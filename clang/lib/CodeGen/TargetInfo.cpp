@@ -10137,6 +10137,126 @@ public:
 
 } // End anonymous namespace.
 
+//===----------------------------------------------------------------------===//
+// YCore ABI Implementation
+//===----------------------------------------------------------------------===//
+
+namespace {
+
+/// A SmallStringEnc instance is used to build up the TypeString by passing
+/// it by reference between functions that append to it.
+typedef llvm::SmallString<128> SmallStringEnc;
+
+/// TypeStringCache caches the meta encodings of Types.
+///
+/// The reason for caching TypeStrings is two fold:
+///   1. To cache a type's encoding for later uses;
+///   2. As a means to break recursive member type inclusion.
+///
+/// A cache Entry can have a Status of:
+///   NonRecursive:   The type encoding is not recursive;
+///   Recursive:      The type encoding is recursive;
+///   Incomplete:     An incomplete TypeString;
+///   IncompleteUsed: An incomplete TypeString that has been used in a
+///                   Recursive type encoding.
+///
+/// A NonRecursive entry will have all of its sub-members expanded as fully
+/// as possible. Whilst it may contain types which are recursive, the type
+/// itself is not recursive and thus its encoding may be safely used whenever
+/// the type is encountered.
+///
+/// A Recursive entry will have all of its sub-members expanded as fully as
+/// possible. The type itself is recursive and it may contain other types which
+/// are recursive. The Recursive encoding must not be used during the expansion
+/// of a recursive type's recursive branch. For simplicity the code uses
+/// IncompleteCount to reject all usage of Recursive encodings for member types.
+///
+/// An Incomplete entry is always a RecordType and only encodes its
+/// identifier e.g. "s(S){}". Incomplete 'StubEnc' entries are ephemeral and
+/// are placed into the cache during type expansion as a means to identify and
+/// handle recursive inclusion of types as sub-members. If there is recursion
+/// the entry becomes IncompleteUsed.
+///
+/// During the expansion of a RecordType's members:
+///
+///   If the cache contains a NonRecursive encoding for the member type, the
+///   cached encoding is used;
+///
+///   If the cache contains a Recursive encoding for the member type, the
+///   cached encoding is 'Swapped' out, as it may be incorrect, and...
+///
+///   If the member is a RecordType, an Incomplete encoding is placed into the
+///   cache to break potential recursive inclusion of itself as a sub-member;
+///
+///   Once a member RecordType has been expanded, its temporary incomplete
+///   entry is removed from the cache. If a Recursive encoding was swapped out
+///   it is swapped back in;
+///
+///   If an incomplete entry is used to expand a sub-member, the incomplete
+///   entry is marked as IncompleteUsed. The cache keeps count of how many
+///   IncompleteUsed entries it currently contains in IncompleteUsedCount;
+///
+///   If a member's encoding is found to be a NonRecursive or Recursive viz:
+///   IncompleteUsedCount==0, the member's encoding is added to the cache.
+///   Else the member is part of a recursive type and thus the recursion has
+///   been exited too soon for the encoding to be correct for the member.
+///
+//class TypeStringCache {
+//  enum Status {NonRecursive, Recursive, Incomplete, IncompleteUsed};
+//  struct Entry {
+//    std::string Str;     // The encoded TypeString for the type.
+//    enum Status State;   // Information about the encoding in 'Str'.
+//    std::string Swapped; // A temporary place holder for a Recursive encoding
+//                         // during the expansion of RecordType's members.
+//  };
+//  std::map<const IdentifierInfo *, struct Entry> Map;
+//  unsigned IncompleteCount;     // Number of Incomplete entries in the Map.
+//  unsigned IncompleteUsedCount; // Number of IncompleteUsed entries in the Map.
+//public:
+//  TypeStringCache() : IncompleteCount(0), IncompleteUsedCount(0) {}
+//  void addIncomplete(const IdentifierInfo *ID, std::string StubEnc);
+//  bool removeIncomplete(const IdentifierInfo *ID);
+//  void addIfComplete(const IdentifierInfo *ID, StringRef Str,
+//                     bool IsRecursive);
+//  StringRef lookupStr(const IdentifierInfo *ID);
+//};
+
+/// TypeString encodings for enum & union fields must be order.
+/// FieldEncoding is a helper for this ordering process.
+//class FieldEncoding {
+//  bool HasName;
+//  std::string Enc;
+//public:
+//  FieldEncoding(bool b, SmallStringEnc &e) : HasName(b), Enc(e.c_str()) {}
+//  StringRef str() { return Enc; }
+//  bool operator<(const FieldEncoding &rhs) const {
+//    if (HasName != rhs.HasName) return HasName;
+//    return Enc < rhs.Enc;
+//  }
+//};
+
+class YCoreABIInfo : public DefaultABIInfo {
+public:
+  YCoreABIInfo(CodeGen::CodeGenTypes &CGT) : DefaultABIInfo(CGT) {}
+  Address EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
+                    QualType Ty) const override;
+};
+
+class YCoreTargetCodeGenInfo : public TargetCodeGenInfo {
+  mutable TypeStringCache TSC;
+  void emitTargetMD(const Decl *D, llvm::GlobalValue *GV,
+                    const CodeGen::CodeGenModule &M) const;
+
+public:
+  YCoreTargetCodeGenInfo(CodeGenTypes &CGT)
+      : TargetCodeGenInfo(std::make_unique<YCoreABIInfo>(CGT)) {}
+  void emitTargetMetadata(CodeGen::CodeGenModule &CGM,
+                          const llvm::MapVector<GlobalDecl, StringRef>
+                              &MangledDeclNames) const override;
+};
+
+} // End anonymous namespace.
+
 // TODO: this implementation is likely now redundant with the default
 // EmitVAArg.
 Address XCoreABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
@@ -10171,6 +10291,59 @@ Address XCoreABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
     Val = Builder.CreateBitCast(AP, ArgPtrTy);
     ArgSize = CharUnits::fromQuantity(
                        getDataLayout().getTypeAllocSize(AI.getCoerceToType()));
+    ArgSize = ArgSize.alignTo(SlotSize);
+    break;
+  case ABIArgInfo::Indirect:
+  case ABIArgInfo::IndirectAliased:
+    Val = Builder.CreateElementBitCast(AP, ArgPtrTy);
+    Val = Address(Builder.CreateLoad(Val), TypeAlign);
+    ArgSize = SlotSize;
+    break;
+  }
+
+  // Increment the VAList.
+  if (!ArgSize.isZero()) {
+    Address APN = Builder.CreateConstInBoundsByteGEP(AP, ArgSize);
+    Builder.CreateStore(APN.getPointer(), VAListAddr);
+  }
+
+  return Val;
+}
+
+// TODO: this implementation is likely now redundant with the default
+// EmitVAArg.
+Address YCoreABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
+                                QualType Ty) const {
+  CGBuilderTy &Builder = CGF.Builder;
+
+  // Get the VAList.
+  CharUnits SlotSize = CharUnits::fromQuantity(4);
+  Address AP(Builder.CreateLoad(VAListAddr), SlotSize);
+
+  // Handle the argument.
+  ABIArgInfo AI = classifyArgumentType(Ty);
+  CharUnits TypeAlign = getContext().getTypeAlignInChars(Ty);
+  llvm::Type *ArgTy = CGT.ConvertType(Ty);
+  if (AI.canHaveCoerceToType() && !AI.getCoerceToType())
+    AI.setCoerceToType(ArgTy);
+  llvm::Type *ArgPtrTy = llvm::PointerType::getUnqual(ArgTy);
+
+  Address Val = Address::invalid();
+  CharUnits ArgSize = CharUnits::Zero();
+  switch (AI.getKind()) {
+  case ABIArgInfo::Expand:
+  case ABIArgInfo::CoerceAndExpand:
+  case ABIArgInfo::InAlloca:
+    llvm_unreachable("Unsupported ABI kind for va_arg");
+  case ABIArgInfo::Ignore:
+    Val = Address(llvm::UndefValue::get(ArgPtrTy), TypeAlign);
+    ArgSize = CharUnits::Zero();
+    break;
+  case ABIArgInfo::Extend:
+  case ABIArgInfo::Direct:
+    Val = Builder.CreateBitCast(AP, ArgPtrTy);
+    ArgSize = CharUnits::fromQuantity(
+        getDataLayout().getTypeAllocSize(AI.getCoerceToType()));
     ArgSize = ArgSize.alignTo(SlotSize);
     break;
   case ABIArgInfo::Indirect:
@@ -10312,7 +10485,38 @@ void XCoreTargetCodeGenInfo::emitTargetMD(
   }
 }
 
+/// YCore uses emitTargetMD to emit TypeString metadata for global symbols.
+void YCoreTargetCodeGenInfo::emitTargetMD(
+    const Decl *D, llvm::GlobalValue *GV,
+    const CodeGen::CodeGenModule &CGM) const {
+  SmallStringEnc Enc;
+  if (getTypeString(Enc, D, CGM, TSC)) {
+    llvm::LLVMContext &Ctx = CGM.getModule().getContext();
+    llvm::Metadata *MDVals[] = {llvm::ConstantAsMetadata::get(GV),
+                                llvm::MDString::get(Ctx, Enc.str())};
+    llvm::NamedMDNode *MD =
+        CGM.getModule().getOrInsertNamedMetadata("ycore.typestrings");
+    MD->addOperand(llvm::MDNode::get(Ctx, MDVals));
+  }
+}
+
 void XCoreTargetCodeGenInfo::emitTargetMetadata(
+    CodeGen::CodeGenModule &CGM,
+    const llvm::MapVector<GlobalDecl, StringRef> &MangledDeclNames) const {
+  // Warning, new MangledDeclNames may be appended within this loop.
+  // We rely on MapVector insertions adding new elements to the end
+  // of the container.
+  for (unsigned I = 0; I != MangledDeclNames.size(); ++I) {
+    auto Val = *(MangledDeclNames.begin() + I);
+    llvm::GlobalValue *GV = CGM.GetGlobalValue(Val.second);
+    if (GV) {
+      const Decl *D = Val.first.getDecl()->getMostRecentDecl();
+      emitTargetMD(D, GV, CGM);
+    }
+  }
+}
+
+void YCoreTargetCodeGenInfo::emitTargetMetadata(
     CodeGen::CodeGenModule &CGM,
     const llvm::MapVector<GlobalDecl, StringRef> &MangledDeclNames) const {
   // Warning, new MangledDeclNames may be appended within this loop.
@@ -11505,6 +11709,8 @@ const TargetCodeGenInfo &CodeGenModule::getTargetCodeGenInfo() {
     return SetCGInfo(new SparcV9TargetCodeGenInfo(Types));
   case llvm::Triple::xcore:
     return SetCGInfo(new XCoreTargetCodeGenInfo(Types));
+  case llvm::Triple::ycore:
+    return SetCGInfo(new YCoreTargetCodeGenInfo(Types));
   case llvm::Triple::arc:
     return SetCGInfo(new ARCTargetCodeGenInfo(Types));
   case llvm::Triple::spir:

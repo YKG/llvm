@@ -4141,6 +4141,13 @@ CodeGenModule::GetOrCreateLLVMGlobal(StringRef MangledName, llvm::Type *Ty,
         isExternallyVisible(D->getLinkageAndVisibility().getLinkage()))
       GV->setSection(".cp.rodata");
 
+    // Handle YCore specific ABI requirements.
+    if (getTriple().getArch() == llvm::Triple::ycore &&
+        D->getLanguageLinkage() == CLanguageLinkage &&
+        D->getType().isConstant(Context) &&
+        isExternallyVisible(D->getLinkageAndVisibility().getLinkage()))
+      GV->setSection(".cp.rodata");
+
     // Check if we a have a const declaration with an initializer, we may be
     // able to emit it as available_externally to expose it's value to the
     // optimizer.
