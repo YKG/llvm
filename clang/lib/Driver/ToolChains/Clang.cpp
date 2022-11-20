@@ -450,9 +450,10 @@ static bool addExceptionArgs(const ArgList &Args, types::ID InputType,
   }
 
   if (types::isCXX(InputType)) {
-    // Disable C++ EH by default on XCore and PS4.
+    // Disable C++ EH by default on XCore, YCore and PS4.
     bool CXXExceptionsEnabled =
-        Triple.getArch() != llvm::Triple::xcore && !Triple.isPS4CPU();
+        Triple.getArch() != llvm::Triple::xcore &&
+        Triple.getArch() != llvm::Triple::ycore && !Triple.isPS4CPU();
     Arg *ExceptionArg = Args.getLastArg(
         options::OPT_fcxx_exceptions, options::OPT_fno_cxx_exceptions,
         options::OPT_fexceptions, options::OPT_fno_exceptions);
@@ -529,10 +530,11 @@ static bool useFramePointerForTargetByDefault(const ArgList &Args,
 
   switch (Triple.getArch()) {
   case llvm::Triple::xcore:
+  case llvm::Triple::ycore:
   case llvm::Triple::wasm32:
   case llvm::Triple::wasm64:
   case llvm::Triple::msp430:
-    // XCore never wants frame pointers, regardless of OS.
+    // XCore/YCore never wants frame pointers, regardless of OS.
     // WebAssembly never wants frame pointers.
     return false;
   case llvm::Triple::ppc:
@@ -1485,6 +1487,7 @@ static bool isSignedCharDefault(const llvm::Triple &Triple) {
   case llvm::Triple::riscv64:
   case llvm::Triple::systemz:
   case llvm::Triple::xcore:
+  case llvm::Triple::ycore:
     return false;
   }
 }
