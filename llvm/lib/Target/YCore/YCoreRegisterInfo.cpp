@@ -79,11 +79,11 @@ static void InsertFPImmInst(MachineBasicBlock::iterator II,
           .addImm(Offset)
           .addMemOperand(*MI.memoperands_begin());
     break;
-  case YCore::LDAWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l2rus), Reg)
-          .addReg(FrameReg)
-          .addImm(Offset);
-    break;
+//  case YCore::LDAWFI:
+//    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l2rus), Reg)
+//          .addReg(FrameReg)
+//          .addImm(Offset);
+//    break;
   default:
     llvm_unreachable("Unexpected Opcode");
   }
@@ -115,11 +115,11 @@ static void InsertFPConstInst(MachineBasicBlock::iterator II,
           .addReg(ScratchOffset, RegState::Kill)
           .addMemOperand(*MI.memoperands_begin());
     break;
-  case YCore::LDAWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
-          .addReg(FrameReg)
-          .addReg(ScratchOffset, RegState::Kill);
-    break;
+//  case YCore::LDAWFI:
+//    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
+//          .addReg(FrameReg)
+//          .addReg(ScratchOffset, RegState::Kill);
+//    break;
   default:
     llvm_unreachable("Unexpected Opcode");
   }
@@ -192,11 +192,11 @@ static void InsertSPConstInst(MachineBasicBlock::iterator II,
           .addReg(ScratchOffset, RegState::Kill)
           .addMemOperand(*MI.memoperands_begin());
     break;
-  case YCore::LDAWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
-          .addReg(ScratchBase, RegState::Kill)
-          .addReg(ScratchOffset, RegState::Kill);
-    break;
+//  case YCore::LDAWFI:
+//    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
+//          .addReg(ScratchBase, RegState::Kill)
+//          .addReg(ScratchOffset, RegState::Kill);
+//    break;
   default:
     llvm_unreachable("Unexpected Opcode");
   }

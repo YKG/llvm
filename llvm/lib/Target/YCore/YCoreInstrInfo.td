@@ -419,39 +419,39 @@ def TSETR_3r : _F3RImm<0b10111, (outs), (ins i32imm:$a, GRRegs:$b, GRRegs:$c),
                        "set t[$c]:r$a, $b", []>;
 
 // Three operand long
-def LDAWF_l3r : _FL3R<0b000111100, (outs GRRegs:$dst),
-                      (ins GRRegs:$addr, GRRegs:$offset),
-                      "ldaw $dst, $addr[$offset]",
-                      [(set GRRegs:$dst,
-                         (ldawf GRRegs:$addr, GRRegs:$offset))]>;
+// def LDAWF_l3r : _FL3R<0b000111100, (outs GRRegs:$dst),
+//                       (ins GRRegs:$addr, GRRegs:$offset),
+//                       "ldaw $dst, $addr[$offset]",
+//                       [(set GRRegs:$dst,
+//                          (ldawf GRRegs:$addr, GRRegs:$offset))]>;
 
-let hasSideEffects = 0 in
-def LDAWF_l2rus : _FL2RUS<0b100111100, (outs GRRegs:$dst),
-                          (ins GRRegs:$addr, i32imm:$offset),
-                          "ldaw $dst, $addr[$offset]", []>;
+// let hasSideEffects = 0 in
+// def LDAWF_l2rus : _FL2RUS<0b100111100, (outs GRRegs:$dst),
+//                           (ins GRRegs:$addr, i32imm:$offset),
+//                           "ldaw $dst, $addr[$offset]", []>;
 
-def LDAWB_l3r : _FL3R<0b001001100, (outs GRRegs:$dst),
-                      (ins GRRegs:$addr, GRRegs:$offset),
-                      "ldaw $dst, $addr[-$offset]",
-                      [(set GRRegs:$dst,
-                         (ldawb GRRegs:$addr, GRRegs:$offset))]>;
+// def LDAWB_l3r : _FL3R<0b001001100, (outs GRRegs:$dst),
+//                       (ins GRRegs:$addr, GRRegs:$offset),
+//                       "ldaw $dst, $addr[-$offset]",
+//                       [(set GRRegs:$dst,
+//                          (ldawb GRRegs:$addr, GRRegs:$offset))]>;
 
-let hasSideEffects = 0 in
-def LDAWB_l2rus : _FL2RUS<0b101001100, (outs GRRegs:$dst),
-                         (ins GRRegs:$addr, i32imm:$offset),
-                         "ldaw $dst, $addr[-$offset]", []>;
+// let hasSideEffects = 0 in
+// def LDAWB_l2rus : _FL2RUS<0b101001100, (outs GRRegs:$dst),
+//                          (ins GRRegs:$addr, i32imm:$offset),
+//                          "ldaw $dst, $addr[-$offset]", []>;
 
-def LDA16F_l3r : _FL3R<0b001011100, (outs GRRegs:$dst),
-                       (ins GRRegs:$addr, GRRegs:$offset),
-                       "lda16 $dst, $addr[$offset]",
-                       [(set GRRegs:$dst,
-                          (lda16f GRRegs:$addr, GRRegs:$offset))]>;
+// def LDA16F_l3r : _FL3R<0b001011100, (outs GRRegs:$dst),
+//                        (ins GRRegs:$addr, GRRegs:$offset),
+//                        "lda16 $dst, $addr[$offset]",
+//                        [(set GRRegs:$dst,
+//                           (lda16f GRRegs:$addr, GRRegs:$offset))]>;
 
-def LDA16B_l3r : _FL3R<0b001101100, (outs GRRegs:$dst),
-                       (ins GRRegs:$addr, GRRegs:$offset),
-                       "lda16 $dst, $addr[-$offset]",
-                       [(set GRRegs:$dst,
-                          (lda16b GRRegs:$addr, GRRegs:$offset))]>;
+// def LDA16B_l3r : _FL3R<0b001101100, (outs GRRegs:$dst),
+//                        (ins GRRegs:$addr, GRRegs:$offset),
+//                        "lda16 $dst, $addr[-$offset]",
+//                        [(set GRRegs:$dst,
+//                           (lda16b GRRegs:$addr, GRRegs:$offset))]>;
 
 def MUL_l3r : FL3R<0b001111100, "mul", mul>;
 // Instructions which may trap are marked as side effecting.
@@ -1256,11 +1256,11 @@ def : Pat<(setne GRRegs:$lhs, immUs:$rhs),
           (EQ_2rus (EQ_2rus GRRegs:$lhs, immUs:$rhs), 0)>;
 
 // misc
-def : Pat<(add GRRegs:$addr, immUs4:$offset),
-          (LDAWF_l2rus GRRegs:$addr, (div4_xform immUs4:$offset))>;
+// def : Pat<(add GRRegs:$addr, immUs4:$offset),
+//           (LDAWF_l2rus GRRegs:$addr, (div4_xform immUs4:$offset))>;
 
-def : Pat<(sub GRRegs:$addr, immUs4:$offset),
-          (LDAWB_l2rus GRRegs:$addr, (div4_xform immUs4:$offset))>;
+// def : Pat<(sub GRRegs:$addr, immUs4:$offset),
+//           (LDAWB_l2rus GRRegs:$addr, (div4_xform immUs4:$offset))>;
 
 def : Pat<(and GRRegs:$val, immMskBitp:$mask),
           (ZEXT_rus GRRegs:$val, (msksize_xform immMskBitp:$mask))>;
@@ -1269,21 +1269,21 @@ def : Pat<(and GRRegs:$val, immMskBitp:$mask),
 def : Pat<(add GRRegs:$src1, immUsNeg:$src2),
           (SUB_2rus GRRegs:$src1, (neg_xform immUsNeg:$src2))>;
 
-def : Pat<(add GRRegs:$src1, immUs4Neg:$src2),
-          (LDAWB_l2rus GRRegs:$src1, (div4neg_xform immUs4Neg:$src2))>;
+// def : Pat<(add GRRegs:$src1, immUs4Neg:$src2),
+//           (LDAWB_l2rus GRRegs:$src1, (div4neg_xform immUs4Neg:$src2))>;
 
 ///
 /// Some peepholes
 ///
 
-def : Pat<(mul GRRegs:$src, 3),
-          (LDA16F_l3r GRRegs:$src, GRRegs:$src)>;
+// def : Pat<(mul GRRegs:$src, 3),
+//           (LDA16F_l3r GRRegs:$src, GRRegs:$src)>;
 
-def : Pat<(mul GRRegs:$src, 5),
-          (LDAWF_l3r GRRegs:$src, GRRegs:$src)>;
+// def : Pat<(mul GRRegs:$src, 5),
+//           (LDAWF_l3r GRRegs:$src, GRRegs:$src)>;
 
-def : Pat<(mul GRRegs:$src, -3),
-          (LDAWB_l3r GRRegs:$src, GRRegs:$src)>;
+// def : Pat<(mul GRRegs:$src, -3),
+//           (LDAWB_l3r GRRegs:$src, GRRegs:$src)>;
 
 // ashr X, 32 is equivalent to ashr X, 31 on the YCore.
 def : Pat<(sra GRRegs:$src, 31),
