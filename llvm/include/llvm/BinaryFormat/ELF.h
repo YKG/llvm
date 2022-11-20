@@ -319,6 +319,7 @@ enum {
   EM_BPF = 247,           // Linux kernel bpf virtual machine
   EM_VE = 251,            // NEC SX-Aurora VE
   EM_CSKY = 252,          // C-SKY 32-bit processor
+  EM_YCORE = 253,         // XMOS yCORE processor family
 };
 
 // Object file classes.
@@ -1043,11 +1044,13 @@ enum : unsigned {
   /// the data section and the dp register is set to the start of the section by
   /// the boot code.
   XCORE_SHF_DP_SECTION = 0x10000000,
+  YCORE_SHF_DP_SECTION = 0x10000000,
 
   /// All sections with the "c" flag are grouped together by the linker to form
   /// the constant pool and the cp register is set to the start of the constant
   /// pool by the boot code.
   XCORE_SHF_CP_SECTION = 0x20000000,
+  YCORE_SHF_CP_SECTION = 0x20000000,
 
   // If an object file section does not have this flag set, then it may not hold
   // more than 2GB and can be freely referred to in objects using smaller code
