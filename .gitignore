@@ -71,3 +71,4 @@ pythonenv*
 
 llvm/cmake-build-debug-bpf/
 llvm/cmake-build-debug/
+llvm/cmake-build-*
