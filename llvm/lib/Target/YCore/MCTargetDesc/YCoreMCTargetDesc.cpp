@@ -14,7 +14,6 @@
 #include "MCTargetDesc/YCoreInstPrinter.h"
 #include "MCTargetDesc/YCoreMCAsmInfo.h"
 #include "TargetInfo/YCoreTargetInfo.h"
-#include "YCoreTargetStreamer.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/MC/MCDwarf.h"
 #include "llvm/MC/MCInstrInfo.h"
@@ -74,53 +73,6 @@ static MCInstPrinter *createYCoreMCInstPrinter(const Triple &T,
   return new YCoreInstPrinter(MAI, MII, MRI);
 }
 
-YCoreTargetStreamer::YCoreTargetStreamer(MCStreamer &S) : MCTargetStreamer(S) {}
-
-YCoreTargetStreamer::~YCoreTargetStreamer() = default;
-
-namespace {
-
-class YCoreTargetAsmStreamer : public YCoreTargetStreamer {
-  formatted_raw_ostream &OS;
-
-public:
-  YCoreTargetAsmStreamer(MCStreamer &S, formatted_raw_ostream &OS);
-
-  void emitCCTopData(StringRef Name) override;
-  void emitCCTopFunction(StringRef Name) override;
-  void emitCCBottomData(StringRef Name) override;
-  void emitCCBottomFunction(StringRef Name) override;
-};
-
-} // end anonymous namespace
-
-YCoreTargetAsmStreamer::YCoreTargetAsmStreamer(MCStreamer &S,
-                                               formatted_raw_ostream &OS)
-    : YCoreTargetStreamer(S), OS(OS) {}
-
-void YCoreTargetAsmStreamer::emitCCTopData(StringRef Name) {
-  OS << "\t.cc_top " << Name << ".data," << Name << '\n';
-}
-
-void YCoreTargetAsmStreamer::emitCCTopFunction(StringRef Name) {
-  OS << "\t.cc_top " << Name << ".function," << Name << '\n';
-}
-
-void YCoreTargetAsmStreamer::emitCCBottomData(StringRef Name) {
-  OS << "\t.cc_bottom " << Name << ".data\n";
-}
-
-void YCoreTargetAsmStreamer::emitCCBottomFunction(StringRef Name) {
-  OS << "\t.cc_bottom " << Name << ".function\n";
-}
-
-static MCTargetStreamer *createTargetAsmStreamer(MCStreamer &S,
-                                                 formatted_raw_ostream &OS,
-                                                 MCInstPrinter *InstPrint,
-                                                 bool isVerboseAsm) {
-  return new YCoreTargetAsmStreamer(S, OS);
-}
-
 // Force static initialization.
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeYCoreTargetMC() {
   // Register the MC asm info.
@@ -141,7 +93,4 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeYCoreTargetMC() {
   // Register the MCInstPrinter
   TargetRegistry::RegisterMCInstPrinter(getTheYCoreTarget(),
                                         createYCoreMCInstPrinter);
-
-  TargetRegistry::RegisterAsmTargetStreamer(getTheYCoreTarget(),
-                                            createTargetAsmStreamer);
 }

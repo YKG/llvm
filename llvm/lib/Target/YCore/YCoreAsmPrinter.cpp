@@ -18,7 +18,6 @@
 #include "YCoreMCInstLower.h"
 #include "YCoreSubtarget.h"
 #include "YCoreTargetMachine.h"
-#include "YCoreTargetStreamer.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/CodeGen/AsmPrinter.h"
@@ -51,7 +50,6 @@ using namespace llvm;
 namespace {
   class YCoreAsmPrinter : public AsmPrinter {
     YCoreMCInstLower MCInstLowering;
-    YCoreTargetStreamer &getTargetStreamer();
 
   public:
     explicit YCoreAsmPrinter(TargetMachine &TM,
@@ -67,10 +65,6 @@ namespace {
   };
 } // end of anonymous namespace
 
-YCoreTargetStreamer &YCoreAsmPrinter::getTargetStreamer() {
-  return static_cast<YCoreTargetStreamer&>(*OutStreamer->getTargetStreamer());
-}
-
 void YCoreAsmPrinter::emitFunctionBodyStart() {
   MCInstLowering.Initialize(&MF->getContext());
 }
@@ -79,12 +73,10 @@ void YCoreAsmPrinter::emitFunctionBodyStart() {
 /// the last basic block in the function.
 void YCoreAsmPrinter::emitFunctionBodyEnd() {
   // Emit function end directives
-  getTargetStreamer().emitCCBottomFunction(CurrentFnSym->getName());
 }
 
 void YCoreAsmPrinter::emitFunctionEntryLabel() {
   // Mark the start of the function
-  getTargetStreamer().emitCCTopFunction(CurrentFnSym->getName());
   OutStreamer->emitLabel(CurrentFnSym);
 }
 
