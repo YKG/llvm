@@ -587,6 +587,7 @@ static bool
 isADDADDMUL(SDValue Op, SDValue &Mul0, SDValue &Mul1, SDValue &Addend0,
             SDValue &Addend1, bool requireIntermediatesHaveOneUse)
 {
+  llvm_unreachable("TODO");
   if (Op.getOpcode() != ISD::ADD)
     return false;
   SDValue N0 = Op.getOperand(0);
