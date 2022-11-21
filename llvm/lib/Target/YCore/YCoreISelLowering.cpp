@@ -201,7 +201,7 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 //  case ISD::EH_RETURN:          return LowerEH_RETURN(Op, DAG);
 //  case ISD::GlobalAddress:      return LowerGlobalAddress(Op, DAG);
 //  case ISD::BlockAddress:       return LowerBlockAddress(Op, DAG);
-  case ISD::ConstantPool:       return LowerConstantPool(Op, DAG);
+//  case ISD::ConstantPool:       return LowerConstantPool(Op, DAG);
 //  case ISD::BR_JT:              return LowerBR_JT(Op, DAG);
   case ISD::LOAD:               return LowerLOAD(Op, DAG);
   case ISD::STORE:              return LowerSTORE(Op, DAG);
@@ -318,23 +318,23 @@ static bool IsSmallObject(const GlobalValue *GV, const YCoreTargetLowering &XTL)
 //  return DAG.getNode(YCoreISD::PCRelativeWrapper, DL, PtrVT, Result);
 //}
 //
-SDValue YCoreTargetLowering::
-LowerConstantPool(SDValue Op, SelectionDAG &DAG) const
-{
-  ConstantPoolSDNode *CP = cast<ConstantPoolSDNode>(Op);
-  // FIXME there isn't really debug info here
-  SDLoc dl(CP);
-  EVT PtrVT = Op.getValueType();
-  SDValue Res;
-  if (CP->isMachineConstantPoolEntry()) {
-    Res = DAG.getTargetConstantPool(CP->getMachineCPVal(), PtrVT,
-                                    CP->getAlign(), CP->getOffset());
-  } else {
-    Res = DAG.getTargetConstantPool(CP->getConstVal(), PtrVT, CP->getAlign(),
-                                    CP->getOffset());
-  }
-  return DAG.getNode(YCoreISD::CPRelativeWrapper, dl, MVT::i32, Res);
-}
+//SDValue YCoreTargetLowering::
+//LowerConstantPool(SDValue Op, SelectionDAG &DAG) const
+//{
+//  ConstantPoolSDNode *CP = cast<ConstantPoolSDNode>(Op);
+//  // FIXME there isn't really debug info here
+//  SDLoc dl(CP);
+//  EVT PtrVT = Op.getValueType();
+//  SDValue Res;
+//  if (CP->isMachineConstantPoolEntry()) {
+//    Res = DAG.getTargetConstantPool(CP->getMachineCPVal(), PtrVT,
+//                                    CP->getAlign(), CP->getOffset());
+//  } else {
+//    Res = DAG.getTargetConstantPool(CP->getConstVal(), PtrVT, CP->getAlign(),
+//                                    CP->getOffset());
+//  }
+//  return DAG.getNode(YCoreISD::CPRelativeWrapper, dl, MVT::i32, Res);
+//}
 
 unsigned YCoreTargetLowering::getJumpTableEncoding() const {
   return MachineJumpTableInfo::EK_Inline;
