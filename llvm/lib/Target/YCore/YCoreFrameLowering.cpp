@@ -484,53 +484,53 @@ void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
 
 // This function eliminates ADJCALLSTACKDOWN,
 // ADJCALLSTACKUP pseudo instructions
-MachineBasicBlock::iterator YCoreFrameLowering::eliminateCallFramePseudoInstr(
-    MachineFunction &MF, MachineBasicBlock &MBB,
-    MachineBasicBlock::iterator I) const {
-  llvm_unreachable("TODO");
-  const YCoreInstrInfo &TII = *MF.getSubtarget<YCoreSubtarget>().getInstrInfo();
-  if (!hasReservedCallFrame(MF)) {
-    // Turn the adjcallstackdown instruction into 'extsp <amt>' and the
-    // adjcallstackup instruction into 'ldaw sp, sp[<amt>]'
-    MachineInstr &Old = *I;
-    uint64_t Amount = Old.getOperand(0).getImm();
-    if (Amount != 0) {
-      // We need to keep the stack aligned properly.  To do this, we round the
-      // amount of space needed for the outgoing arguments up to the next
-      // alignment boundary.
-      Amount = alignTo(Amount, getStackAlign());
-
-      assert(Amount%4 == 0);
-      Amount /= 4;
-
-      bool isU6 = isImmU6(Amount);
-      if (!isU6 && !isImmU16(Amount)) {
-        // FIX could emit multiple instructions in this case.
-#ifndef NDEBUG
-        errs() << "eliminateCallFramePseudoInstr size too big: "
-               << Amount << "\n";
-#endif
-        llvm_unreachable(nullptr);
-      }
-
-      MachineInstr *New;
-      if (Old.getOpcode() == YCore::ADJCALLSTACKDOWN) {
-        int Opcode = isU6 ? YCore::EXTSP_u6 : YCore::EXTSP_lu6;
-        New = BuildMI(MF, Old.getDebugLoc(), TII.get(Opcode)).addImm(Amount);
-      } else {
-        assert(Old.getOpcode() == YCore::ADJCALLSTACKUP);
-        int Opcode = isU6 ? YCore::LDAWSP_ru6 : YCore::LDAWSP_lru6;
-        New = BuildMI(MF, Old.getDebugLoc(), TII.get(Opcode), YCore::SP)
-                  .addImm(Amount);
-      }
-
-      // Replace the pseudo instruction with a new instruction...
-      MBB.insert(I, New);
-    }
-  }
-
-  return MBB.erase(I);
-}
+//MachineBasicBlock::iterator YCoreFrameLowering::eliminateCallFramePseudoInstr(
+//    MachineFunction &MF, MachineBasicBlock &MBB,
+//    MachineBasicBlock::iterator I) const {
+//  llvm_unreachable("TODO");
+//  const YCoreInstrInfo &TII = *MF.getSubtarget<YCoreSubtarget>().getInstrInfo();
+//  if (!hasReservedCallFrame(MF)) {
+//    // Turn the adjcallstackdown instruction into 'extsp <amt>' and the
+//    // adjcallstackup instruction into 'ldaw sp, sp[<amt>]'
+//    MachineInstr &Old = *I;
+//    uint64_t Amount = Old.getOperand(0).getImm();
+//    if (Amount != 0) {
+//      // We need to keep the stack aligned properly.  To do this, we round the
+//      // amount of space needed for the outgoing arguments up to the next
+//      // alignment boundary.
+//      Amount = alignTo(Amount, getStackAlign());
+//
+//      assert(Amount%4 == 0);
+//      Amount /= 4;
+//
+//      bool isU6 = isImmU6(Amount);
+//      if (!isU6 && !isImmU16(Amount)) {
+//        // FIX could emit multiple instructions in this case.
+//#ifndef NDEBUG
+//        errs() << "eliminateCallFramePseudoInstr size too big: "
+//               << Amount << "\n";
+//#endif
+//        llvm_unreachable(nullptr);
+//      }
+//
+//      MachineInstr *New;
+//      if (Old.getOpcode() == YCore::ADJCALLSTACKDOWN) {
+//        int Opcode = isU6 ? YCore::EXTSP_u6 : YCore::EXTSP_lu6;
+//        New = BuildMI(MF, Old.getDebugLoc(), TII.get(Opcode)).addImm(Amount);
+//      } else {
+//        assert(Old.getOpcode() == YCore::ADJCALLSTACKUP);
+//        int Opcode = isU6 ? YCore::LDAWSP_ru6 : YCore::LDAWSP_lru6;
+//        New = BuildMI(MF, Old.getDebugLoc(), TII.get(Opcode), YCore::SP)
+//                  .addImm(Amount);
+//      }
+//
+//      // Replace the pseudo instruction with a new instruction...
+//      MBB.insert(I, New);
+//    }
+//  }
+//
+//  return MBB.erase(I);
+//}
 
 void YCoreFrameLowering::determineCalleeSaves(MachineFunction &MF,
                                               BitVector &SavedRegs,
