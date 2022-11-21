@@ -213,9 +213,9 @@ namespace llvm {
                          const SDLoc &dl, SelectionDAG &DAG,
                          SmallVectorImpl<SDValue> &InVals) const override;
 
-    SDValue
-      LowerCall(TargetLowering::CallLoweringInfo &CLI,
-                SmallVectorImpl<SDValue> &InVals) const override;
+//    SDValue
+//      LowerCall(TargetLowering::CallLoweringInfo &CLI,
+//                SmallVectorImpl<SDValue> &InVals) const override;
 
     SDValue LowerReturn(SDValue Chain, CallingConv::ID CallConv, bool isVarArg,
                         const SmallVectorImpl<ISD::OutputArg> &Outs,

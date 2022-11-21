@@ -1028,35 +1028,35 @@ YCoreTargetLowering::getTargetMMOFlags(const Instruction &I) const {
 //===----------------------------------------------------------------------===//
 
 /// YCore call implementation
-SDValue
-YCoreTargetLowering::LowerCall(TargetLowering::CallLoweringInfo &CLI,
-                               SmallVectorImpl<SDValue> &InVals) const {
-  SelectionDAG &DAG                     = CLI.DAG;
-  SDLoc &dl                             = CLI.DL;
-  SmallVectorImpl<ISD::OutputArg> &Outs = CLI.Outs;
-  SmallVectorImpl<SDValue> &OutVals     = CLI.OutVals;
-  SmallVectorImpl<ISD::InputArg> &Ins   = CLI.Ins;
-  SDValue Chain                         = CLI.Chain;
-  SDValue Callee                        = CLI.Callee;
-  bool &isTailCall                      = CLI.IsTailCall;
-  CallingConv::ID CallConv              = CLI.CallConv;
-  bool isVarArg                         = CLI.IsVarArg;
-
-  // YCore target does not yet support tail call optimization.
-  isTailCall = false;
-  llvm_unreachable("TODO");
-
-  // For now, only CallingConv::C implemented
-  switch (CallConv)
-  {
-    default:
-      report_fatal_error("Unsupported calling convention");
-    case CallingConv::Fast:
-    case CallingConv::C:
-      return LowerCCCCallTo(Chain, Callee, CallConv, isVarArg, isTailCall,
-                            Outs, OutVals, Ins, dl, DAG, InVals);
-  }
-}
+//SDValue
+//YCoreTargetLowering::LowerCall(TargetLowering::CallLoweringInfo &CLI,
+//                               SmallVectorImpl<SDValue> &InVals) const {
+//  SelectionDAG &DAG                     = CLI.DAG;
+//  SDLoc &dl                             = CLI.DL;
+//  SmallVectorImpl<ISD::OutputArg> &Outs = CLI.Outs;
+//  SmallVectorImpl<SDValue> &OutVals     = CLI.OutVals;
+//  SmallVectorImpl<ISD::InputArg> &Ins   = CLI.Ins;
+//  SDValue Chain                         = CLI.Chain;
+//  SDValue Callee                        = CLI.Callee;
+//  bool &isTailCall                      = CLI.IsTailCall;
+//  CallingConv::ID CallConv              = CLI.CallConv;
+//  bool isVarArg                         = CLI.IsVarArg;
+//
+//  // YCore target does not yet support tail call optimization.
+//  isTailCall = false;
+//  llvm_unreachable("TODO");
+//
+//  // For now, only CallingConv::C implemented
+//  switch (CallConv)
+//  {
+//    default:
+//      report_fatal_error("Unsupported calling convention");
+//    case CallingConv::Fast:
+//    case CallingConv::C:
+//      return LowerCCCCallTo(Chain, Callee, CallConv, isVarArg, isTailCall,
+//                            Outs, OutVals, Ins, dl, DAG, InVals);
+//  }
+//}
 
 /// LowerCallResult - Lower the result values of a call into the
 /// appropriate copies out of appropriate physical registers / memory locations.
