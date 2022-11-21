@@ -60,20 +60,6 @@ namespace {
 
     StringRef getPassName() const override { return "YCore Assembly Printer"; }
 
-    void printInlineJT(const MachineInstr *MI, int opNum, raw_ostream &O,
-                       const std::string &directive = ".jmptable");
-    void printInlineJT32(const MachineInstr *MI, int opNum, raw_ostream &O) {
-      printInlineJT(MI, opNum, O, ".jmptable32");
-    }
-    void printOperand(const MachineInstr *MI, int opNum, raw_ostream &O);
-    bool PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
-                         const char *ExtraCode, raw_ostream &O) override;
-    bool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNum,
-                               const char *ExtraCode, raw_ostream &O) override;
-
-    void emitArrayBound(MCSymbol *Sym, const GlobalVariable *GV);
-    void emitGlobalVariable(const GlobalVariable *GV) override;
-
     void emitFunctionEntryLabel() override;
     void emitInstruction(const MachineInstr *MI) override;
     void emitFunctionBodyStart() override;
@@ -83,85 +69,6 @@ namespace {
 
 YCoreTargetStreamer &YCoreAsmPrinter::getTargetStreamer() {
   return static_cast<YCoreTargetStreamer&>(*OutStreamer->getTargetStreamer());
-}
-
-void YCoreAsmPrinter::emitArrayBound(MCSymbol *Sym, const GlobalVariable *GV) {
-  assert( ( GV->hasExternalLinkage() || GV->hasWeakLinkage() ||
-            GV->hasLinkOnceLinkage() || GV->hasCommonLinkage() ) &&
-          "Unexpected linkage");
-  if (ArrayType *ATy = dyn_cast<ArrayType>(GV->getValueType())) {
-
-    MCSymbol *SymGlob = OutContext.getOrCreateSymbol(
-                          Twine(Sym->getName() + StringRef(".globound")));
-    OutStreamer->emitSymbolAttribute(SymGlob, MCSA_Global);
-    OutStreamer->emitAssignment(SymGlob,
-                                MCConstantExpr::create(ATy->getNumElements(),
-                                                       OutContext));
-    if (GV->hasWeakLinkage() || GV->hasLinkOnceLinkage() ||
-        GV->hasCommonLinkage()) {
-      OutStreamer->emitSymbolAttribute(SymGlob, MCSA_Weak);
-    }
-  }
-}
-
-void YCoreAsmPrinter::emitGlobalVariable(const GlobalVariable *GV) {
-  // Check to see if this is a special global used by LLVM, if so, emit it.
-  if (!GV->hasInitializer() || emitSpecialLLVMGlobal(GV))
-    return;
-
-  const DataLayout &DL = getDataLayout();
-  OutStreamer->SwitchSection(getObjFileLowering().SectionForGlobal(GV, TM));
-
-  MCSymbol *GVSym = getSymbol(GV);
-  const Constant *C = GV->getInitializer();
-  const Align Alignment(DL.getPrefTypeAlignment(C->getType()));
-
-  // Mark the start of the global
-  getTargetStreamer().emitCCTopData(GVSym->getName());
-
-  switch (GV->getLinkage()) {
-  case GlobalValue::AppendingLinkage:
-    report_fatal_error("AppendingLinkage is not supported by this target!");
-  case GlobalValue::LinkOnceAnyLinkage:
-  case GlobalValue::LinkOnceODRLinkage:
-  case GlobalValue::WeakAnyLinkage:
-  case GlobalValue::WeakODRLinkage:
-  case GlobalValue::ExternalLinkage:
-  case GlobalValue::CommonLinkage:
-    emitArrayBound(GVSym, GV);
-    OutStreamer->emitSymbolAttribute(GVSym, MCSA_Global);
-
-    if (GV->hasWeakLinkage() || GV->hasLinkOnceLinkage() ||
-        GV->hasCommonLinkage())
-      OutStreamer->emitSymbolAttribute(GVSym, MCSA_Weak);
-    LLVM_FALLTHROUGH;
-  case GlobalValue::InternalLinkage:
-  case GlobalValue::PrivateLinkage:
-    break;
-  default:
-    llvm_unreachable("Unknown linkage type!");
-  }
-
-  emitAlignment(std::max(Alignment, Align(4)), GV);
-
-  if (GV->isThreadLocal()) {
-    report_fatal_error("TLS is not supported by this target!");
-  }
-  unsigned Size = DL.getTypeAllocSize(C->getType());
-  if (MAI->hasDotTypeDotSizeDirective()) {
-    OutStreamer->emitSymbolAttribute(GVSym, MCSA_ELF_TypeObject);
-    OutStreamer->emitELFSize(GVSym, MCConstantExpr::create(Size, OutContext));
-  }
-  OutStreamer->emitLabel(GVSym);
-
-  emitGlobalConstant(DL, C);
-  // The ABI requires that unsigned scalar types smaller than 32 bits
-  // are padded to 32 bits.
-  if (Size < 4)
-    OutStreamer->emitZeros(4 - Size);
-
-  // Mark the end of the global
-  getTargetStreamer().emitCCBottomData(GVSym->getName());
 }
 
 void YCoreAsmPrinter::emitFunctionBodyStart() {
@@ -181,109 +88,9 @@ void YCoreAsmPrinter::emitFunctionEntryLabel() {
   OutStreamer->emitLabel(CurrentFnSym);
 }
 
-void YCoreAsmPrinter::
-printInlineJT(const MachineInstr *MI, int opNum, raw_ostream &O,
-              const std::string &directive) {
-  unsigned JTI = MI->getOperand(opNum).getIndex();
-  const MachineFunction *MF = MI->getParent()->getParent();
-  const MachineJumpTableInfo *MJTI = MF->getJumpTableInfo();
-  const std::vector<MachineJumpTableEntry> &JT = MJTI->getJumpTables();
-  const std::vector<MachineBasicBlock*> &JTBBs = JT[JTI].MBBs;
-  O << "\t" << directive << " ";
-  for (unsigned i = 0, e = JTBBs.size(); i != e; ++i) {
-    MachineBasicBlock *MBB = JTBBs[i];
-    if (i > 0)
-      O << ",";
-    MBB->getSymbol()->print(O, MAI);
-  }
-}
-
-void YCoreAsmPrinter::printOperand(const MachineInstr *MI, int opNum,
-                                   raw_ostream &O) {
-  const DataLayout &DL = getDataLayout();
-  const MachineOperand &MO = MI->getOperand(opNum);
-  switch (MO.getType()) {
-  case MachineOperand::MO_Register:
-    O << YCoreInstPrinter::getRegisterName(MO.getReg());
-    break;
-  case MachineOperand::MO_Immediate:
-    O << MO.getImm();
-    break;
-  case MachineOperand::MO_MachineBasicBlock:
-    MO.getMBB()->getSymbol()->print(O, MAI);
-    break;
-  case MachineOperand::MO_GlobalAddress:
-    PrintSymbolOperand(MO, O);
-    break;
-  case MachineOperand::MO_ConstantPoolIndex:
-    O << DL.getPrivateGlobalPrefix() << "CPI" << getFunctionNumber() << '_'
-      << MO.getIndex();
-    break;
-  case MachineOperand::MO_BlockAddress:
-    GetBlockAddressSymbol(MO.getBlockAddress())->print(O, MAI);
-    break;
-  default:
-    llvm_unreachable("not implemented");
-  }
-}
-
-/// PrintAsmOperand - Print out an operand for an inline asm expression.
-///
-bool YCoreAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,
-                                      const char *ExtraCode, raw_ostream &O) {
-  // Print the operand if there is no operand modifier.
-  if (!ExtraCode || !ExtraCode[0]) {
-    printOperand(MI, OpNo, O);
-    return false;
-  }
-
-  // Otherwise fallback on the default implementation.
-  return AsmPrinter::PrintAsmOperand(MI, OpNo, ExtraCode, O);
-}
-
-bool YCoreAsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI,
-                                            unsigned OpNum,
-                                            const char *ExtraCode,
-                                            raw_ostream &O) {
-  if (ExtraCode && ExtraCode[0]) {
-    return true; // Unknown modifier.
-  }
-  printOperand(MI, OpNum, O);
-  O << '[';
-  printOperand(MI, OpNum + 1, O);
-  O << ']';
-  return false;
-}
-
 void YCoreAsmPrinter::emitInstruction(const MachineInstr *MI) {
   SmallString<128> Str;
   raw_svector_ostream O(Str);
-
-//  switch (MI->getOpcode()) {
-//  case YCore::DBG_VALUE:
-//    llvm_unreachable("Should be handled target independently");
-//  case YCore::ADD_2rus:
-//    if (MI->getOperand(2).getImm() == 0) {
-//      O << "\tmov "
-//        << YCoreInstPrinter::getRegisterName(MI->getOperand(0).getReg()) << ", "
-//        << YCoreInstPrinter::getRegisterName(MI->getOperand(1).getReg());
-//      OutStreamer->emitRawText(O.str());
-//      return;
-//    }
-//    break;
-//  case YCore::BR_JT:
-//  case YCore::BR_JT32:
-//    O << "\tbru "
-//      << YCoreInstPrinter::getRegisterName(MI->getOperand(1).getReg()) << '\n';
-//    if (MI->getOpcode() == YCore::BR_JT)
-//      printInlineJT(MI, 0, O);
-//    else
-//      printInlineJT32(MI, 0, O);
-//    O << '\n';
-//    OutStreamer->emitRawText(O.str());
-//    return;
-//  }
-
   MCInst TmpInst;
   MCInstLowering.Lower(MI, TmpInst);
 
