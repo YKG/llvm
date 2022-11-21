@@ -91,11 +91,11 @@ def callseq_end   : SDNode<"ISD::CALLSEQ_END",   SDT_YCoreCallSeqEnd,
 // Instruction Pattern Stuff
 //===----------------------------------------------------------------------===//
 
-def div4_xform : SDNodeXForm<imm, [{
-  // Transformation function: imm/4
-  assert(N->getZExtValue() % 4 == 0);
-  return getI32Imm(N->getZExtValue()/4, SDLoc(N));
-}]>;
+// def div4_xform : SDNodeXForm<imm, [{
+//   // Transformation function: imm/4
+//   assert(N->getZExtValue() % 4 == 0);
+//   return getI32Imm(N->getZExtValue()/4, SDLoc(N));
+// }]>;
 
 def msksize_xform : SDNodeXForm<imm, [{
   // Transformation function: get the size of a mask
