@@ -168,14 +168,14 @@ def immU16 : PatLeaf<(imm), [{
 //           || value == 0;
 // }]>;
 
-def lda16f : PatFrag<(ops node:$addr, node:$offset),
-                     (add node:$addr, (shl node:$offset, 1))>;
-def lda16b : PatFrag<(ops node:$addr, node:$offset),
-                     (sub node:$addr, (shl node:$offset, 1))>;
-def ldawf : PatFrag<(ops node:$addr, node:$offset),
-                     (add node:$addr, (shl node:$offset, 2))>;
-def ldawb : PatFrag<(ops node:$addr, node:$offset),
-                     (sub node:$addr, (shl node:$offset, 2))>;
+// def lda16f : PatFrag<(ops node:$addr, node:$offset),
+//                      (add node:$addr, (shl node:$offset, 1))>;
+// def lda16b : PatFrag<(ops node:$addr, node:$offset),
+//                      (sub node:$addr, (shl node:$offset, 1))>;
+// def ldawf : PatFrag<(ops node:$addr, node:$offset),
+//                      (add node:$addr, (shl node:$offset, 2))>;
+// def ldawb : PatFrag<(ops node:$addr, node:$offset),
+//                      (sub node:$addr, (shl node:$offset, 2))>;
 
 // Instruction operand types
 def pcrel_imm  : Operand<i32>;
