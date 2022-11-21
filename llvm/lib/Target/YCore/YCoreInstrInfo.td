@@ -51,14 +51,14 @@ def YCoreBR_JT32 : SDNode<"YCoreISD::BR_JT32", SDT_YCoreBR_JT,
 def SDT_YCoreAddress    : SDTypeProfile<1, 1,
                             [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 
-def pcrelwrapper : SDNode<"YCoreISD::PCRelativeWrapper", SDT_YCoreAddress,
-                           []>;
+// def pcrelwrapper : SDNode<"YCoreISD::PCRelativeWrapper", SDT_YCoreAddress,
+//                            []>;
 
-def dprelwrapper : SDNode<"YCoreISD::DPRelativeWrapper", SDT_YCoreAddress,
-                           []>;
+// def dprelwrapper : SDNode<"YCoreISD::DPRelativeWrapper", SDT_YCoreAddress,
+//                            []>;
 
-def cprelwrapper : SDNode<"YCoreISD::CPRelativeWrapper", SDT_YCoreAddress,
-                           []>;
+// def cprelwrapper : SDNode<"YCoreISD::CPRelativeWrapper", SDT_YCoreAddress,
+//                            []>;
 
 def frametoargsoffset : SDNode<"YCoreISD::FRAME_TO_ARGS_OFFSET", SDTIntLeaf,
                                []>;
