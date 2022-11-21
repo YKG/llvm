@@ -42,7 +42,7 @@ namespace {
       : SelectionDAGISel(TM, OptLevel) {}
 
     void Select(SDNode *N) override;
-    bool tryBRIND(SDNode *N);
+//    bool tryBRIND(SDNode *N);
 
     /// getI32Imm - Return a target constant with the specified value, of type
     /// i32.
@@ -64,8 +64,8 @@ namespace {
     // Complex Pattern Selectors.
     bool SelectADDRspii(SDValue Addr, SDValue &Base, SDValue &Offset);
 
-    bool SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
-                                      std::vector<SDValue> &OutOps) override;
+//    bool SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
+//                                      std::vector<SDValue> &OutOps) override;
 
     StringRef getPassName() const override {
       return "YCore DAG->DAG Pattern Instruction Selection";
@@ -107,27 +107,28 @@ bool YCoreDAGToDAGISel::SelectADDRspii(SDValue Addr, SDValue &Base,
   return false;
 }
 
-bool YCoreDAGToDAGISel::
-SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
-                             std::vector<SDValue> &OutOps) {
-  SDValue Reg;
-  switch (ConstraintID) {
-  default: return true;
-//  case InlineAsm::Constraint_m: // Memory.
-//    switch (Op.getOpcode()) {
-//    default: return true;
-//    case YCoreISD::CPRelativeWrapper:
-//      Reg = CurDAG->getRegister(YCore::CP, MVT::i32);
-//      break;
-//    case YCoreISD::DPRelativeWrapper:
-//      Reg = CurDAG->getRegister(YCore::DP, MVT::i32);
-//      break;
-//    }
-  }
-  OutOps.push_back(Reg);
-  OutOps.push_back(Op.getOperand(0));
-  return false;
-}
+//bool YCoreDAGToDAGISel::
+//SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
+//                             std::vector<SDValue> &OutOps) {
+//  llvm_unreachable("TODO");
+//  SDValue Reg;
+//  switch (ConstraintID) {
+//  default: return true;
+////  case InlineAsm::Constraint_m: // Memory.
+////    switch (Op.getOpcode()) {
+////    default: return true;
+////    case YCoreISD::CPRelativeWrapper:
+////      Reg = CurDAG->getRegister(YCore::CP, MVT::i32);
+////      break;
+////    case YCoreISD::DPRelativeWrapper:
+////      Reg = CurDAG->getRegister(YCore::DP, MVT::i32);
+////      break;
+////    }
+//  }
+//  OutOps.push_back(Reg);
+//  OutOps.push_back(Op.getOperand(0));
+//  return false;
+//}
 
 void YCoreDAGToDAGISel::Select(SDNode *N) {
   SDLoc dl(N);
@@ -216,6 +217,7 @@ void YCoreDAGToDAGISel::Select(SDNode *N) {
 static SDValue
 replaceInChain(SelectionDAG *CurDAG, SDValue Chain, SDValue Old, SDValue New)
 {
+  llvm_unreachable("TODO");
   if (Chain == Old)
     return New;
   if (Chain->getOpcode() != ISD::TokenFactor)
@@ -234,49 +236,50 @@ replaceInChain(SelectionDAG *CurDAG, SDValue Chain, SDValue Old, SDValue New)
     return SDValue();
   return CurDAG->getNode(ISD::TokenFactor, SDLoc(Chain), MVT::Other, Ops);
 }
-
-bool YCoreDAGToDAGISel::tryBRIND(SDNode *N) {
-  SDLoc dl(N);
-  // (brind (int_ycore_checkevent (addr)))
-  SDValue Chain = N->getOperand(0);
-  SDValue Addr = N->getOperand(1);
-  if (Addr->getOpcode() != ISD::INTRINSIC_W_CHAIN)
-    return false;
-  unsigned IntNo = cast<ConstantSDNode>(Addr->getOperand(1))->getZExtValue();
-  if (IntNo != Intrinsic::ycore_checkevent)
-    return false;
-  SDValue nextAddr = Addr->getOperand(2);
-  SDValue CheckEventChainOut(Addr.getNode(), 1);
-  if (!CheckEventChainOut.use_empty()) {
-    // If the chain out of the checkevent intrinsic is an operand of the
-    // indirect branch or used in a TokenFactor which is the operand of the
-    // indirect branch then build a new chain which uses the chain coming into
-    // the checkevent intrinsic instead.
-    SDValue CheckEventChainIn = Addr->getOperand(0);
-    SDValue NewChain = replaceInChain(CurDAG, Chain, CheckEventChainOut,
-                                      CheckEventChainIn);
-    if (!NewChain.getNode())
-      return false;
-    Chain = NewChain;
-  }
-  // Enable events on the thread using setsr 1 and then disable them immediately
-  // after with clrsr 1. If any resources owned by the thread are ready an event
-  // will be taken. If no resource is ready we branch to the address which was
-  // the operand to the checkevent intrinsic.
-  SDValue constOne = getI32Imm(1, dl);
-  SDValue Glue =
-    SDValue(CurDAG->getMachineNode(YCore::SETSR_branch_u6, dl, MVT::Glue,
-                                   constOne, Chain), 0);
-  Glue =
-    SDValue(CurDAG->getMachineNode(YCore::CLRSR_branch_u6, dl, MVT::Glue,
-                                   constOne, Glue), 0);
-//  if (nextAddr->getOpcode() == YCoreISD::PCRelativeWrapper &&
-//      nextAddr->getOperand(0)->getOpcode() == ISD::TargetBlockAddress) {
-//    CurDAG->SelectNodeTo(N, YCore::BRFU_lu6, MVT::Other,
-//                         nextAddr->getOperand(0), Glue);
-//    return true;
+//
+//bool YCoreDAGToDAGISel::tryBRIND(SDNode *N) {
+//  llvm_unreachable("TODO");
+//  SDLoc dl(N);
+//  // (brind (int_ycore_checkevent (addr)))
+//  SDValue Chain = N->getOperand(0);
+//  SDValue Addr = N->getOperand(1);
+//  if (Addr->getOpcode() != ISD::INTRINSIC_W_CHAIN)
+//    return false;
+//  unsigned IntNo = cast<ConstantSDNode>(Addr->getOperand(1))->getZExtValue();
+//  if (IntNo != Intrinsic::ycore_checkevent)
+//    return false;
+//  SDValue nextAddr = Addr->getOperand(2);
+//  SDValue CheckEventChainOut(Addr.getNode(), 1);
+//  if (!CheckEventChainOut.use_empty()) {
+//    // If the chain out of the checkevent intrinsic is an operand of the
+//    // indirect branch or used in a TokenFactor which is the operand of the
+//    // indirect branch then build a new chain which uses the chain coming into
+//    // the checkevent intrinsic instead.
+//    SDValue CheckEventChainIn = Addr->getOperand(0);
+//    SDValue NewChain = replaceInChain(CurDAG, Chain, CheckEventChainOut,
+//                                      CheckEventChainIn);
+//    if (!NewChain.getNode())
+//      return false;
+//    Chain = NewChain;
 //  }
-//  CurDAG->SelectNodeTo(N, YCore::BAU_1r, MVT::Other, nextAddr, Glue);
-  llvm_unreachable("TODO");
-  return true;
-}
+//  // Enable events on the thread using setsr 1 and then disable them immediately
+//  // after with clrsr 1. If any resources owned by the thread are ready an event
+//  // will be taken. If no resource is ready we branch to the address which was
+//  // the operand to the checkevent intrinsic.
+//  SDValue constOne = getI32Imm(1, dl);
+//  SDValue Glue =
+//    SDValue(CurDAG->getMachineNode(YCore::SETSR_branch_u6, dl, MVT::Glue,
+//                                   constOne, Chain), 0);
+//  Glue =
+//    SDValue(CurDAG->getMachineNode(YCore::CLRSR_branch_u6, dl, MVT::Glue,
+//                                   constOne, Glue), 0);
+////  if (nextAddr->getOpcode() == YCoreISD::PCRelativeWrapper &&
+////      nextAddr->getOperand(0)->getOpcode() == ISD::TargetBlockAddress) {
+////    CurDAG->SelectNodeTo(N, YCore::BRFU_lu6, MVT::Other,
+////                         nextAddr->getOperand(0), Glue);
+////    return true;
+////  }
+////  CurDAG->SelectNodeTo(N, YCore::BAU_1r, MVT::Other, nextAddr, Glue);
+//  llvm_unreachable("TODO");
+//  return true;
+//}
