@@ -1832,6 +1832,7 @@ void YCoreTargetLowering::computeKnownBitsForTargetNode(const SDValue Op,
                                                         const APInt &DemandedElts,
                                                         const SelectionDAG &DAG,
                                                         unsigned Depth) const {
+  llvm_unreachable("TODO");
   Known.resetAll();
   switch (Op.getOpcode()) {
   default: break;
