@@ -1537,6 +1537,7 @@ YCoreTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
 MachineBasicBlock *
 YCoreTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
                                                  MachineBasicBlock *BB) const {
+  llvm_unreachable("TODO");
   const TargetInstrInfo &TII = *Subtarget.getInstrInfo();
   DebugLoc dl = MI.getDebugLoc();
   assert((MI.getOpcode() == YCore::SELECT_CC) &&
