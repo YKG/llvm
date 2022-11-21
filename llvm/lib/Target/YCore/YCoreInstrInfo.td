@@ -769,175 +769,175 @@ let isReMaterializable = 1, hasSideEffects = 0 in
 def MKMSK_rus : _FRUSBitp<0b101001, (outs GRRegs:$dst), (ins i32imm:$size),
                           "mkmsk $dst, $size", []>;
 
-def MKMSK_2r : _F2R<0b101000, (outs GRRegs:$dst), (ins GRRegs:$size),
-                    "mkmsk $dst, $size",
-                    [(set GRRegs:$dst, (add (shl 1, GRRegs:$size), -1))]>;
+// def MKMSK_2r : _F2R<0b101000, (outs GRRegs:$dst), (ins GRRegs:$size),
+//                     "mkmsk $dst, $size",
+//                     [(set GRRegs:$dst, (add (shl 1, GRRegs:$size), -1))]>;
 
-def GETR_rus : _FRUS<0b100000, (outs GRRegs:$dst), (ins i32imm:$type),
-                     "getr $dst, $type",
-                     [(set GRRegs:$dst, (int_ycore_getr immUs:$type))]>;
+// def GETR_rus : _FRUS<0b100000, (outs GRRegs:$dst), (ins i32imm:$type),
+//                      "getr $dst, $type",
+//                      [(set GRRegs:$dst, (int_ycore_getr immUs:$type))]>;
 
-def GETTS_2r : _F2R<0b001110, (outs GRRegs:$dst), (ins GRRegs:$r),
-                    "getts $dst, res[$r]",
-                    [(set GRRegs:$dst, (int_ycore_getts GRRegs:$r))]>;
+// def GETTS_2r : _F2R<0b001110, (outs GRRegs:$dst), (ins GRRegs:$r),
+//                     "getts $dst, res[$r]",
+//                     [(set GRRegs:$dst, (int_ycore_getts GRRegs:$r))]>;
 
-def SETPT_2r : _FR2R<0b001111, (outs), (ins GRRegs:$r, GRRegs:$val),
-                     "setpt res[$r], $val",
-                     [(int_ycore_setpt GRRegs:$r, GRRegs:$val)]>;
+// def SETPT_2r : _FR2R<0b001111, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                      "setpt res[$r], $val",
+//                      [(int_ycore_setpt GRRegs:$r, GRRegs:$val)]>;
 
-def OUTCT_2r : _F2R<0b010010, (outs), (ins GRRegs:$r, GRRegs:$val),
-                    "outct res[$r], $val",
-                    [(int_ycore_outct GRRegs:$r, GRRegs:$val)]>;
+// def OUTCT_2r : _F2R<0b010010, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                     "outct res[$r], $val",
+//                     [(int_ycore_outct GRRegs:$r, GRRegs:$val)]>;
 
-def OUTCT_rus : _FRUS<0b010011, (outs), (ins GRRegs:$r, i32imm:$val),
-                       "outct res[$r], $val",
-                       [(int_ycore_outct GRRegs:$r, immUs:$val)]>;
+// def OUTCT_rus : _FRUS<0b010011, (outs), (ins GRRegs:$r, i32imm:$val),
+//                        "outct res[$r], $val",
+//                        [(int_ycore_outct GRRegs:$r, immUs:$val)]>;
 
-def OUTT_2r : _FR2R<0b000011, (outs), (ins GRRegs:$r, GRRegs:$val),
-                    "outt res[$r], $val",
-                    [(int_ycore_outt GRRegs:$r, GRRegs:$val)]>;
+// def OUTT_2r : _FR2R<0b000011, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                     "outt res[$r], $val",
+//                     [(int_ycore_outt GRRegs:$r, GRRegs:$val)]>;
 
-def OUT_2r : _FR2R<0b101010, (outs), (ins GRRegs:$r, GRRegs:$val),
-                   "out res[$r], $val",
-                   [(int_ycore_out GRRegs:$r, GRRegs:$val)]>;
+// def OUT_2r : _FR2R<0b101010, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                    "out res[$r], $val",
+//                    [(int_ycore_out GRRegs:$r, GRRegs:$val)]>;
 
-let Constraints = "$src = $dst" in
-def OUTSHR_2r :
-  _F2RSrcDst<0b101011, (outs GRRegs:$dst), (ins GRRegs:$src, GRRegs:$r),
-             "outshr res[$r], $src",
-             [(set GRRegs:$dst, (int_ycore_outshr GRRegs:$r, GRRegs:$src))]>;
+// let Constraints = "$src = $dst" in
+// def OUTSHR_2r :
+//   _F2RSrcDst<0b101011, (outs GRRegs:$dst), (ins GRRegs:$src, GRRegs:$r),
+//              "outshr res[$r], $src",
+//              [(set GRRegs:$dst, (int_ycore_outshr GRRegs:$r, GRRegs:$src))]>;
 
-def INCT_2r : _F2R<0b100001, (outs GRRegs:$dst), (ins GRRegs:$r),
-                   "inct $dst, res[$r]",
-                   [(set GRRegs:$dst, (int_ycore_inct GRRegs:$r))]>;
+// def INCT_2r : _F2R<0b100001, (outs GRRegs:$dst), (ins GRRegs:$r),
+//                    "inct $dst, res[$r]",
+//                    [(set GRRegs:$dst, (int_ycore_inct GRRegs:$r))]>;
 
-def INT_2r : _F2R<0b100011, (outs GRRegs:$dst), (ins GRRegs:$r),
-                  "int $dst, res[$r]",
-                  [(set GRRegs:$dst, (int_ycore_int GRRegs:$r))]>;
+// def INT_2r : _F2R<0b100011, (outs GRRegs:$dst), (ins GRRegs:$r),
+//                   "int $dst, res[$r]",
+//                   [(set GRRegs:$dst, (int_ycore_int GRRegs:$r))]>;
 
-def IN_2r : _F2R<0b101100, (outs GRRegs:$dst), (ins GRRegs:$r),
-                 "in $dst, res[$r]",
-                 [(set GRRegs:$dst, (int_ycore_in GRRegs:$r))]>;
+// def IN_2r : _F2R<0b101100, (outs GRRegs:$dst), (ins GRRegs:$r),
+//                  "in $dst, res[$r]",
+//                  [(set GRRegs:$dst, (int_ycore_in GRRegs:$r))]>;
 
-let Constraints = "$src = $dst" in
-def INSHR_2r :
-  _F2RSrcDst<0b101101, (outs GRRegs:$dst), (ins GRRegs:$src, GRRegs:$r),
-             "inshr $dst, res[$r]",
-             [(set GRRegs:$dst, (int_ycore_inshr GRRegs:$r, GRRegs:$src))]>;
+// let Constraints = "$src = $dst" in
+// def INSHR_2r :
+//   _F2RSrcDst<0b101101, (outs GRRegs:$dst), (ins GRRegs:$src, GRRegs:$r),
+//              "inshr $dst, res[$r]",
+//              [(set GRRegs:$dst, (int_ycore_inshr GRRegs:$r, GRRegs:$src))]>;
 
-def CHKCT_2r : _F2R<0b110010, (outs), (ins GRRegs:$r, GRRegs:$val),
-                    "chkct res[$r], $val",
-                    [(int_ycore_chkct GRRegs:$r, GRRegs:$val)]>;
+// def CHKCT_2r : _F2R<0b110010, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                     "chkct res[$r], $val",
+//                     [(int_ycore_chkct GRRegs:$r, GRRegs:$val)]>;
 
-def CHKCT_rus : _FRUSBitp<0b110011, (outs), (ins GRRegs:$r, i32imm:$val),
-                          "chkct res[$r], $val",
-                          [(int_ycore_chkct GRRegs:$r, immUs:$val)]>;
+// def CHKCT_rus : _FRUSBitp<0b110011, (outs), (ins GRRegs:$r, i32imm:$val),
+//                           "chkct res[$r], $val",
+//                           [(int_ycore_chkct GRRegs:$r, immUs:$val)]>;
 
-def TESTCT_2r : _F2R<0b101111, (outs GRRegs:$dst), (ins GRRegs:$src),
-                     "testct $dst, res[$src]",
-                     [(set GRRegs:$dst, (int_ycore_testct GRRegs:$src))]>;
+// def TESTCT_2r : _F2R<0b101111, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                      "testct $dst, res[$src]",
+//                      [(set GRRegs:$dst, (int_ycore_testct GRRegs:$src))]>;
 
-def TESTWCT_2r : _F2R<0b110001, (outs GRRegs:$dst), (ins GRRegs:$src),
-                      "testwct $dst, res[$src]",
-                      [(set GRRegs:$dst, (int_ycore_testwct GRRegs:$src))]>;
+// def TESTWCT_2r : _F2R<0b110001, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                       "testwct $dst, res[$src]",
+//                       [(set GRRegs:$dst, (int_ycore_testwct GRRegs:$src))]>;
 
-def SETD_2r : _FR2R<0b000101, (outs), (ins GRRegs:$r, GRRegs:$val),
-                    "setd res[$r], $val",
-                    [(int_ycore_setd GRRegs:$r, GRRegs:$val)]>;
+// def SETD_2r : _FR2R<0b000101, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                     "setd res[$r], $val",
+//                     [(int_ycore_setd GRRegs:$r, GRRegs:$val)]>;
 
-def SETPSC_2r : _FR2R<0b110000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
-                      "setpsc res[$src1], $src2",
-                      [(int_ycore_setpsc GRRegs:$src1, GRRegs:$src2)]>;
+// def SETPSC_2r : _FR2R<0b110000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
+//                       "setpsc res[$src1], $src2",
+//                       [(int_ycore_setpsc GRRegs:$src1, GRRegs:$src2)]>;
 
-def GETST_2r : _F2R<0b000001, (outs GRRegs:$dst), (ins GRRegs:$r),
-                    "getst $dst, res[$r]",
-                    [(set GRRegs:$dst, (int_ycore_getst GRRegs:$r))]>;
+// def GETST_2r : _F2R<0b000001, (outs GRRegs:$dst), (ins GRRegs:$r),
+//                     "getst $dst, res[$r]",
+//                     [(set GRRegs:$dst, (int_ycore_getst GRRegs:$r))]>;
 
-def INITSP_2r : _F2R<0b000100, (outs), (ins GRRegs:$src, GRRegs:$t),
-                     "init t[$t]:sp, $src",
-                     [(int_ycore_initsp GRRegs:$t, GRRegs:$src)]>;
+// def INITSP_2r : _F2R<0b000100, (outs), (ins GRRegs:$src, GRRegs:$t),
+//                      "init t[$t]:sp, $src",
+//                      [(int_ycore_initsp GRRegs:$t, GRRegs:$src)]>;
 
-def INITPC_2r : _F2R<0b000000, (outs), (ins GRRegs:$src, GRRegs:$t),
-                     "init t[$t]:pc, $src",
-                     [(int_ycore_initpc GRRegs:$t, GRRegs:$src)]>;
+// def INITPC_2r : _F2R<0b000000, (outs), (ins GRRegs:$src, GRRegs:$t),
+//                      "init t[$t]:pc, $src",
+//                      [(int_ycore_initpc GRRegs:$t, GRRegs:$src)]>;
 
-def INITCP_2r : _F2R<0b000110, (outs), (ins GRRegs:$src, GRRegs:$t),
-                     "init t[$t]:cp, $src",
-                     [(int_ycore_initcp GRRegs:$t, GRRegs:$src)]>;
+// def INITCP_2r : _F2R<0b000110, (outs), (ins GRRegs:$src, GRRegs:$t),
+//                      "init t[$t]:cp, $src",
+//                      [(int_ycore_initcp GRRegs:$t, GRRegs:$src)]>;
 
-def INITDP_2r : _F2R<0b000010, (outs), (ins GRRegs:$src, GRRegs:$t),
-                     "init t[$t]:dp, $src",
-                     [(int_ycore_initdp GRRegs:$t, GRRegs:$src)]>;
+// def INITDP_2r : _F2R<0b000010, (outs), (ins GRRegs:$src, GRRegs:$t),
+//                      "init t[$t]:dp, $src",
+//                      [(int_ycore_initdp GRRegs:$t, GRRegs:$src)]>;
 
-def PEEK_2r : _F2R<0b101110, (outs GRRegs:$dst), (ins GRRegs:$src),
-                    "peek $dst, res[$src]",
-                    [(set GRRegs:$dst, (int_ycore_peek GRRegs:$src))]>;
+// def PEEK_2r : _F2R<0b101110, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                     "peek $dst, res[$src]",
+//                     [(set GRRegs:$dst, (int_ycore_peek GRRegs:$src))]>;
 
-def ENDIN_2r : _F2R<0b100101, (outs GRRegs:$dst), (ins GRRegs:$src),
-                     "endin $dst, res[$src]",
-                     [(set GRRegs:$dst, (int_ycore_endin GRRegs:$src))]>;
+// def ENDIN_2r : _F2R<0b100101, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                      "endin $dst, res[$src]",
+//                      [(set GRRegs:$dst, (int_ycore_endin GRRegs:$src))]>;
 
-def EEF_2r : _F2R<0b001011, (outs), (ins GRRegs:$a, GRRegs:$b),
-                  "eef $a, res[$b]", []>;
+// def EEF_2r : _F2R<0b001011, (outs), (ins GRRegs:$a, GRRegs:$b),
+//                   "eef $a, res[$b]", []>;
 
-def EET_2r : _F2R<0b001001, (outs), (ins GRRegs:$a, GRRegs:$b),
-                  "eet $a, res[$b]", []>;
+// def EET_2r : _F2R<0b001001, (outs), (ins GRRegs:$a, GRRegs:$b),
+//                   "eet $a, res[$b]", []>;
 
-def TSETMR_2r : _F2RImm<0b000111, (outs), (ins i32imm:$a, GRRegs:$b),
-                        "tsetmr r$a, $b", []>;
+// def TSETMR_2r : _F2RImm<0b000111, (outs), (ins i32imm:$a, GRRegs:$b),
+//                         "tsetmr r$a, $b", []>;
 
-// Two operand long
-def BITREV_l2r : _FL2R<0b0000011000, (outs GRRegs:$dst), (ins GRRegs:$src),
-                       "bitrev $dst, $src",
-                       [(set GRRegs:$dst, (int_ycore_bitrev GRRegs:$src))]>;
+// // Two operand long
+// def BITREV_l2r : _FL2R<0b0000011000, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                        "bitrev $dst, $src",
+//                        [(set GRRegs:$dst, (int_ycore_bitrev GRRegs:$src))]>;
 
-def BYTEREV_l2r : _FL2R<0b0000011001, (outs GRRegs:$dst), (ins GRRegs:$src),
-                        "byterev $dst, $src",
-                        [(set GRRegs:$dst, (bswap GRRegs:$src))]>;
+// def BYTEREV_l2r : _FL2R<0b0000011001, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                         "byterev $dst, $src",
+//                         [(set GRRegs:$dst, (bswap GRRegs:$src))]>;
 
-def CLZ_l2r : _FL2R<0b0000111000, (outs GRRegs:$dst), (ins GRRegs:$src),
-                    "clz $dst, $src",
-                    [(set GRRegs:$dst, (ctlz GRRegs:$src))]>;
+// def CLZ_l2r : _FL2R<0b0000111000, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                     "clz $dst, $src",
+//                     [(set GRRegs:$dst, (ctlz GRRegs:$src))]>;
 
-def GETD_l2r : _FL2R<0b0001111001, (outs GRRegs:$dst), (ins GRRegs:$src),
-                     "getd $dst, res[$src]", []>;
+// def GETD_l2r : _FL2R<0b0001111001, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                      "getd $dst, res[$src]", []>;
 
-def GETN_l2r : _FL2R<0b0011011001, (outs GRRegs:$dst), (ins GRRegs:$src),
-                     "getn $dst, res[$src]", []>;
+// def GETN_l2r : _FL2R<0b0011011001, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                      "getn $dst, res[$src]", []>;
 
-def SETC_l2r : _FL2R<0b0010111001, (outs), (ins GRRegs:$r, GRRegs:$val),
-                     "setc res[$r], $val",
-                     [(int_ycore_setc GRRegs:$r, GRRegs:$val)]>;
+// def SETC_l2r : _FL2R<0b0010111001, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                      "setc res[$r], $val",
+//                      [(int_ycore_setc GRRegs:$r, GRRegs:$val)]>;
 
-def SETTW_l2r : _FLR2R<0b0010011001, (outs), (ins GRRegs:$r, GRRegs:$val),
-                       "settw res[$r], $val",
-                       [(int_ycore_settw GRRegs:$r, GRRegs:$val)]>;
+// def SETTW_l2r : _FLR2R<0b0010011001, (outs), (ins GRRegs:$r, GRRegs:$val),
+//                        "settw res[$r], $val",
+//                        [(int_ycore_settw GRRegs:$r, GRRegs:$val)]>;
 
-def GETPS_l2r : _FL2R<0b0001011001, (outs GRRegs:$dst), (ins GRRegs:$src),
-                      "get $dst, ps[$src]",
-                      [(set GRRegs:$dst, (int_ycore_getps GRRegs:$src))]>;
+// def GETPS_l2r : _FL2R<0b0001011001, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                       "get $dst, ps[$src]",
+//                       [(set GRRegs:$dst, (int_ycore_getps GRRegs:$src))]>;
 
-def SETPS_l2r : _FLR2R<0b0001111000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
-                       "set ps[$src1], $src2",
-                       [(int_ycore_setps GRRegs:$src1, GRRegs:$src2)]>;
+// def SETPS_l2r : _FLR2R<0b0001111000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
+//                        "set ps[$src1], $src2",
+//                        [(int_ycore_setps GRRegs:$src1, GRRegs:$src2)]>;
 
-def INITLR_l2r : _FL2R<0b0001011000, (outs), (ins GRRegs:$src, GRRegs:$t),
-                       "init t[$t]:lr, $src",
-                       [(int_ycore_initlr GRRegs:$t, GRRegs:$src)]>;
+// def INITLR_l2r : _FL2R<0b0001011000, (outs), (ins GRRegs:$src, GRRegs:$t),
+//                        "init t[$t]:lr, $src",
+//                        [(int_ycore_initlr GRRegs:$t, GRRegs:$src)]>;
 
-def SETCLK_l2r : _FLR2R<0b0000111001, (outs), (ins GRRegs:$src1, GRRegs:$src2),
-                        "setclk res[$src1], $src2",
-                        [(int_ycore_setclk GRRegs:$src1, GRRegs:$src2)]>;
+// def SETCLK_l2r : _FLR2R<0b0000111001, (outs), (ins GRRegs:$src1, GRRegs:$src2),
+//                         "setclk res[$src1], $src2",
+//                         [(int_ycore_setclk GRRegs:$src1, GRRegs:$src2)]>;
 
-def SETN_l2r : _FLR2R<0b0011011000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
-                      "setn res[$src1], $src2", []>;
+// def SETN_l2r : _FLR2R<0b0011011000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
+//                       "setn res[$src1], $src2", []>;
 
-def SETRDY_l2r : _FLR2R<0b0010111000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
-                        "setrdy res[$src1], $src2",
-                        [(int_ycore_setrdy GRRegs:$src1, GRRegs:$src2)]>;
+// def SETRDY_l2r : _FLR2R<0b0010111000, (outs), (ins GRRegs:$src1, GRRegs:$src2),
+//                         "setrdy res[$src1], $src2",
+//                         [(int_ycore_setrdy GRRegs:$src1, GRRegs:$src2)]>;
 
-def TESTLCL_l2r : _FL2R<0b0010011000, (outs GRRegs:$dst), (ins GRRegs:$src),
-                        "testlcl $dst, res[$src]", []>;
+// def TESTLCL_l2r : _FL2R<0b0010011000, (outs GRRegs:$dst), (ins GRRegs:$src),
+//                         "testlcl $dst, res[$src]", []>;
 
 // One operand short
 def MSYNC_1r : _F1R<0b000111, (outs), (ins GRRegs:$a),
@@ -1155,10 +1155,10 @@ def WAITEU_0R : _F0R<0b0000001100, (outs), (ins),
 //           (STW_2rus GRRegs:$val, GRRegs:$addr, 0)>;
 
 /// bitrev
-def : Pat<(bitreverse GRRegs:$src), (BITREV_l2r GRRegs:$src)>;
+// def : Pat<(bitreverse GRRegs:$src), (BITREV_l2r GRRegs:$src)>;
 
-/// cttz
-def : Pat<(cttz GRRegs:$src), (CLZ_l2r (BITREV_l2r GRRegs:$src))>;
+// /// cttz
+// def : Pat<(cttz GRRegs:$src), (CLZ_l2r (BITREV_l2r GRRegs:$src))>;
 
 /// trap
 // def : Pat<(trap), (ECALLF_1r (LDC_ru6 0))>;
