@@ -1044,6 +1044,7 @@ YCoreTargetLowering::LowerCall(TargetLowering::CallLoweringInfo &CLI,
 
   // YCore target does not yet support tail call optimization.
   isTailCall = false;
+  llvm_unreachable("TODO");
 
   // For now, only CallingConv::C implemented
   switch (CallConv)
