@@ -88,42 +88,42 @@ static void InsertFPImmInst(MachineBasicBlock::iterator II,
     llvm_unreachable("Unexpected Opcode");
   }
 }
-
-static void InsertFPConstInst(MachineBasicBlock::iterator II,
-                              const YCoreInstrInfo &TII,
-                              unsigned Reg, unsigned FrameReg,
-                              int Offset, RegScavenger *RS ) {
-  assert(RS && "requiresRegisterScavenging failed");
-  MachineInstr &MI = *II;
-  MachineBasicBlock &MBB = *MI.getParent();
-  DebugLoc dl = MI.getDebugLoc();
-  Register ScratchOffset = RS->scavengeRegister(&YCore::GRRegsRegClass, II, 0);
-  RS->setRegUsed(ScratchOffset);
-  TII.loadImmediate(MBB, II, ScratchOffset, Offset);
-
-  switch (MI.getOpcode()) {
-  case YCore::LDWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::LDW_3r), Reg)
-          .addReg(FrameReg)
-          .addReg(ScratchOffset, RegState::Kill)
-          .addMemOperand(*MI.memoperands_begin());
-    break;
-  case YCore::STWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::STW_l3r))
-          .addReg(Reg, getKillRegState(MI.getOperand(0).isKill()))
-          .addReg(FrameReg)
-          .addReg(ScratchOffset, RegState::Kill)
-          .addMemOperand(*MI.memoperands_begin());
-    break;
-//  case YCore::LDAWFI:
-//    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
+//
+//static void InsertFPConstInst(MachineBasicBlock::iterator II,
+//                              const YCoreInstrInfo &TII,
+//                              unsigned Reg, unsigned FrameReg,
+//                              int Offset, RegScavenger *RS ) {
+//  assert(RS && "requiresRegisterScavenging failed");
+//  MachineInstr &MI = *II;
+//  MachineBasicBlock &MBB = *MI.getParent();
+//  DebugLoc dl = MI.getDebugLoc();
+//  Register ScratchOffset = RS->scavengeRegister(&YCore::GRRegsRegClass, II, 0);
+//  RS->setRegUsed(ScratchOffset);
+//  TII.loadImmediate(MBB, II, ScratchOffset, Offset);
+//
+//  switch (MI.getOpcode()) {
+//  case YCore::LDWFI:
+//    BuildMI(MBB, II, dl, TII.get(YCore::LDW_3r), Reg)
 //          .addReg(FrameReg)
-//          .addReg(ScratchOffset, RegState::Kill);
+//          .addReg(ScratchOffset, RegState::Kill)
+//          .addMemOperand(*MI.memoperands_begin());
 //    break;
-  default:
-    llvm_unreachable("Unexpected Opcode");
-  }
-}
+//  case YCore::STWFI:
+//    BuildMI(MBB, II, dl, TII.get(YCore::STW_l3r))
+//          .addReg(Reg, getKillRegState(MI.getOperand(0).isKill()))
+//          .addReg(FrameReg)
+//          .addReg(ScratchOffset, RegState::Kill)
+//          .addMemOperand(*MI.memoperands_begin());
+//    break;
+////  case YCore::LDAWFI:
+////    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
+////          .addReg(FrameReg)
+////          .addReg(ScratchOffset, RegState::Kill);
+////    break;
+//  default:
+//    llvm_unreachable("Unexpected Opcode");
+//  }
+//}
 
 static void InsertSPImmInst(MachineBasicBlock::iterator II,
                             const YCoreInstrInfo &TII,
@@ -157,50 +157,50 @@ static void InsertSPImmInst(MachineBasicBlock::iterator II,
     llvm_unreachable("Unexpected Opcode");
   }
 }
-
-static void InsertSPConstInst(MachineBasicBlock::iterator II,
-                                const YCoreInstrInfo &TII,
-                                unsigned Reg, int Offset, RegScavenger *RS ) {
-  assert(RS && "requiresRegisterScavenging failed");
-  MachineInstr &MI = *II;
-  MachineBasicBlock &MBB = *MI.getParent();
-  DebugLoc dl = MI.getDebugLoc();
-  unsigned OpCode = MI.getOpcode();
-
-  unsigned ScratchBase;
-  if (OpCode==YCore::STWFI) {
-    ScratchBase = RS->scavengeRegister(&YCore::GRRegsRegClass, II, 0);
-    RS->setRegUsed(ScratchBase);
-  } else
-    ScratchBase = Reg;
-  BuildMI(MBB, II, dl, TII.get(YCore::LDAWSP_ru6), ScratchBase).addImm(0);
-  Register ScratchOffset = RS->scavengeRegister(&YCore::GRRegsRegClass, II, 0);
-  RS->setRegUsed(ScratchOffset);
-  TII.loadImmediate(MBB, II, ScratchOffset, Offset);
-
-  switch (OpCode) {
-  case YCore::LDWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::LDW_3r), Reg)
-          .addReg(ScratchBase, RegState::Kill)
-          .addReg(ScratchOffset, RegState::Kill)
-          .addMemOperand(*MI.memoperands_begin());
-    break;
-  case YCore::STWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::STW_l3r))
-          .addReg(Reg, getKillRegState(MI.getOperand(0).isKill()))
-          .addReg(ScratchBase, RegState::Kill)
-          .addReg(ScratchOffset, RegState::Kill)
-          .addMemOperand(*MI.memoperands_begin());
-    break;
-//  case YCore::LDAWFI:
-//    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
+//
+//static void InsertSPConstInst(MachineBasicBlock::iterator II,
+//                                const YCoreInstrInfo &TII,
+//                                unsigned Reg, int Offset, RegScavenger *RS ) {
+//  assert(RS && "requiresRegisterScavenging failed");
+//  MachineInstr &MI = *II;
+//  MachineBasicBlock &MBB = *MI.getParent();
+//  DebugLoc dl = MI.getDebugLoc();
+//  unsigned OpCode = MI.getOpcode();
+//
+//  unsigned ScratchBase;
+//  if (OpCode==YCore::STWFI) {
+//    ScratchBase = RS->scavengeRegister(&YCore::GRRegsRegClass, II, 0);
+//    RS->setRegUsed(ScratchBase);
+//  } else
+//    ScratchBase = Reg;
+//  BuildMI(MBB, II, dl, TII.get(YCore::LDAWSP_ru6), ScratchBase).addImm(0);
+//  Register ScratchOffset = RS->scavengeRegister(&YCore::GRRegsRegClass, II, 0);
+//  RS->setRegUsed(ScratchOffset);
+//  TII.loadImmediate(MBB, II, ScratchOffset, Offset);
+//
+//  switch (OpCode) {
+//  case YCore::LDWFI:
+//    BuildMI(MBB, II, dl, TII.get(YCore::LDW_3r), Reg)
 //          .addReg(ScratchBase, RegState::Kill)
-//          .addReg(ScratchOffset, RegState::Kill);
+//          .addReg(ScratchOffset, RegState::Kill)
+//          .addMemOperand(*MI.memoperands_begin());
 //    break;
-  default:
-    llvm_unreachable("Unexpected Opcode");
-  }
-}
+//  case YCore::STWFI:
+//    BuildMI(MBB, II, dl, TII.get(YCore::STW_l3r))
+//          .addReg(Reg, getKillRegState(MI.getOperand(0).isKill()))
+//          .addReg(ScratchBase, RegState::Kill)
+//          .addReg(ScratchOffset, RegState::Kill)
+//          .addMemOperand(*MI.memoperands_begin());
+//    break;
+////  case YCore::LDAWFI:
+////    BuildMI(MBB, II, dl, TII.get(YCore::LDAWF_l3r), Reg)
+////          .addReg(ScratchBase, RegState::Kill)
+////          .addReg(ScratchOffset, RegState::Kill);
+////    break;
+//  default:
+//    llvm_unreachable("Unexpected Opcode");
+//  }
+//}
 
 bool YCoreRegisterInfo::needsFrameMoves(const MachineFunction &MF) {
   return MF.needsFrameMoves();
@@ -303,12 +303,12 @@ YCoreRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
     if (isImmUs(Offset))
       InsertFPImmInst(II, TII, Reg, FrameReg, Offset);
     else
-      InsertFPConstInst(II, TII, Reg, FrameReg, Offset, RS);
+      llvm_unreachable("Impossible reg-to-reg copy");//InsertFPConstInst(II, TII, Reg, FrameReg, Offset, RS);
   } else {
     if (isImmU16(Offset))
       InsertSPImmInst(II, TII, Reg, Offset);
     else
-      InsertSPConstInst(II, TII, Reg, Offset, RS);
+      llvm_unreachable("Impossible reg-to-reg copy");//InsertSPConstInst(II, TII, Reg, Offset, RS);
   }
   // Erase old instruction.
   MachineBasicBlock &MBB = *MI.getParent();

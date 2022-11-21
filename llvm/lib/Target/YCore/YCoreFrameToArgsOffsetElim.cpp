@@ -47,17 +47,5 @@ FunctionPass *llvm::createYCoreFrameToArgsOffsetEliminationPass() {
 bool YCoreFTAOElim::runOnMachineFunction(MachineFunction &MF) {
   const YCoreInstrInfo &TII =
       *static_cast<const YCoreInstrInfo *>(MF.getSubtarget().getInstrInfo());
-  unsigned StackSize = MF.getFrameInfo().getStackSize();
-  for (MachineBasicBlock &MBB : MF) {
-    for (MachineBasicBlock::iterator MBBI = MBB.begin(), EE = MBB.end();
-         MBBI != EE; ++MBBI) {
-      if (MBBI->getOpcode() == YCore::FRAME_TO_ARGS_OFFSET) {
-        MachineInstr &OldInst = *MBBI;
-        Register Reg = OldInst.getOperand(0).getReg();
-        MBBI = TII.loadImmediate(MBB, MBBI, Reg, StackSize);
-        OldInst.eraseFromParent();
-      }
-    }
-  }
   return true;
 }
