@@ -701,6 +701,7 @@ SDValue YCoreTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
 SDValue YCoreTargetLowering::
 ExpandADDSUB(SDNode *N, SelectionDAG &DAG) const
 {
+  llvm_unreachable("TODO");
   assert(N->getValueType(0) == MVT::i64 &&
          (N->getOpcode() == ISD::ADD || N->getOpcode() == ISD::SUB) &&
         "Unknown operand to lower!");
