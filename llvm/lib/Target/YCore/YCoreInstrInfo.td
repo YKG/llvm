@@ -1223,37 +1223,37 @@ def : Pat<(select (setne GRRegs:$lhs, immUs:$rhs), GRRegs:$T, GRRegs:$F),
 ///
 
 // setcc 2 register operands
-def : Pat<(setle GRRegs:$lhs, GRRegs:$rhs),
-          (EQ_2rus (LSS_3r GRRegs:$rhs, GRRegs:$lhs), 0)>;
-def : Pat<(setule GRRegs:$lhs, GRRegs:$rhs),
-          (EQ_2rus (LSU_3r GRRegs:$rhs, GRRegs:$lhs), 0)>;
+// def : Pat<(setle GRRegs:$lhs, GRRegs:$rhs),
+//           (EQ_2rus (LSS_3r GRRegs:$rhs, GRRegs:$lhs), 0)>;
+// def : Pat<(setule GRRegs:$lhs, GRRegs:$rhs),
+//           (EQ_2rus (LSU_3r GRRegs:$rhs, GRRegs:$lhs), 0)>;
 
-def : Pat<(setgt GRRegs:$lhs, GRRegs:$rhs),
-          (LSS_3r GRRegs:$rhs, GRRegs:$lhs)>;
-def : Pat<(setugt GRRegs:$lhs, GRRegs:$rhs),
-          (LSU_3r GRRegs:$rhs, GRRegs:$lhs)>;
+// def : Pat<(setgt GRRegs:$lhs, GRRegs:$rhs),
+//           (LSS_3r GRRegs:$rhs, GRRegs:$lhs)>;
+// def : Pat<(setugt GRRegs:$lhs, GRRegs:$rhs),
+//           (LSU_3r GRRegs:$rhs, GRRegs:$lhs)>;
 
-def : Pat<(setge GRRegs:$lhs, GRRegs:$rhs),
-          (EQ_2rus (LSS_3r GRRegs:$lhs, GRRegs:$rhs), 0)>;
-def : Pat<(setuge GRRegs:$lhs, GRRegs:$rhs),
-          (EQ_2rus (LSU_3r GRRegs:$lhs, GRRegs:$rhs), 0)>;
+// def : Pat<(setge GRRegs:$lhs, GRRegs:$rhs),
+//           (EQ_2rus (LSS_3r GRRegs:$lhs, GRRegs:$rhs), 0)>;
+// def : Pat<(setuge GRRegs:$lhs, GRRegs:$rhs),
+//           (EQ_2rus (LSU_3r GRRegs:$lhs, GRRegs:$rhs), 0)>;
 
-def : Pat<(setlt GRRegs:$lhs, GRRegs:$rhs),
-          (LSS_3r GRRegs:$lhs, GRRegs:$rhs)>;
-def : Pat<(setult GRRegs:$lhs, GRRegs:$rhs),
-          (LSU_3r GRRegs:$lhs, GRRegs:$rhs)>;
+// def : Pat<(setlt GRRegs:$lhs, GRRegs:$rhs),
+//           (LSS_3r GRRegs:$lhs, GRRegs:$rhs)>;
+// def : Pat<(setult GRRegs:$lhs, GRRegs:$rhs),
+//           (LSU_3r GRRegs:$lhs, GRRegs:$rhs)>;
 
-def : Pat<(setne GRRegs:$lhs, GRRegs:$rhs),
-          (EQ_2rus (EQ_3r GRRegs:$lhs, GRRegs:$rhs), 0)>;
+// def : Pat<(setne GRRegs:$lhs, GRRegs:$rhs),
+//           (EQ_2rus (EQ_3r GRRegs:$lhs, GRRegs:$rhs), 0)>;
 
-def : Pat<(seteq GRRegs:$lhs, GRRegs:$rhs),
-          (EQ_3r GRRegs:$lhs, GRRegs:$rhs)>;
+// def : Pat<(seteq GRRegs:$lhs, GRRegs:$rhs),
+//           (EQ_3r GRRegs:$lhs, GRRegs:$rhs)>;
 
-// setcc reg/imm operands
-def : Pat<(seteq GRRegs:$lhs, immUs:$rhs),
-          (EQ_2rus GRRegs:$lhs, immUs:$rhs)>;
-def : Pat<(setne GRRegs:$lhs, immUs:$rhs),
-          (EQ_2rus (EQ_2rus GRRegs:$lhs, immUs:$rhs), 0)>;
+// // setcc reg/imm operands
+// def : Pat<(seteq GRRegs:$lhs, immUs:$rhs),
+//           (EQ_2rus GRRegs:$lhs, immUs:$rhs)>;
+// def : Pat<(setne GRRegs:$lhs, immUs:$rhs),
+//           (EQ_2rus (EQ_2rus GRRegs:$lhs, immUs:$rhs), 0)>;
 
 // misc
 // def : Pat<(add GRRegs:$addr, immUs4:$offset),
