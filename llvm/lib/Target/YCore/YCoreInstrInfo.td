@@ -595,21 +595,21 @@ def LDAWSP_lru6 : _FLRU6<0b011001, (outs RRegs:$a), (ins i32imm:$b),
 }
 }
 
-let isReMaterializable = 1 in {
-def LDC_ru6 : _FRU6<0b011010, (outs RRegs:$a), (ins i32imm:$b),
-                    "ldc $a, $b", [(set RRegs:$a, immU6:$b)]>;
+// let isReMaterializable = 1 in {
+// def LDC_ru6 : _FRU6<0b011010, (outs RRegs:$a), (ins i32imm:$b),
+//                     "ldc $a, $b", [(set RRegs:$a, immU6:$b)]>;
 
-def LDC_lru6 : _FLRU6<0b011010, (outs RRegs:$a), (ins i32imm:$b),
-                      "ldc $a, $b", [(set RRegs:$a, immU16:$b)]>;
-}
+// def LDC_lru6 : _FLRU6<0b011010, (outs RRegs:$a), (ins i32imm:$b),
+//                       "ldc $a, $b", [(set RRegs:$a, immU16:$b)]>;
+// }
 
-def SETC_ru6 : _FRU6<0b111010, (outs), (ins GRRegs:$a, i32imm:$b),
-                     "setc res[$a], $b",
-                     [(int_ycore_setc GRRegs:$a, immU6:$b)]>;
+// def SETC_ru6 : _FRU6<0b111010, (outs), (ins GRRegs:$a, i32imm:$b),
+//                      "setc res[$a], $b",
+//                      [(int_ycore_setc GRRegs:$a, immU6:$b)]>;
 
-def SETC_lru6 : _FLRU6<0b111010, (outs), (ins GRRegs:$a, i32imm:$b),
-                       "setc res[$a], $b",
-                       [(int_ycore_setc GRRegs:$a, immU16:$b)]>;
+// def SETC_lru6 : _FLRU6<0b111010, (outs), (ins GRRegs:$a, i32imm:$b),
+//                        "setc res[$a], $b",
+//                        [(int_ycore_setc GRRegs:$a, immU16:$b)]>;
 
 // Operand register - U6
 let isBranch = 1, isTerminator = 1 in {
@@ -1113,28 +1113,28 @@ def : Pat<(sext_inreg GRRegs:$b, i1), (SEXT_rus GRRegs:$b, 1)>;
 def : Pat<(sext_inreg GRRegs:$b, i8), (SEXT_rus GRRegs:$b, 8)>;
 def : Pat<(sext_inreg GRRegs:$b, i16), (SEXT_rus GRRegs:$b, 16)>;
 
-/// loads
-def : Pat<(zextloadi8 (add GRRegs:$addr, GRRegs:$offset)),
-          (LD8U_3r GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(zextloadi8 GRRegs:$addr), (LD8U_3r GRRegs:$addr, (LDC_ru6 0))>;
+// /// loads
+// def : Pat<(zextloadi8 (add GRRegs:$addr, GRRegs:$offset)),
+//           (LD8U_3r GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(zextloadi8 GRRegs:$addr), (LD8U_3r GRRegs:$addr, (LDC_ru6 0))>;
 
-def : Pat<(sextloadi16 (lda16f GRRegs:$addr, GRRegs:$offset)),
-          (LD16S_3r GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(sextloadi16 GRRegs:$addr), (LD16S_3r GRRegs:$addr, (LDC_ru6 0))>;
+// def : Pat<(sextloadi16 (lda16f GRRegs:$addr, GRRegs:$offset)),
+//           (LD16S_3r GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(sextloadi16 GRRegs:$addr), (LD16S_3r GRRegs:$addr, (LDC_ru6 0))>;
 
-def : Pat<(load (ldawf GRRegs:$addr, GRRegs:$offset)),
-          (LDW_3r GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(load (add GRRegs:$addr, immUs4:$offset)),
-          (LDW_2rus GRRegs:$addr, (div4_xform immUs4:$offset))>;
-def : Pat<(load GRRegs:$addr), (LDW_2rus GRRegs:$addr, 0)>;
+// def : Pat<(load (ldawf GRRegs:$addr, GRRegs:$offset)),
+//           (LDW_3r GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(load (add GRRegs:$addr, immUs4:$offset)),
+//           (LDW_2rus GRRegs:$addr, (div4_xform immUs4:$offset))>;
+// def : Pat<(load GRRegs:$addr), (LDW_2rus GRRegs:$addr, 0)>;
 
-/// anyext
-def : Pat<(extloadi8 (add GRRegs:$addr, GRRegs:$offset)),
-          (LD8U_3r GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(extloadi8 GRRegs:$addr), (LD8U_3r GRRegs:$addr, (LDC_ru6 0))>;
-def : Pat<(extloadi16 (lda16f GRRegs:$addr, GRRegs:$offset)),
-          (LD16S_3r GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(extloadi16 GRRegs:$addr), (LD16S_3r GRRegs:$addr, (LDC_ru6 0))>;
+// /// anyext
+// def : Pat<(extloadi8 (add GRRegs:$addr, GRRegs:$offset)),
+//           (LD8U_3r GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(extloadi8 GRRegs:$addr), (LD8U_3r GRRegs:$addr, (LDC_ru6 0))>;
+// def : Pat<(extloadi16 (lda16f GRRegs:$addr, GRRegs:$offset)),
+//           (LD16S_3r GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(extloadi16 GRRegs:$addr), (LD16S_3r GRRegs:$addr, (LDC_ru6 0))>;
 
 /// stores
 // def : Pat<(truncstorei8 GRRegs:$val, (add GRRegs:$addr, GRRegs:$offset)),
@@ -1161,7 +1161,7 @@ def : Pat<(bitreverse GRRegs:$src), (BITREV_l2r GRRegs:$src)>;
 def : Pat<(cttz GRRegs:$src), (CLZ_l2r (BITREV_l2r GRRegs:$src))>;
 
 /// trap
-def : Pat<(trap), (ECALLF_1r (LDC_ru6 0))>;
+// def : Pat<(trap), (ECALLF_1r (LDC_ru6 0))>;
 
 ///
 /// branch patterns
