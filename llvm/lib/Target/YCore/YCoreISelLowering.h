@@ -191,9 +191,9 @@ namespace llvm {
 //      const Instruction &I) const override;
 
     // Inline asm support
-    std::pair<unsigned, const TargetRegisterClass *>
-    getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
-                                 StringRef Constraint, MVT VT) const override;
+//    std::pair<unsigned, const TargetRegisterClass *>
+//    getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
+//                                 StringRef Constraint, MVT VT) const override;
 
     // Expand specifics
 //    SDValue TryExpandADDWithMul(SDNode *Op, SelectionDAG &DAG) const;

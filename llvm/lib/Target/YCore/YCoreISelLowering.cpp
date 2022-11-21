@@ -1940,19 +1940,19 @@ static inline bool isImmUs4(int64_t val)
 //                           YCore Inline Assembly Support
 //===----------------------------------------------------------------------===//
 
-std::pair<unsigned, const TargetRegisterClass *>
-YCoreTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
-                                                  StringRef Constraint,
-                                                  MVT VT) const {
-  llvm_unreachable("TODO");
-  if (Constraint.size() == 1) {
-    switch (Constraint[0]) {
-    default : break;
-    case 'r':
-      return std::make_pair(0U, &YCore::GRRegsRegClass);
-    }
-  }
-  // Use the default implementation in TargetLowering to convert the register
-  // constraint into a member of a register class.
-  return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
-}
+//std::pair<unsigned, const TargetRegisterClass *>
+//YCoreTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
+//                                                  StringRef Constraint,
+//                                                  MVT VT) const {
+//  llvm_unreachable("TODO");
+//  if (Constraint.size() == 1) {
+//    switch (Constraint[0]) {
+//    default : break;
+//    case 'r':
+//      return std::make_pair(0U, &YCore::GRRegsRegClass);
+//    }
+//  }
+//  // Use the default implementation in TargetLowering to convert the register
+//  // constraint into a member of a register class.
+//  return TargetLowering::getRegForInlineAsmConstraint(TRI, Constraint, VT);
+//}
