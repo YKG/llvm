@@ -583,60 +583,60 @@ SDValue YCoreTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
 /// each intermediate result in the calculation must also have a single use.
 /// If the Op is in the correct form the constituent parts are written to Mul0,
 /// Mul1, Addend0 and Addend1.
-static bool
-isADDADDMUL(SDValue Op, SDValue &Mul0, SDValue &Mul1, SDValue &Addend0,
-            SDValue &Addend1, bool requireIntermediatesHaveOneUse)
-{
-  llvm_unreachable("TODO");
-  if (Op.getOpcode() != ISD::ADD)
-    return false;
-  SDValue N0 = Op.getOperand(0);
-  SDValue N1 = Op.getOperand(1);
-  SDValue AddOp;
-  SDValue OtherOp;
-  if (N0.getOpcode() == ISD::ADD) {
-    AddOp = N0;
-    OtherOp = N1;
-  } else if (N1.getOpcode() == ISD::ADD) {
-    AddOp = N1;
-    OtherOp = N0;
-  } else {
-    return false;
-  }
-  if (requireIntermediatesHaveOneUse && !AddOp.hasOneUse())
-    return false;
-  if (OtherOp.getOpcode() == ISD::MUL) {
-    // add(add(a,b),mul(x,y))
-    if (requireIntermediatesHaveOneUse && !OtherOp.hasOneUse())
-      return false;
-    Mul0 = OtherOp.getOperand(0);
-    Mul1 = OtherOp.getOperand(1);
-    Addend0 = AddOp.getOperand(0);
-    Addend1 = AddOp.getOperand(1);
-    return true;
-  }
-  if (AddOp.getOperand(0).getOpcode() == ISD::MUL) {
-    // add(add(mul(x,y),a),b)
-    if (requireIntermediatesHaveOneUse && !AddOp.getOperand(0).hasOneUse())
-      return false;
-    Mul0 = AddOp.getOperand(0).getOperand(0);
-    Mul1 = AddOp.getOperand(0).getOperand(1);
-    Addend0 = AddOp.getOperand(1);
-    Addend1 = OtherOp;
-    return true;
-  }
-  if (AddOp.getOperand(1).getOpcode() == ISD::MUL) {
-    // add(add(a,mul(x,y)),b)
-    if (requireIntermediatesHaveOneUse && !AddOp.getOperand(1).hasOneUse())
-      return false;
-    Mul0 = AddOp.getOperand(1).getOperand(0);
-    Mul1 = AddOp.getOperand(1).getOperand(1);
-    Addend0 = AddOp.getOperand(0);
-    Addend1 = OtherOp;
-    return true;
-  }
-  return false;
-}
+//static bool
+//isADDADDMUL(SDValue Op, SDValue &Mul0, SDValue &Mul1, SDValue &Addend0,
+//            SDValue &Addend1, bool requireIntermediatesHaveOneUse)
+//{
+//  llvm_unreachable("TODO");
+//  if (Op.getOpcode() != ISD::ADD)
+//    return false;
+//  SDValue N0 = Op.getOperand(0);
+//  SDValue N1 = Op.getOperand(1);
+//  SDValue AddOp;
+//  SDValue OtherOp;
+//  if (N0.getOpcode() == ISD::ADD) {
+//    AddOp = N0;
+//    OtherOp = N1;
+//  } else if (N1.getOpcode() == ISD::ADD) {
+//    AddOp = N1;
+//    OtherOp = N0;
+//  } else {
+//    return false;
+//  }
+//  if (requireIntermediatesHaveOneUse && !AddOp.hasOneUse())
+//    return false;
+//  if (OtherOp.getOpcode() == ISD::MUL) {
+//    // add(add(a,b),mul(x,y))
+//    if (requireIntermediatesHaveOneUse && !OtherOp.hasOneUse())
+//      return false;
+//    Mul0 = OtherOp.getOperand(0);
+//    Mul1 = OtherOp.getOperand(1);
+//    Addend0 = AddOp.getOperand(0);
+//    Addend1 = AddOp.getOperand(1);
+//    return true;
+//  }
+//  if (AddOp.getOperand(0).getOpcode() == ISD::MUL) {
+//    // add(add(mul(x,y),a),b)
+//    if (requireIntermediatesHaveOneUse && !AddOp.getOperand(0).hasOneUse())
+//      return false;
+//    Mul0 = AddOp.getOperand(0).getOperand(0);
+//    Mul1 = AddOp.getOperand(0).getOperand(1);
+//    Addend0 = AddOp.getOperand(1);
+//    Addend1 = OtherOp;
+//    return true;
+//  }
+//  if (AddOp.getOperand(1).getOpcode() == ISD::MUL) {
+//    // add(add(a,mul(x,y)),b)
+//    if (requireIntermediatesHaveOneUse && !AddOp.getOperand(1).hasOneUse())
+//      return false;
+//    Mul0 = AddOp.getOperand(1).getOperand(0);
+//    Mul1 = AddOp.getOperand(1).getOperand(1);
+//    Addend0 = AddOp.getOperand(0);
+//    Addend1 = OtherOp;
+//    return true;
+//  }
+//  return false;
+//}
 //
 //SDValue YCoreTargetLowering::
 //TryExpandADDWithMul(SDNode *N, SelectionDAG &DAG) const
