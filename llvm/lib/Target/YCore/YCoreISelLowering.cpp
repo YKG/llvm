@@ -432,9 +432,9 @@ SDValue YCoreTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   SDValue BasePtr = LD->getBasePtr();
   SDLoc DL(Op);
 
-  if (!LD->isVolatile()) {
-    const GlobalValue *GV;
-    int64_t Offset = 0;
+//  if (!LD->isVolatile()) {
+//    const GlobalValue *GV;
+//    int64_t Offset = 0;
 //    if (DAG.isBaseWithConstantOffset(BasePtr) &&
 //        isWordAligned(BasePtr->getOperand(0), DAG)) {
 //      SDValue NewBasePtr = BasePtr->getOperand(0);
@@ -449,7 +449,7 @@ SDValue YCoreTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
 //      return lowerLoadWordFromAlignedBasePlusOffset(DL, Chain, NewBasePtr,
 //                                                    Offset, DAG);
 //    }
-  }
+//  }
 
   if (LD->getAlignment() == 2) {
     SDValue Low = DAG.getExtLoad(ISD::ZEXTLOAD, DL, MVT::i32, Chain, BasePtr,
