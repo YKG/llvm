@@ -167,16 +167,16 @@ namespace llvm {
     // Lower Operand specifics
     SDValue LowerLOAD(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerSTORE(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerEH_RETURN(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerGlobalTLSAddress(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerEH_RETURN(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerGlobalTLSAddress(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerConstantPool(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerBR_JT(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerVAARG(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerVASTART(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerUMUL_LOHI(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerSMUL_LOHI(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerBR_JT(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerVAARG(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerVASTART(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerUMUL_LOHI(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerSMUL_LOHI(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerFRAME_TO_ARGS_OFFSET(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const;
