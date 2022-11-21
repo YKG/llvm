@@ -451,36 +451,36 @@ void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
 //  return true;
 //}
 
-bool YCoreFrameLowering::restoreCalleeSavedRegisters(
-    MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
-    MutableArrayRef<CalleeSavedInfo> CSI, const TargetRegisterInfo *TRI) const {
-  llvm_unreachable("TODO");
-  MachineFunction *MF = MBB.getParent();
-  const TargetInstrInfo &TII = *MF->getSubtarget().getInstrInfo();
-  bool AtStart = MI == MBB.begin();
-  MachineBasicBlock::iterator BeforeI = MI;
-  if (!AtStart)
-    --BeforeI;
-  for (const CalleeSavedInfo &CSR : CSI) {
-    Register Reg = CSR.getReg();
-    assert(Reg != YCore::LR && !(Reg == YCore::R10 && hasFP(*MF)) &&
-           "LR & FP are always handled in emitEpilogue");
-
-    const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
-    TII.loadRegFromStackSlot(MBB, MI, Reg, CSR.getFrameIdx(), RC, TRI);
-    assert(MI != MBB.begin() &&
-           "loadRegFromStackSlot didn't insert any code!");
-    // Insert in reverse order.  loadRegFromStackSlot can insert multiple
-    // instructions.
-    if (AtStart)
-      MI = MBB.begin();
-    else {
-      MI = BeforeI;
-      ++MI;
-    }
-  }
-  return true;
-}
+//bool YCoreFrameLowering::restoreCalleeSavedRegisters(
+//    MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
+//    MutableArrayRef<CalleeSavedInfo> CSI, const TargetRegisterInfo *TRI) const {
+//  llvm_unreachable("TODO");
+//  MachineFunction *MF = MBB.getParent();
+//  const TargetInstrInfo &TII = *MF->getSubtarget().getInstrInfo();
+//  bool AtStart = MI == MBB.begin();
+//  MachineBasicBlock::iterator BeforeI = MI;
+//  if (!AtStart)
+//    --BeforeI;
+//  for (const CalleeSavedInfo &CSR : CSI) {
+//    Register Reg = CSR.getReg();
+//    assert(Reg != YCore::LR && !(Reg == YCore::R10 && hasFP(*MF)) &&
+//           "LR & FP are always handled in emitEpilogue");
+//
+//    const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
+//    TII.loadRegFromStackSlot(MBB, MI, Reg, CSR.getFrameIdx(), RC, TRI);
+//    assert(MI != MBB.begin() &&
+//           "loadRegFromStackSlot didn't insert any code!");
+//    // Insert in reverse order.  loadRegFromStackSlot can insert multiple
+//    // instructions.
+//    if (AtStart)
+//      MI = MBB.begin();
+//    else {
+//      MI = BeforeI;
+//      ++MI;
+//    }
+//  }
+//  return true;
+//}
 
 // This function eliminates ADJCALLSTACKDOWN,
 // ADJCALLSTACKUP pseudo instructions
