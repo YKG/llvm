@@ -1198,24 +1198,24 @@ def MKMSK_rus : _FRUSBitp<0b101001, (outs GRRegs:$dst), (ins i32imm:$size),
 ///
 
 // direct match equal/notequal zero select
-def : Pat<(select (setne GRRegs:$lhs, 0), GRRegs:$T, GRRegs:$F),
-        (SELECT_CC GRRegs:$lhs, GRRegs:$T, GRRegs:$F)>;
+// def : Pat<(select (setne GRRegs:$lhs, 0), GRRegs:$T, GRRegs:$F),
+//         (SELECT_CC GRRegs:$lhs, GRRegs:$T, GRRegs:$F)>;
 
-def : Pat<(select (seteq GRRegs:$lhs, 0), GRRegs:$T, GRRegs:$F),
-        (SELECT_CC GRRegs:$lhs, GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (seteq GRRegs:$lhs, 0), GRRegs:$T, GRRegs:$F),
+//         (SELECT_CC GRRegs:$lhs, GRRegs:$F, GRRegs:$T)>;
 
-def : Pat<(select (setle GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (LSS_3r GRRegs:$rhs, GRRegs:$lhs), GRRegs:$F, GRRegs:$T)>;
-def : Pat<(select (setule GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (LSU_3r GRRegs:$rhs, GRRegs:$lhs), GRRegs:$F, GRRegs:$T)>;
-def : Pat<(select (setge GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (LSS_3r GRRegs:$lhs, GRRegs:$rhs), GRRegs:$F, GRRegs:$T)>;
-def : Pat<(select (setuge GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (LSU_3r GRRegs:$lhs, GRRegs:$rhs), GRRegs:$F, GRRegs:$T)>;
-def : Pat<(select (setne GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (EQ_3r GRRegs:$lhs, GRRegs:$rhs), GRRegs:$F, GRRegs:$T)>;
-def : Pat<(select (setne GRRegs:$lhs, immUs:$rhs), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (EQ_2rus GRRegs:$lhs, immUs:$rhs), GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (setle GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (LSS_3r GRRegs:$rhs, GRRegs:$lhs), GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (setule GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (LSU_3r GRRegs:$rhs, GRRegs:$lhs), GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (setge GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (LSS_3r GRRegs:$lhs, GRRegs:$rhs), GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (setuge GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (LSU_3r GRRegs:$lhs, GRRegs:$rhs), GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (setne GRRegs:$lhs, GRRegs:$rhs), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (EQ_3r GRRegs:$lhs, GRRegs:$rhs), GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (setne GRRegs:$lhs, immUs:$rhs), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (EQ_2rus GRRegs:$lhs, immUs:$rhs), GRRegs:$F, GRRegs:$T)>;
 
 ///
 /// setcc patterns, only matched when none of the above brcond
