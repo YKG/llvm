@@ -411,6 +411,7 @@ SDValue YCoreTargetLowering::lowerLoadWordFromAlignedBasePlusOffset(
 
 static bool isWordAligned(SDValue Value, SelectionDAG &DAG)
 {
+  llvm_unreachable("TODO");
   KnownBits Known = DAG.computeKnownBits(Value);
   return Known.countMinTrailingZeros() >= 2;
 }
