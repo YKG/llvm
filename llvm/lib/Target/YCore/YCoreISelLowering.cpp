@@ -374,6 +374,7 @@ unsigned YCoreTargetLowering::getJumpTableEncoding() const {
 SDValue YCoreTargetLowering::lowerLoadWordFromAlignedBasePlusOffset(
     const SDLoc &DL, SDValue Chain, SDValue Base, int64_t Offset,
     SelectionDAG &DAG) const {
+  llvm_unreachable("TODO");
   auto PtrVT = getPointerTy(DAG.getDataLayout());
   if ((Offset & 0x3) == 0) {
     return DAG.getLoad(PtrVT, DL, Chain, Base, MachinePointerInfo());
