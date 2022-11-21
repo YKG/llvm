@@ -218,7 +218,7 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::INIT_TRAMPOLINE:    return LowerINIT_TRAMPOLINE(Op, DAG);
   case ISD::ADJUST_TRAMPOLINE:  return LowerADJUST_TRAMPOLINE(Op, DAG);
   case ISD::INTRINSIC_WO_CHAIN: return LowerINTRINSIC_WO_CHAIN(Op, DAG);
-  case ISD::ATOMIC_FENCE:       return LowerATOMIC_FENCE(Op, DAG);
+//  case ISD::ATOMIC_FENCE:       return LowerATOMIC_FENCE(Op, DAG);
   case ISD::ATOMIC_LOAD:        return LowerATOMIC_LOAD(Op, DAG);
   case ISD::ATOMIC_STORE:       return LowerATOMIC_STORE(Op, DAG);
   default:
@@ -927,11 +927,11 @@ LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const {
   return SDValue();
 }
 
-SDValue YCoreTargetLowering::
-LowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const {
-  SDLoc DL(Op);
-  return DAG.getNode(YCoreISD::MEMBARRIER, DL, MVT::Other, Op.getOperand(0));
-}
+//SDValue YCoreTargetLowering::
+//LowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const {
+//  SDLoc DL(Op);
+//  return DAG.getNode(YCoreISD::MEMBARRIER, DL, MVT::Other, Op.getOperand(0));
+//}
 
 SDValue YCoreTargetLowering::
 LowerATOMIC_LOAD(SDValue Op, SelectionDAG &DAG) const {
