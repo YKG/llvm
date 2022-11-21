@@ -940,131 +940,131 @@ def MKMSK_rus : _FRUSBitp<0b101001, (outs GRRegs:$dst), (ins i32imm:$size),
 //                         "testlcl $dst, res[$src]", []>;
 
 // One operand short
-def MSYNC_1r : _F1R<0b000111, (outs), (ins GRRegs:$a),
-                    "msync res[$a]",
-                    [(int_ycore_msync GRRegs:$a)]>;
-def MJOIN_1r : _F1R<0b000101, (outs), (ins GRRegs:$a),
-                    "mjoin res[$a]",
-                    [(int_ycore_mjoin GRRegs:$a)]>;
+// def MSYNC_1r : _F1R<0b000111, (outs), (ins GRRegs:$a),
+//                     "msync res[$a]",
+//                     [(int_ycore_msync GRRegs:$a)]>;
+// def MJOIN_1r : _F1R<0b000101, (outs), (ins GRRegs:$a),
+//                     "mjoin res[$a]",
+//                     [(int_ycore_mjoin GRRegs:$a)]>;
 
-let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
-def BAU_1r : _F1R<0b001001, (outs), (ins GRRegs:$a),
-                 "bau $a",
-                 [(brind GRRegs:$a)]>;
+// let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
+// def BAU_1r : _F1R<0b001001, (outs), (ins GRRegs:$a),
+//                  "bau $a",
+//                  [(brind GRRegs:$a)]>;
 
-let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
-def BR_JT : PseudoInstYCore<(outs), (ins InlineJT:$t, GRRegs:$i),
-                            "bru $i\n$t",
-                            [(YCoreBR_JT tjumptable:$t, GRRegs:$i)]>;
+// let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
+// def BR_JT : PseudoInstYCore<(outs), (ins InlineJT:$t, GRRegs:$i),
+//                             "bru $i\n$t",
+//                             [(YCoreBR_JT tjumptable:$t, GRRegs:$i)]>;
 
-let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
-def BR_JT32 : PseudoInstYCore<(outs), (ins InlineJT32:$t, GRRegs:$i),
-                              "bru $i\n$t",
-                              [(YCoreBR_JT32 tjumptable:$t, GRRegs:$i)]>;
+// let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
+// def BR_JT32 : PseudoInstYCore<(outs), (ins InlineJT32:$t, GRRegs:$i),
+//                               "bru $i\n$t",
+//                               [(YCoreBR_JT32 tjumptable:$t, GRRegs:$i)]>;
 
-let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
-def BRU_1r : _F1R<0b001010, (outs), (ins GRRegs:$a), "bru $a", []>;
+// let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1 in
+// def BRU_1r : _F1R<0b001010, (outs), (ins GRRegs:$a), "bru $a", []>;
 
-let Defs=[SP], hasSideEffects=0 in
-def SETSP_1r : _F1R<0b001011, (outs), (ins GRRegs:$a), "set sp, $a", []>;
+// let Defs=[SP], hasSideEffects=0 in
+// def SETSP_1r : _F1R<0b001011, (outs), (ins GRRegs:$a), "set sp, $a", []>;
 
-let hasSideEffects=0 in
-def SETDP_1r : _F1R<0b001100, (outs), (ins GRRegs:$a), "set dp, $a", []>;
+// let hasSideEffects=0 in
+// def SETDP_1r : _F1R<0b001100, (outs), (ins GRRegs:$a), "set dp, $a", []>;
 
-let hasSideEffects=0 in
-def SETCP_1r : _F1R<0b001101, (outs), (ins GRRegs:$a), "set cp, $a", []>;
+// let hasSideEffects=0 in
+// def SETCP_1r : _F1R<0b001101, (outs), (ins GRRegs:$a), "set cp, $a", []>;
 
-let hasCtrlDep = 1 in
-def ECALLT_1r : _F1R<0b010011, (outs), (ins GRRegs:$a),
-                 "ecallt $a",
-                 []>;
+// let hasCtrlDep = 1 in
+// def ECALLT_1r : _F1R<0b010011, (outs), (ins GRRegs:$a),
+//                  "ecallt $a",
+//                  []>;
 
-let hasCtrlDep = 1 in
-def ECALLF_1r : _F1R<0b010010, (outs), (ins GRRegs:$a),
-                 "ecallf $a",
-                 []>;
+// let hasCtrlDep = 1 in
+// def ECALLF_1r : _F1R<0b010010, (outs), (ins GRRegs:$a),
+//                  "ecallf $a",
+//                  []>;
 
-let isCall=1,
-// All calls clobber the link register and the non-callee-saved registers:
-Defs = [R0, R1, R2, R3, R11, LR], Uses = [SP] in {
-def BLA_1r : _F1R<0b001000, (outs), (ins GRRegs:$a),
-                 "bla $a",
-                 [(YCoreBranchLink GRRegs:$a)]>;
-}
+// let isCall=1,
+// // All calls clobber the link register and the non-callee-saved registers:
+// Defs = [R0, R1, R2, R3, R11, LR], Uses = [SP] in {
+// def BLA_1r : _F1R<0b001000, (outs), (ins GRRegs:$a),
+//                  "bla $a",
+//                  [(YCoreBranchLink GRRegs:$a)]>;
+// }
 
-def SYNCR_1r : _F1R<0b100001, (outs), (ins GRRegs:$a),
-                 "syncr res[$a]",
-                 [(int_ycore_syncr GRRegs:$a)]>;
+// def SYNCR_1r : _F1R<0b100001, (outs), (ins GRRegs:$a),
+//                  "syncr res[$a]",
+//                  [(int_ycore_syncr GRRegs:$a)]>;
 
-def FREER_1r : _F1R<0b000100, (outs), (ins GRRegs:$a),
-               "freer res[$a]",
-               [(int_ycore_freer GRRegs:$a)]>;
+// def FREER_1r : _F1R<0b000100, (outs), (ins GRRegs:$a),
+//                "freer res[$a]",
+//                [(int_ycore_freer GRRegs:$a)]>;
 
-let Uses=[R11] in {
-def SETV_1r : _F1R<0b010001, (outs), (ins GRRegs:$a),
-                   "setv res[$a], r11",
-                   [(int_ycore_setv GRRegs:$a, R11)]>;
+// let Uses=[R11] in {
+// def SETV_1r : _F1R<0b010001, (outs), (ins GRRegs:$a),
+//                    "setv res[$a], r11",
+//                    [(int_ycore_setv GRRegs:$a, R11)]>;
 
-def SETEV_1r : _F1R<0b001111, (outs), (ins GRRegs:$a),
-                    "setev res[$a], r11",
-                    [(int_ycore_setev GRRegs:$a, R11)]>;
-}
+// def SETEV_1r : _F1R<0b001111, (outs), (ins GRRegs:$a),
+//                     "setev res[$a], r11",
+//                     [(int_ycore_setev GRRegs:$a, R11)]>;
+// }
 
-def DGETREG_1r : _F1R<0b001110, (outs GRRegs:$a), (ins), "dgetreg $a", []>;
+// def DGETREG_1r : _F1R<0b001110, (outs GRRegs:$a), (ins), "dgetreg $a", []>;
 
-def EDU_1r : _F1R<0b000000, (outs), (ins GRRegs:$a), "edu res[$a]",
-                  [(int_ycore_edu GRRegs:$a)]>;
+// def EDU_1r : _F1R<0b000000, (outs), (ins GRRegs:$a), "edu res[$a]",
+//                   [(int_ycore_edu GRRegs:$a)]>;
 
-def EEU_1r : _F1R<0b000001, (outs), (ins GRRegs:$a),
-               "eeu res[$a]",
-               [(int_ycore_eeu GRRegs:$a)]>;
+// def EEU_1r : _F1R<0b000001, (outs), (ins GRRegs:$a),
+//                "eeu res[$a]",
+//                [(int_ycore_eeu GRRegs:$a)]>;
 
-def KCALL_1r : _F1R<0b010000, (outs), (ins GRRegs:$a), "kcall $a", []>;
+// def KCALL_1r : _F1R<0b010000, (outs), (ins GRRegs:$a), "kcall $a", []>;
 
-def WAITEF_1R : _F1R<0b000011, (outs), (ins GRRegs:$a), "waitef $a", []>;
+// def WAITEF_1R : _F1R<0b000011, (outs), (ins GRRegs:$a), "waitef $a", []>;
 
-def WAITET_1R : _F1R<0b000010, (outs), (ins GRRegs:$a), "waitet $a", []>;
+// def WAITET_1R : _F1R<0b000010, (outs), (ins GRRegs:$a), "waitet $a", []>;
 
-def TSTART_1R : _F1R<0b000110, (outs), (ins GRRegs:$a), "start t[$a]", []>;
+// def TSTART_1R : _F1R<0b000110, (outs), (ins GRRegs:$a), "start t[$a]", []>;
 
-def CLRPT_1R : _F1R<0b100000, (outs), (ins GRRegs:$a), "clrpt res[$a]",
-                    [(int_ycore_clrpt GRRegs:$a)]>;
+// def CLRPT_1R : _F1R<0b100000, (outs), (ins GRRegs:$a), "clrpt res[$a]",
+//                     [(int_ycore_clrpt GRRegs:$a)]>;
 
-// Zero operand short
+// // Zero operand short
 
-def CLRE_0R : _F0R<0b0000001101, (outs), (ins), "clre", [(int_ycore_clre)]>;
+// def CLRE_0R : _F0R<0b0000001101, (outs), (ins), "clre", [(int_ycore_clre)]>;
 
-def DCALL_0R : _F0R<0b0000011100, (outs), (ins), "dcall", []>;
+// def DCALL_0R : _F0R<0b0000011100, (outs), (ins), "dcall", []>;
 
-let Defs = [SP], Uses = [SP] in
-def DENTSP_0R : _F0R<0b0001001100, (outs), (ins), "dentsp", []>;
+// let Defs = [SP], Uses = [SP] in
+// def DENTSP_0R : _F0R<0b0001001100, (outs), (ins), "dentsp", []>;
 
-let Defs = [SP] in
-def DRESTSP_0R : _F0R<0b0001001101, (outs), (ins), "drestsp", []>;
+// let Defs = [SP] in
+// def DRESTSP_0R : _F0R<0b0001001101, (outs), (ins), "drestsp", []>;
 
-def DRET_0R : _F0R<0b0000011110, (outs), (ins), "dret", []>;
+// def DRET_0R : _F0R<0b0000011110, (outs), (ins), "dret", []>;
 
-def FREET_0R : _F0R<0b0000001111, (outs), (ins), "freet", []>;
+// def FREET_0R : _F0R<0b0000001111, (outs), (ins), "freet", []>;
 
-let Defs = [R11] in {
-def GETID_0R : _F0R<0b0001001110, (outs), (ins),
-                    "get r11, id",
-                    [(set R11, (int_ycore_getid))]>;
+// let Defs = [R11] in {
+// def GETID_0R : _F0R<0b0001001110, (outs), (ins),
+//                     "get r11, id",
+//                     [(set R11, (int_ycore_getid))]>;
 
-def GETED_0R : _F0R<0b0000111110, (outs), (ins),
-                    "get r11, ed",
-                    [(set R11, (int_ycore_geted))]>;
+// def GETED_0R : _F0R<0b0000111110, (outs), (ins),
+//                     "get r11, ed",
+//                     [(set R11, (int_ycore_geted))]>;
 
-def GETET_0R : _F0R<0b0000111111, (outs), (ins),
-                    "get r11, et",
-                    [(set R11, (int_ycore_getet))]>;
+// def GETET_0R : _F0R<0b0000111111, (outs), (ins),
+//                     "get r11, et",
+//                     [(set R11, (int_ycore_getet))]>;
 
-def GETKEP_0R : _F0R<0b0001001111, (outs), (ins),
-                     "get r11, kep", []>;
+// def GETKEP_0R : _F0R<0b0001001111, (outs), (ins),
+//                      "get r11, kep", []>;
 
-def GETKSP_0R : _F0R<0b0001011100, (outs), (ins),
-                     "get r11, ksp", []>;
-}
+// def GETKSP_0R : _F0R<0b0001011100, (outs), (ins),
+//                      "get r11, ksp", []>;
+// }
 
 let Defs = [SP] in
 def KRET_0R : _F0R<0b0000011101, (outs), (ins), "kret", []>;

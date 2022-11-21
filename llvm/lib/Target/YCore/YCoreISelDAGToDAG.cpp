@@ -276,6 +276,7 @@ bool YCoreDAGToDAGISel::tryBRIND(SDNode *N) {
 //                         nextAddr->getOperand(0), Glue);
 //    return true;
 //  }
-  CurDAG->SelectNodeTo(N, YCore::BAU_1r, MVT::Other, nextAddr, Glue);
+//  CurDAG->SelectNodeTo(N, YCore::BAU_1r, MVT::Other, nextAddr, Glue);
+  llvm_unreachable("TODO");
   return true;
 }

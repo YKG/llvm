@@ -358,20 +358,21 @@ void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
   if (RetOpcode == YCore::EH_RETURN) {
     // 'Restore' the exception info the unwinder has placed into the stack
     // slots.
-    const Function *Fn = &MF.getFunction();
-    const Constant *PersonalityFn =
-        Fn->hasPersonalityFn() ? Fn->getPersonalityFn() : nullptr;
-    SmallVector<StackSlotInfo, 2> SpillList;
-    GetEHSpillList(SpillList, MFI, XFI, PersonalityFn,
-                   MF.getSubtarget().getTargetLowering());
-    RestoreSpillList(MBB, MBBI, dl, TII, RemainingAdj, SpillList);
-
-    // Return to the landing pad.
-    Register EhStackReg = MBBI->getOperand(0).getReg();
-    Register EhHandlerReg = MBBI->getOperand(1).getReg();
-    BuildMI(MBB, MBBI, dl, TII.get(YCore::SETSP_1r)).addReg(EhStackReg);
-    BuildMI(MBB, MBBI, dl, TII.get(YCore::BAU_1r)).addReg(EhHandlerReg);
-    MBB.erase(MBBI);  // Erase the previous return instruction.
+//    const Function *Fn = &MF.getFunction();
+//    const Constant *PersonalityFn =
+//        Fn->hasPersonalityFn() ? Fn->getPersonalityFn() : nullptr;
+//    SmallVector<StackSlotInfo, 2> SpillList;
+//    GetEHSpillList(SpillList, MFI, XFI, PersonalityFn,
+//                   MF.getSubtarget().getTargetLowering());
+//    RestoreSpillList(MBB, MBBI, dl, TII, RemainingAdj, SpillList);
+//
+//    // Return to the landing pad.
+//    Register EhStackReg = MBBI->getOperand(0).getReg();
+//    Register EhHandlerReg = MBBI->getOperand(1).getReg();
+//    BuildMI(MBB, MBBI, dl, TII.get(YCore::SETSP_1r)).addReg(EhStackReg);
+//    BuildMI(MBB, MBBI, dl, TII.get(YCore::BAU_1r)).addReg(EhHandlerReg);
+//    MBB.erase(MBBI);  // Erase the previous return instruction.
+    llvm_unreachable("TODO");
     return;
   }
 
@@ -383,7 +384,10 @@ void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
   bool FP = hasFP(MF);
 
   if (FP) // Restore the stack pointer.
-    BuildMI(MBB, MBBI, dl, TII.get(YCore::SETSP_1r)).addReg(FramePtr);
+  {
+    llvm_unreachable("TODO");
+//    BuildMI(MBB, MBBI, dl, TII.get(YCore::SETSP_1r)).addReg(FramePtr);
+  }
 
   // If necessary, restore LR and FP from the stack, as we EXTSP.
   SmallVector<StackSlotInfo,2> SpillList;

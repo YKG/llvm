@@ -259,30 +259,30 @@ void YCoreAsmPrinter::emitInstruction(const MachineInstr *MI) {
   SmallString<128> Str;
   raw_svector_ostream O(Str);
 
-  switch (MI->getOpcode()) {
-  case YCore::DBG_VALUE:
-    llvm_unreachable("Should be handled target independently");
-  case YCore::ADD_2rus:
-    if (MI->getOperand(2).getImm() == 0) {
-      O << "\tmov "
-        << YCoreInstPrinter::getRegisterName(MI->getOperand(0).getReg()) << ", "
-        << YCoreInstPrinter::getRegisterName(MI->getOperand(1).getReg());
-      OutStreamer->emitRawText(O.str());
-      return;
-    }
-    break;
-  case YCore::BR_JT:
-  case YCore::BR_JT32:
-    O << "\tbru "
-      << YCoreInstPrinter::getRegisterName(MI->getOperand(1).getReg()) << '\n';
-    if (MI->getOpcode() == YCore::BR_JT)
-      printInlineJT(MI, 0, O);
-    else
-      printInlineJT32(MI, 0, O);
-    O << '\n';
-    OutStreamer->emitRawText(O.str());
-    return;
-  }
+//  switch (MI->getOpcode()) {
+//  case YCore::DBG_VALUE:
+//    llvm_unreachable("Should be handled target independently");
+//  case YCore::ADD_2rus:
+//    if (MI->getOperand(2).getImm() == 0) {
+//      O << "\tmov "
+//        << YCoreInstPrinter::getRegisterName(MI->getOperand(0).getReg()) << ", "
+//        << YCoreInstPrinter::getRegisterName(MI->getOperand(1).getReg());
+//      OutStreamer->emitRawText(O.str());
+//      return;
+//    }
+//    break;
+//  case YCore::BR_JT:
+//  case YCore::BR_JT32:
+//    O << "\tbru "
+//      << YCoreInstPrinter::getRegisterName(MI->getOperand(1).getReg()) << '\n';
+//    if (MI->getOpcode() == YCore::BR_JT)
+//      printInlineJT(MI, 0, O);
+//    else
+//      printInlineJT32(MI, 0, O);
+//    O << '\n';
+//    OutStreamer->emitRawText(O.str());
+//    return;
+//  }
 
   MCInst TmpInst;
   MCInstLowering.Lower(MI, TmpInst);

@@ -337,26 +337,26 @@ void YCoreInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                  MachineBasicBlock::iterator I,
                                  const DebugLoc &DL, MCRegister DestReg,
                                  MCRegister SrcReg, bool KillSrc) const {
-  bool GRDest = YCore::GRRegsRegClass.contains(DestReg);
-  bool GRSrc  = YCore::GRRegsRegClass.contains(SrcReg);
-
-  if (GRDest && GRSrc) {
-    BuildMI(MBB, I, DL, get(YCore::ADD_2rus), DestReg)
-      .addReg(SrcReg, getKillRegState(KillSrc))
-      .addImm(0);
-    return;
-  }
-
-  if (GRDest && SrcReg == YCore::SP) {
-    BuildMI(MBB, I, DL, get(YCore::LDAWSP_ru6), DestReg).addImm(0);
-    return;
-  }
-
-  if (DestReg == YCore::SP && GRSrc) {
-    BuildMI(MBB, I, DL, get(YCore::SETSP_1r))
-      .addReg(SrcReg, getKillRegState(KillSrc));
-    return;
-  }
+//  bool GRDest = YCore::GRRegsRegClass.contains(DestReg);
+//  bool GRSrc  = YCore::GRRegsRegClass.contains(SrcReg);
+//
+//  if (GRDest && GRSrc) {
+//    BuildMI(MBB, I, DL, get(YCore::ADD_2rus), DestReg)
+//      .addReg(SrcReg, getKillRegState(KillSrc))
+//      .addImm(0);
+//    return;
+//  }
+//
+//  if (GRDest && SrcReg == YCore::SP) {
+//    BuildMI(MBB, I, DL, get(YCore::LDAWSP_ru6), DestReg).addImm(0);
+//    return;
+//  }
+//
+//  if (DestReg == YCore::SP && GRSrc) {
+//    BuildMI(MBB, I, DL, get(YCore::SETSP_1r))
+//      .addReg(SrcReg, getKillRegState(KillSrc));
+//    return;
+//  }
   llvm_unreachable("Impossible reg-to-reg copy");
 }
 
