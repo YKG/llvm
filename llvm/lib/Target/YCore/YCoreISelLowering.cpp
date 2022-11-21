@@ -435,20 +435,20 @@ SDValue YCoreTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   if (!LD->isVolatile()) {
     const GlobalValue *GV;
     int64_t Offset = 0;
-    if (DAG.isBaseWithConstantOffset(BasePtr) &&
-        isWordAligned(BasePtr->getOperand(0), DAG)) {
-      SDValue NewBasePtr = BasePtr->getOperand(0);
-      Offset = cast<ConstantSDNode>(BasePtr->getOperand(1))->getSExtValue();
-      return lowerLoadWordFromAlignedBasePlusOffset(DL, Chain, NewBasePtr,
-                                                    Offset, DAG);
-    }
-    if (TLI.isGAPlusOffset(BasePtr.getNode(), GV, Offset) &&
-        GV->getPointerAlignment(DAG.getDataLayout()) >= 4) {
-      SDValue NewBasePtr = DAG.getGlobalAddress(GV, DL,
-                                                BasePtr->getValueType(0));
-      return lowerLoadWordFromAlignedBasePlusOffset(DL, Chain, NewBasePtr,
-                                                    Offset, DAG);
-    }
+//    if (DAG.isBaseWithConstantOffset(BasePtr) &&
+//        isWordAligned(BasePtr->getOperand(0), DAG)) {
+//      SDValue NewBasePtr = BasePtr->getOperand(0);
+//      Offset = cast<ConstantSDNode>(BasePtr->getOperand(1))->getSExtValue();
+//      return lowerLoadWordFromAlignedBasePlusOffset(DL, Chain, NewBasePtr,
+//                                                    Offset, DAG);
+//    }
+//    if (TLI.isGAPlusOffset(BasePtr.getNode(), GV, Offset) &&
+//        GV->getPointerAlignment(DAG.getDataLayout()) >= 4) {
+//      SDValue NewBasePtr = DAG.getGlobalAddress(GV, DL,
+//                                                BasePtr->getValueType(0));
+//      return lowerLoadWordFromAlignedBasePlusOffset(DL, Chain, NewBasePtr,
+//                                                    Offset, DAG);
+//    }
   }
 
   if (LD->getAlignment() == 2) {
