@@ -98,10 +98,10 @@ namespace llvm {
 //    bool isZExtFree(SDValue Val, EVT VT2) const override;
 
 
-    unsigned getJumpTableEncoding() const override;
-    MVT getScalarShiftAmountTy(const DataLayout &DL, EVT) const override {
-      return MVT::i32;
-    }
+//    unsigned getJumpTableEncoding() const override;
+//    MVT getScalarShiftAmountTy(const DataLayout &DL, EVT) const override {
+//      return MVT::i32;
+//    }
 
     /// LowerOperation - Provide custom lowering hooks for some operations.
     SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;

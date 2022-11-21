@@ -342,10 +342,10 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 //  return DAG.getNode(YCoreISD::CPRelativeWrapper, dl, MVT::i32, Res);
 //}
 
-unsigned YCoreTargetLowering::getJumpTableEncoding() const {
-  llvm_unreachable("TODO");
-  return MachineJumpTableInfo::EK_Inline;
-}
+//unsigned YCoreTargetLowering::getJumpTableEncoding() const {
+//  llvm_unreachable("TODO");
+//  return MachineJumpTableInfo::EK_Inline;
+//}
 //
 //SDValue YCoreTargetLowering::
 //LowerBR_JT(SDValue Op, SelectionDAG &DAG) const
