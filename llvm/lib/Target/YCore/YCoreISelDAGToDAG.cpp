@@ -133,77 +133,77 @@ void YCoreDAGToDAGISel::Select(SDNode *N) {
   SDLoc dl(N);
   switch (N->getOpcode()) {
   default: break;
-  case ISD::Constant: {
-    uint64_t Val = cast<ConstantSDNode>(N)->getZExtValue();
-    if (immMskBitp(N)) {
-      // Transformation function: get the size of a mask
-      // Look for the first non-zero bit
-      SDValue MskSize = getI32Imm(32 - countLeadingZeros((uint32_t)Val), dl);
-      ReplaceNode(N, CurDAG->getMachineNode(YCore::MKMSK_rus, dl,
-                                            MVT::i32, MskSize));
-      return;
-    }
-    else if (!isUInt<16>(Val)) {
-      SDValue CPIdx = CurDAG->getTargetConstantPool(
-          ConstantInt::get(Type::getInt32Ty(*CurDAG->getContext()), Val),
-          getTargetLowering()->getPointerTy(CurDAG->getDataLayout()));
-      SDNode *node = CurDAG->getMachineNode(YCore::LDWCP_lru6, dl, MVT::i32,
-                                            MVT::Other, CPIdx,
-                                            CurDAG->getEntryNode());
-      MachineMemOperand *MemOp =
-          MF->getMachineMemOperand(MachinePointerInfo::getConstantPool(*MF),
-                                   MachineMemOperand::MOLoad, 4, Align(4));
-      CurDAG->setNodeMemRefs(cast<MachineSDNode>(node), {MemOp});
-      ReplaceNode(N, node);
-      return;
-    }
-    break;
-  }
-  case YCoreISD::LADD: {
-    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
-                        N->getOperand(2) };
-    ReplaceNode(N, CurDAG->getMachineNode(YCore::LADD_l5r, dl, MVT::i32,
-                                          MVT::i32, Ops));
-    return;
-  }
-  case YCoreISD::LSUB: {
-    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
-                        N->getOperand(2) };
-    ReplaceNode(N, CurDAG->getMachineNode(YCore::LSUB_l5r, dl, MVT::i32,
-                                          MVT::i32, Ops));
-    return;
-  }
-  case YCoreISD::MACCU: {
-    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
-                      N->getOperand(2), N->getOperand(3) };
-    ReplaceNode(N, CurDAG->getMachineNode(YCore::MACCU_l4r, dl, MVT::i32,
-                                          MVT::i32, Ops));
-    return;
-  }
-  case YCoreISD::MACCS: {
-    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
-                      N->getOperand(2), N->getOperand(3) };
-    ReplaceNode(N, CurDAG->getMachineNode(YCore::MACCS_l4r, dl, MVT::i32,
-                                          MVT::i32, Ops));
-    return;
-  }
-  case YCoreISD::LMUL: {
-    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
-                      N->getOperand(2), N->getOperand(3) };
-    ReplaceNode(N, CurDAG->getMachineNode(YCore::LMUL_l6r, dl, MVT::i32,
-                                          MVT::i32, Ops));
-    return;
-  }
-  case YCoreISD::CRC8: {
-    SDValue Ops[] = { N->getOperand(0), N->getOperand(1), N->getOperand(2) };
-    ReplaceNode(N, CurDAG->getMachineNode(YCore::CRC8_l4r, dl, MVT::i32,
-                                          MVT::i32, Ops));
-    return;
-  }
-  case ISD::BRIND:
-    if (tryBRIND(N))
-      return;
-    break;
+//  case ISD::Constant: {
+//    uint64_t Val = cast<ConstantSDNode>(N)->getZExtValue();
+//    if (immMskBitp(N)) {
+//      // Transformation function: get the size of a mask
+//      // Look for the first non-zero bit
+//      SDValue MskSize = getI32Imm(32 - countLeadingZeros((uint32_t)Val), dl);
+//      ReplaceNode(N, CurDAG->getMachineNode(YCore::MKMSK_rus, dl,
+//                                            MVT::i32, MskSize));
+//      return;
+//    }
+//    else if (!isUInt<16>(Val)) {
+//      SDValue CPIdx = CurDAG->getTargetConstantPool(
+//          ConstantInt::get(Type::getInt32Ty(*CurDAG->getContext()), Val),
+//          getTargetLowering()->getPointerTy(CurDAG->getDataLayout()));
+//      SDNode *node = CurDAG->getMachineNode(YCore::LDWCP_lru6, dl, MVT::i32,
+//                                            MVT::Other, CPIdx,
+//                                            CurDAG->getEntryNode());
+//      MachineMemOperand *MemOp =
+//          MF->getMachineMemOperand(MachinePointerInfo::getConstantPool(*MF),
+//                                   MachineMemOperand::MOLoad, 4, Align(4));
+//      CurDAG->setNodeMemRefs(cast<MachineSDNode>(node), {MemOp});
+//      ReplaceNode(N, node);
+//      return;
+//    }
+//    break;
+//  }
+//  case YCoreISD::LADD: {
+//    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
+//                        N->getOperand(2) };
+//    ReplaceNode(N, CurDAG->getMachineNode(YCore::LADD_l5r, dl, MVT::i32,
+//                                          MVT::i32, Ops));
+//    return;
+//  }
+//  case YCoreISD::LSUB: {
+//    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
+//                        N->getOperand(2) };
+//    ReplaceNode(N, CurDAG->getMachineNode(YCore::LSUB_l5r, dl, MVT::i32,
+//                                          MVT::i32, Ops));
+//    return;
+//  }
+//  case YCoreISD::MACCU: {
+//    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
+//                      N->getOperand(2), N->getOperand(3) };
+//    ReplaceNode(N, CurDAG->getMachineNode(YCore::MACCU_l4r, dl, MVT::i32,
+//                                          MVT::i32, Ops));
+//    return;
+//  }
+//  case YCoreISD::MACCS: {
+//    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
+//                      N->getOperand(2), N->getOperand(3) };
+//    ReplaceNode(N, CurDAG->getMachineNode(YCore::MACCS_l4r, dl, MVT::i32,
+//                                          MVT::i32, Ops));
+//    return;
+//  }
+//  case YCoreISD::LMUL: {
+//    SDValue Ops[] = { N->getOperand(0), N->getOperand(1),
+//                      N->getOperand(2), N->getOperand(3) };
+//    ReplaceNode(N, CurDAG->getMachineNode(YCore::LMUL_l6r, dl, MVT::i32,
+//                                          MVT::i32, Ops));
+//    return;
+//  }
+//  case YCoreISD::CRC8: {
+//    SDValue Ops[] = { N->getOperand(0), N->getOperand(1), N->getOperand(2) };
+//    ReplaceNode(N, CurDAG->getMachineNode(YCore::CRC8_l4r, dl, MVT::i32,
+//                                          MVT::i32, Ops));
+//    return;
+//  }
+//  case ISD::BRIND:
+//    if (tryBRIND(N))
+//      return;
+//    break;
   // Other cases are autogenerated.
   }
   SelectCode(N);

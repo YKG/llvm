@@ -490,71 +490,71 @@ def OUTPW_l2rus : _FL2RUSBitp<0b100101101, (outs),
                               (ins GRRegs:$a, GRRegs:$b, i32imm:$c),
                               "outpw res[$b], $a, $c", []>;
 
-// Four operand long
-let Constraints = "$e = $a,$f = $b" in {
-def MACCU_l4r : _FL4RSrcDstSrcDst<
-  0b000001, (outs GRRegs:$a, GRRegs:$b),
-  (ins GRRegs:$e, GRRegs:$f, GRRegs:$c, GRRegs:$d), "maccu $a, $b, $c, $d", []>;
+// // Four operand long
+// let Constraints = "$e = $a,$f = $b" in {
+// def MACCU_l4r : _FL4RSrcDstSrcDst<
+//   0b000001, (outs GRRegs:$a, GRRegs:$b),
+//   (ins GRRegs:$e, GRRegs:$f, GRRegs:$c, GRRegs:$d), "maccu $a, $b, $c, $d", []>;
 
-def MACCS_l4r : _FL4RSrcDstSrcDst<
-  0b000010, (outs GRRegs:$a, GRRegs:$b),
-  (ins GRRegs:$e, GRRegs:$f, GRRegs:$c, GRRegs:$d), "maccs $a, $b, $c, $d", []>;
-}
+// def MACCS_l4r : _FL4RSrcDstSrcDst<
+//   0b000010, (outs GRRegs:$a, GRRegs:$b),
+//   (ins GRRegs:$e, GRRegs:$f, GRRegs:$c, GRRegs:$d), "maccs $a, $b, $c, $d", []>;
+// }
 
-let Constraints = "$e = $b" in
-def CRC8_l4r : _FL4RSrcDst<0b000000, (outs GRRegs:$a, GRRegs:$b),
-                           (ins GRRegs:$e, GRRegs:$c, GRRegs:$d),
-                           "crc8 $b, $a, $c, $d", []>;
+// let Constraints = "$e = $b" in
+// def CRC8_l4r : _FL4RSrcDst<0b000000, (outs GRRegs:$a, GRRegs:$b),
+//                            (ins GRRegs:$e, GRRegs:$c, GRRegs:$d),
+//                            "crc8 $b, $a, $c, $d", []>;
 
-// Five operand long
+// // Five operand long
 
-def LADD_l5r : _FL5R<0b000001, (outs GRRegs:$dst1, GRRegs:$dst2),
-                     (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
-                     "ladd $dst2, $dst1, $src1, $src2, $src3",
-                     []>;
+// def LADD_l5r : _FL5R<0b000001, (outs GRRegs:$dst1, GRRegs:$dst2),
+//                      (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
+//                      "ladd $dst2, $dst1, $src1, $src2, $src3",
+//                      []>;
 
-def LSUB_l5r : _FL5R<0b000010, (outs GRRegs:$dst1, GRRegs:$dst2),
-                     (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
-                     "lsub $dst2, $dst1, $src1, $src2, $src3", []>;
+// def LSUB_l5r : _FL5R<0b000010, (outs GRRegs:$dst1, GRRegs:$dst2),
+//                      (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
+//                      "lsub $dst2, $dst1, $src1, $src2, $src3", []>;
 
-def LDIVU_l5r : _FL5R<0b000000, (outs GRRegs:$dst1, GRRegs:$dst2),
-                      (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
-                      "ldivu $dst1, $dst2, $src3, $src1, $src2", []>;
+// def LDIVU_l5r : _FL5R<0b000000, (outs GRRegs:$dst1, GRRegs:$dst2),
+//                       (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
+//                       "ldivu $dst1, $dst2, $src3, $src1, $src2", []>;
 
-// Six operand long
+// // Six operand long
 
-def LMUL_l6r : _FL6R<
-  0b00000, (outs GRRegs:$dst1, GRRegs:$dst2),
-  (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3, GRRegs:$src4),
-  "lmul $dst1, $dst2, $src1, $src2, $src3, $src4", []>;
+// def LMUL_l6r : _FL6R<
+//   0b00000, (outs GRRegs:$dst1, GRRegs:$dst2),
+//   (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3, GRRegs:$src4),
+//   "lmul $dst1, $dst2, $src1, $src2, $src3, $src4", []>;
 
-// Register - U6
+// // Register - U6
 
-//let Uses = [DP] in ...
-let hasSideEffects = 0, isReMaterializable = 1 in
-def LDAWDP_ru6: _FRU6<0b011000, (outs RRegs:$a), (ins i32imm:$b),
-                      "ldaw $a, dp[$b]", []>;
+// //let Uses = [DP] in ...
+// let hasSideEffects = 0, isReMaterializable = 1 in
+// def LDAWDP_ru6: _FRU6<0b011000, (outs RRegs:$a), (ins i32imm:$b),
+//                       "ldaw $a, dp[$b]", []>;
 
-let isReMaterializable = 1 in
-def LDAWDP_lru6: _FLRU6<0b011000, (outs RRegs:$a), (ins i32imm:$b),
-                        "ldaw $a, dp[$b]",
-                        [(set RRegs:$a, (dprelwrapper tglobaladdr:$b))]>;
+// let isReMaterializable = 1 in
+// def LDAWDP_lru6: _FLRU6<0b011000, (outs RRegs:$a), (ins i32imm:$b),
+//                         "ldaw $a, dp[$b]",
+//                         [(set RRegs:$a, (dprelwrapper tglobaladdr:$b))]>;
 
-let mayLoad=1 in
-def LDWDP_ru6: _FRU6<0b010110, (outs RRegs:$a), (ins i32imm:$b),
-                     "ldw $a, dp[$b]", []>;
+// let mayLoad=1 in
+// def LDWDP_ru6: _FRU6<0b010110, (outs RRegs:$a), (ins i32imm:$b),
+//                      "ldw $a, dp[$b]", []>;
 
-def LDWDP_lru6: _FLRU6<0b010110, (outs RRegs:$a), (ins i32imm:$b),
-                       "ldw $a, dp[$b]",
-                       [(set RRegs:$a, (load (dprelwrapper tglobaladdr:$b)))]>;
+// def LDWDP_lru6: _FLRU6<0b010110, (outs RRegs:$a), (ins i32imm:$b),
+//                        "ldw $a, dp[$b]",
+//                        [(set RRegs:$a, (load (dprelwrapper tglobaladdr:$b)))]>;
 
-let mayStore=1 in
-def STWDP_ru6 : _FRU6<0b010100, (outs), (ins RRegs:$a, i32imm:$b),
-                      "stw $a, dp[$b]", []>;
+// let mayStore=1 in
+// def STWDP_ru6 : _FRU6<0b010100, (outs), (ins RRegs:$a, i32imm:$b),
+//                       "stw $a, dp[$b]", []>;
 
-def STWDP_lru6 : _FLRU6<0b010100, (outs), (ins RRegs:$a, i32imm:$b),
-                        "stw $a, dp[$b]",
-                        [(store RRegs:$a, (dprelwrapper tglobaladdr:$b))]>;
+// def STWDP_lru6 : _FLRU6<0b010100, (outs), (ins RRegs:$a, i32imm:$b),
+//                         "stw $a, dp[$b]",
+//                         [(store RRegs:$a, (dprelwrapper tglobaladdr:$b))]>;
 
 //let Uses = [CP] in ..
 let mayLoad = 1, isReMaterializable = 1, hasSideEffects = 0 in {
