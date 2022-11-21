@@ -72,7 +72,6 @@ public:
   void addIRPasses() override;
   bool addPreISel() override;
   bool addInstSelector() override;
-  void addPreEmitPass() override;
 };
 
 } // end anonymous namespace
@@ -95,10 +94,6 @@ bool YCorePassConfig::addPreISel() {
 bool YCorePassConfig::addInstSelector() {
   addPass(createYCoreISelDag(getYCoreTargetMachine(), getOptLevel()));
   return false;
-}
-
-void YCorePassConfig::addPreEmitPass() {
-  addPass(createYCoreFrameToArgsOffsetEliminationPass());
 }
 
 // Force static initialization.

@@ -26,7 +26,6 @@ add_llvm_target(YCoreCodeGen
   YCoreTargetMachine.cpp
   YCoreTargetObjectFile.cpp
   YCoreSelectionDAGInfo.cpp
-  YCoreFrameToArgsOffsetElim.cpp
 
   LINK_COMPONENTS
   Analysis
