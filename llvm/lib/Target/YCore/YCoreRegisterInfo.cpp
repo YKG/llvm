@@ -148,11 +148,11 @@ static void InsertSPImmInst(MachineBasicBlock::iterator II,
           .addImm(Offset)
           .addMemOperand(*MI.memoperands_begin());
     break;
-  case YCore::LDAWFI:
-    NewOpcode = (isU6) ? YCore::LDAWSP_ru6 : YCore::LDAWSP_lru6;
-    BuildMI(MBB, II, dl, TII.get(NewOpcode), Reg)
-          .addImm(Offset);
-    break;
+//  case YCore::LDAWFI:
+//    NewOpcode = (isU6) ? YCore::LDAWSP_ru6 : YCore::LDAWSP_lru6;
+//    BuildMI(MBB, II, dl, TII.get(NewOpcode), Reg)
+//          .addImm(Offset);
+//    break;
   default:
     llvm_unreachable("Unexpected Opcode");
   }

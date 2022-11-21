@@ -178,14 +178,14 @@ def immU16 : PatLeaf<(imm), [{
 //                      (sub node:$addr, (shl node:$offset, 2))>;
 
 // Instruction operand types
-def pcrel_imm  : Operand<i32>;
-def pcrel_imm_neg  : Operand<i32> {
-  let DecoderMethod = "DecodeNegImmOperand";
-}
-def brtarget : Operand<OtherVT>;
-def brtarget_neg : Operand<OtherVT> {
-  let DecoderMethod = "DecodeNegImmOperand";
-}
+// def pcrel_imm  : Operand<i32>;
+// def pcrel_imm_neg  : Operand<i32> {
+//   let DecoderMethod = "DecodeNegImmOperand";
+// }
+// def brtarget : Operand<OtherVT>;
+// def brtarget_neg : Operand<OtherVT> {
+//   let DecoderMethod = "DecodeNegImmOperand";
+// }
 
 // Addressing modes
 def ADDRspii : ComplexPattern<i32, 2, "SelectADDRspii", [add, frameindex], []>;
@@ -195,14 +195,14 @@ def MEMii : Operand<i32> {
   let MIOperandInfo = (ops i32imm, i32imm);
 }
 
-// Jump tables.
-def InlineJT : Operand<i32> {
-  let PrintMethod = "printInlineJT";
-}
+// // Jump tables.
+// def InlineJT : Operand<i32> {
+//   let PrintMethod = "printInlineJT";
+// }
 
-def InlineJT32 : Operand<i32> {
-  let PrintMethod = "printInlineJT32";
-}
+// def InlineJT32 : Operand<i32> {
+//   let PrintMethod = "printInlineJT32";
+// }
 
 //===----------------------------------------------------------------------===//
 // Instruction Class Templates
@@ -275,19 +275,19 @@ class FL3R<bits<9> opc, string OpcStr, SDNode OpNode> :
 
 // Register - U6
 // Operand register - U6
-multiclass FRU6_LRU6_branch<bits<6> opc, string OpcStr> {
-  def _ru6: _FRU6<opc, (outs), (ins GRRegs:$a, brtarget:$b),
-                  !strconcat(OpcStr, " $a, $b"), []>;
-  def _lru6: _FLRU6<opc, (outs), (ins GRRegs:$a, brtarget:$b),
-                    !strconcat(OpcStr, " $a, $b"), []>;
-}
+// multiclass FRU6_LRU6_branch<bits<6> opc, string OpcStr> {
+//   def _ru6: _FRU6<opc, (outs), (ins GRRegs:$a, brtarget:$b),
+//                   !strconcat(OpcStr, " $a, $b"), []>;
+//   def _lru6: _FLRU6<opc, (outs), (ins GRRegs:$a, brtarget:$b),
+//                     !strconcat(OpcStr, " $a, $b"), []>;
+// }
 
-multiclass FRU6_LRU6_backwards_branch<bits<6> opc, string OpcStr> {
-  def _ru6: _FRU6<opc, (outs), (ins GRRegs:$a, brtarget_neg:$b),
-                  !strconcat(OpcStr, " $a, $b"), []>;
-  def _lru6: _FLRU6<opc, (outs), (ins GRRegs:$a, brtarget_neg:$b),
-                    !strconcat(OpcStr, " $a, $b"), []>;
-}
+// multiclass FRU6_LRU6_backwards_branch<bits<6> opc, string OpcStr> {
+//   def _ru6: _FRU6<opc, (outs), (ins GRRegs:$a, brtarget_neg:$b),
+//                   !strconcat(OpcStr, " $a, $b"), []>;
+//   def _lru6: _FLRU6<opc, (outs), (ins GRRegs:$a, brtarget_neg:$b),
+//                     !strconcat(OpcStr, " $a, $b"), []>;
+// }
 
 
 // U6
@@ -345,9 +345,9 @@ def LDWFI : PseudoInstYCore<(outs GRRegs:$dst), (ins MEMii:$addr),
                              "# LDWFI $dst, $addr",
                              [(set GRRegs:$dst, (load ADDRspii:$addr))]>;
 
-def LDAWFI : PseudoInstYCore<(outs GRRegs:$dst), (ins MEMii:$addr),
-                             "# LDAWFI $dst, $addr",
-                             [(set GRRegs:$dst, ADDRspii:$addr)]>;
+// def LDAWFI : PseudoInstYCore<(outs GRRegs:$dst), (ins MEMii:$addr),
+//                              "# LDAWFI $dst, $addr",
+//                              [(set GRRegs:$dst, ADDRspii:$addr)]>;
 
 def STWFI : PseudoInstYCore<(outs), (ins GRRegs:$src, MEMii:$addr),
                             "# STWFI $src, $addr",

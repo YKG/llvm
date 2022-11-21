@@ -62,15 +62,15 @@ static bool isZeroImm(const MachineOperand &op) {
 unsigned YCoreInstrInfo::isLoadFromStackSlot(const MachineInstr &MI,
                                              int &FrameIndex) const {
   int Opcode = MI.getOpcode();
-  if (Opcode == YCore::LDWFI)
-  {
-    if ((MI.getOperand(1).isFI()) &&  // is a stack slot
-        (MI.getOperand(2).isImm()) && // the imm is zero
-        (isZeroImm(MI.getOperand(2)))) {
-      FrameIndex = MI.getOperand(1).getIndex();
-      return MI.getOperand(0).getReg();
-    }
-  }
+//  if (Opcode == YCore::LDWFI)
+//  {
+//    if ((MI.getOperand(1).isFI()) &&  // is a stack slot
+//        (MI.getOperand(2).isImm()) && // the imm is zero
+//        (isZeroImm(MI.getOperand(2)))) {
+//      FrameIndex = MI.getOperand(1).getIndex();
+//      return MI.getOperand(0).getReg();
+//    }
+//  }
   return 0;
 }
 
@@ -82,15 +82,15 @@ unsigned YCoreInstrInfo::isLoadFromStackSlot(const MachineInstr &MI,
 unsigned YCoreInstrInfo::isStoreToStackSlot(const MachineInstr &MI,
                                             int &FrameIndex) const {
   int Opcode = MI.getOpcode();
-  if (Opcode == YCore::STWFI)
-  {
-    if ((MI.getOperand(1).isFI()) &&  // is a stack slot
-        (MI.getOperand(2).isImm()) && // the imm is zero
-        (isZeroImm(MI.getOperand(2)))) {
-      FrameIndex = MI.getOperand(1).getIndex();
-      return MI.getOperand(0).getReg();
-    }
-  }
+//  if (Opcode == YCore::STWFI)
+//  {
+//    if ((MI.getOperand(1).isFI()) &&  // is a stack slot
+//        (MI.getOperand(2).isImm()) && // the imm is zero
+//        (isZeroImm(MI.getOperand(2)))) {
+//      FrameIndex = MI.getOperand(1).getIndex();
+//      return MI.getOperand(0).getReg();
+//    }
+//  }
   return 0;
 }
 
@@ -367,20 +367,20 @@ void YCoreInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                          const TargetRegisterClass *RC,
                                          const TargetRegisterInfo *TRI) const
 {
-  DebugLoc DL;
-  if (I != MBB.end() && !I->isDebugInstr())
-    DL = I->getDebugLoc();
-  MachineFunction *MF = MBB.getParent();
-  const MachineFrameInfo &MFI = MF->getFrameInfo();
-  MachineMemOperand *MMO = MF->getMachineMemOperand(
-      MachinePointerInfo::getFixedStack(*MF, FrameIndex),
-      MachineMemOperand::MOStore, MFI.getObjectSize(FrameIndex),
-      MFI.getObjectAlign(FrameIndex));
-  BuildMI(MBB, I, DL, get(YCore::STWFI))
-    .addReg(SrcReg, getKillRegState(isKill))
-    .addFrameIndex(FrameIndex)
-    .addImm(0)
-    .addMemOperand(MMO);
+//  DebugLoc DL;
+//  if (I != MBB.end() && !I->isDebugInstr())
+//    DL = I->getDebugLoc();
+//  MachineFunction *MF = MBB.getParent();
+//  const MachineFrameInfo &MFI = MF->getFrameInfo();
+//  MachineMemOperand *MMO = MF->getMachineMemOperand(
+//      MachinePointerInfo::getFixedStack(*MF, FrameIndex),
+//      MachineMemOperand::MOStore, MFI.getObjectSize(FrameIndex),
+//      MFI.getObjectAlign(FrameIndex));
+//  BuildMI(MBB, I, DL, get(YCore::STWFI))
+//    .addReg(SrcReg, getKillRegState(isKill))
+//    .addFrameIndex(FrameIndex)
+//    .addImm(0)
+//    .addMemOperand(MMO);
 }
 
 void YCoreInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
@@ -389,19 +389,19 @@ void YCoreInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                                           const TargetRegisterClass *RC,
                                           const TargetRegisterInfo *TRI) const
 {
-  DebugLoc DL;
-  if (I != MBB.end() && !I->isDebugInstr())
-    DL = I->getDebugLoc();
-  MachineFunction *MF = MBB.getParent();
-  const MachineFrameInfo &MFI = MF->getFrameInfo();
-  MachineMemOperand *MMO = MF->getMachineMemOperand(
-      MachinePointerInfo::getFixedStack(*MF, FrameIndex),
-      MachineMemOperand::MOLoad, MFI.getObjectSize(FrameIndex),
-      MFI.getObjectAlign(FrameIndex));
-  BuildMI(MBB, I, DL, get(YCore::LDWFI), DestReg)
-    .addFrameIndex(FrameIndex)
-    .addImm(0)
-    .addMemOperand(MMO);
+//  DebugLoc DL;
+//  if (I != MBB.end() && !I->isDebugInstr())
+//    DL = I->getDebugLoc();
+//  MachineFunction *MF = MBB.getParent();
+//  const MachineFrameInfo &MFI = MF->getFrameInfo();
+//  MachineMemOperand *MMO = MF->getMachineMemOperand(
+//      MachinePointerInfo::getFixedStack(*MF, FrameIndex),
+//      MachineMemOperand::MOLoad, MFI.getObjectSize(FrameIndex),
+//      MFI.getObjectAlign(FrameIndex));
+//  BuildMI(MBB, I, DL, get(YCore::LDWFI), DestReg)
+//    .addFrameIndex(FrameIndex)
+//    .addImm(0)
+//    .addMemOperand(MMO);
 }
 
 bool YCoreInstrInfo::
