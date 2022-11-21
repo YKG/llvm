@@ -1944,6 +1944,7 @@ std::pair<unsigned, const TargetRegisterClass *>
 YCoreTargetLowering::getRegForInlineAsmConstraint(const TargetRegisterInfo *TRI,
                                                   StringRef Constraint,
                                                   MVT VT) const {
+  llvm_unreachable("TODO");
   if (Constraint.size() == 1) {
     switch (Constraint[0]) {
     default : break;
