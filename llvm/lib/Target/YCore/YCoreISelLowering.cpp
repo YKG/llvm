@@ -212,8 +212,8 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 //  case ISD::SMUL_LOHI:          return LowerSMUL_LOHI(Op, DAG);
 //  case ISD::UMUL_LOHI:          return LowerUMUL_LOHI(Op, DAG);
   // FIXME: Remove these when LegalizeDAGTypes lands.
-  case ISD::ADD:
-                                return ExpandADDSUB(Op.getNode(), DAG);
+//  case ISD::ADD:
+//                                return ExpandADDSUB(Op.getNode(), DAG);
 //  case ISD::SUB:                return ExpandADDSUB(Op.getNode(), DAG);
 //  case ISD::FRAMEADDR:          return LowerFRAMEADDR(Op, DAG);
 //  case ISD::RETURNADDR:         return LowerRETURNADDR(Op, DAG);
@@ -698,49 +698,49 @@ SDValue YCoreTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
 //  return DAG.getNode(ISD::BUILD_PAIR, dl, MVT::i64, Lo, Hi);
 //}
 //
-SDValue YCoreTargetLowering::
-ExpandADDSUB(SDNode *N, SelectionDAG &DAG) const
-{
-  llvm_unreachable("TODO");
-  assert(N->getValueType(0) == MVT::i64 &&
-         (N->getOpcode() == ISD::ADD || N->getOpcode() == ISD::SUB) &&
-        "Unknown operand to lower!");
-
-//  if (N->getOpcode() == ISD::ADD)
-//    if (SDValue Result = TryExpandADDWithMul(N, DAG))
-//      return Result;
-
-  SDLoc dl(N);
-
-  // Extract components
-  SDValue LHSL = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
-                             N->getOperand(0),
-                             DAG.getConstant(0, dl, MVT::i32));
-  SDValue LHSH = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
-                             N->getOperand(0),
-                             DAG.getConstant(1, dl, MVT::i32));
-  SDValue RHSL = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
-                             N->getOperand(1),
-                             DAG.getConstant(0, dl, MVT::i32));
-  SDValue RHSH = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
-                             N->getOperand(1),
-                             DAG.getConstant(1, dl, MVT::i32));
-
-  // Expand
-//  unsigned Opcode = (N->getOpcode() == ISD::ADD) ? YCoreISD::LADD :
-//                                                   YCoreISD::LSUB;
-  unsigned Opcode = (YCoreISD::LADD);
-  SDValue Zero = DAG.getConstant(0, dl, MVT::i32);
-  SDValue Lo = DAG.getNode(Opcode, dl, DAG.getVTList(MVT::i32, MVT::i32),
-                           LHSL, RHSL, Zero);
-  SDValue Carry(Lo.getNode(), 1);
-
-  SDValue Hi = DAG.getNode(Opcode, dl, DAG.getVTList(MVT::i32, MVT::i32),
-                           LHSH, RHSH, Carry);
-  SDValue Ignored(Hi.getNode(), 1);
-  // Merge the pieces
-  return DAG.getNode(ISD::BUILD_PAIR, dl, MVT::i64, Lo, Hi);
-}
+//SDValue YCoreTargetLowering::
+//ExpandADDSUB(SDNode *N, SelectionDAG &DAG) const
+//{
+//  llvm_unreachable("TODO");
+//  assert(N->getValueType(0) == MVT::i64 &&
+//         (N->getOpcode() == ISD::ADD || N->getOpcode() == ISD::SUB) &&
+//        "Unknown operand to lower!");
+//
+////  if (N->getOpcode() == ISD::ADD)
+////    if (SDValue Result = TryExpandADDWithMul(N, DAG))
+////      return Result;
+//
+//  SDLoc dl(N);
+//
+//  // Extract components
+//  SDValue LHSL = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
+//                             N->getOperand(0),
+//                             DAG.getConstant(0, dl, MVT::i32));
+//  SDValue LHSH = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
+//                             N->getOperand(0),
+//                             DAG.getConstant(1, dl, MVT::i32));
+//  SDValue RHSL = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
+//                             N->getOperand(1),
+//                             DAG.getConstant(0, dl, MVT::i32));
+//  SDValue RHSH = DAG.getNode(ISD::EXTRACT_ELEMENT, dl, MVT::i32,
+//                             N->getOperand(1),
+//                             DAG.getConstant(1, dl, MVT::i32));
+//
+//  // Expand
+////  unsigned Opcode = (N->getOpcode() == ISD::ADD) ? YCoreISD::LADD :
+////                                                   YCoreISD::LSUB;
+//  unsigned Opcode = (YCoreISD::LADD);
+//  SDValue Zero = DAG.getConstant(0, dl, MVT::i32);
+//  SDValue Lo = DAG.getNode(Opcode, dl, DAG.getVTList(MVT::i32, MVT::i32),
+//                           LHSL, RHSL, Zero);
+//  SDValue Carry(Lo.getNode(), 1);
+//
+//  SDValue Hi = DAG.getNode(Opcode, dl, DAG.getVTList(MVT::i32, MVT::i32),
+//                           LHSH, RHSH, Carry);
+//  SDValue Ignored(Hi.getNode(), 1);
+//  // Merge the pieces
+//  return DAG.getNode(ISD::BUILD_PAIR, dl, MVT::i64, Lo, Hi);
+//}
 //
 //SDValue YCoreTargetLowering::
 //LowerVAARG(SDValue Op, SelectionDAG &DAG) const
