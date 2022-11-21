@@ -113,51 +113,10 @@ SDValue YCoreTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   assert(LD->getMemoryVT() == MVT::i32 && "Unexpected load EVT");
 
   if (allowsMemoryAccessForAlignment(Context, DAG.getDataLayout(),
-                                     LD->getMemoryVT(), *LD->getMemOperand()))
+                                     LD->getMemoryVT(), *LD->getMemOperand())){
     return SDValue();
-
-  SDValue Chain = LD->getChain();
-  SDValue BasePtr = LD->getBasePtr();
-  SDLoc DL(Op);
-
-  if (LD->getAlignment() == 2) {
-    SDValue Low = DAG.getExtLoad(ISD::ZEXTLOAD, DL, MVT::i32, Chain, BasePtr,
-                                 LD->getPointerInfo(), MVT::i16, Align(2),
-                                 LD->getMemOperand()->getFlags());
-    SDValue HighAddr = DAG.getNode(ISD::ADD, DL, MVT::i32, BasePtr,
-                                   DAG.getConstant(2, DL, MVT::i32));
-    SDValue High =
-        DAG.getExtLoad(ISD::EXTLOAD, DL, MVT::i32, Chain, HighAddr,
-                       LD->getPointerInfo().getWithOffset(2), MVT::i16,
-                       Align(2), LD->getMemOperand()->getFlags());
-    SDValue HighShifted = DAG.getNode(ISD::SHL, DL, MVT::i32, High,
-                                      DAG.getConstant(16, DL, MVT::i32));
-    SDValue Result = DAG.getNode(ISD::OR, DL, MVT::i32, Low, HighShifted);
-    Chain = DAG.getNode(ISD::TokenFactor, DL, MVT::Other, Low.getValue(1),
-                             High.getValue(1));
-    SDValue Ops[] = { Result, Chain };
-    return DAG.getMergeValues(Ops, DL);
   }
-
-  // Lower to a call to __misaligned_load(BasePtr).
-  Type *IntPtrTy = DAG.getDataLayout().getIntPtrType(Context);
-  TargetLowering::ArgListTy Args;
-  TargetLowering::ArgListEntry Entry;
-
-  Entry.Ty = IntPtrTy;
-  Entry.Node = BasePtr;
-  Args.push_back(Entry);
-
-  TargetLowering::CallLoweringInfo CLI(DAG);
-  CLI.setDebugLoc(DL).setChain(Chain).setLibCallee(
-      CallingConv::C, IntPtrTy,
-      DAG.getExternalSymbol("__misaligned_load",
-                            getPointerTy(DAG.getDataLayout())),
-      std::move(Args));
-
-  std::pair<SDValue, SDValue> CallResult = LowerCallTo(CLI);
-  SDValue Ops[] = { CallResult.first, CallResult.second };
-  return DAG.getMergeValues(Ops, DL);
+  llvm_unreachable("unimplemented");
 }
 
 SDValue YCoreTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
@@ -169,48 +128,7 @@ SDValue YCoreTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
   if (allowsMemoryAccessForAlignment(Context, DAG.getDataLayout(),
                                      ST->getMemoryVT(), *ST->getMemOperand()))
     return SDValue();
-
-  SDValue Chain = ST->getChain();
-  SDValue BasePtr = ST->getBasePtr();
-  SDValue Value = ST->getValue();
-  SDLoc dl(Op);
-
-  if (ST->getAlignment() == 2) {
-    SDValue Low = Value;
-    SDValue High = DAG.getNode(ISD::SRL, dl, MVT::i32, Value,
-                               DAG.getConstant(16, dl, MVT::i32));
-    SDValue StoreLow =
-        DAG.getTruncStore(Chain, dl, Low, BasePtr, ST->getPointerInfo(),
-                          MVT::i16, Align(2), ST->getMemOperand()->getFlags());
-    SDValue HighAddr = DAG.getNode(ISD::ADD, dl, MVT::i32, BasePtr,
-                                   DAG.getConstant(2, dl, MVT::i32));
-    SDValue StoreHigh = DAG.getTruncStore(
-        Chain, dl, High, HighAddr, ST->getPointerInfo().getWithOffset(2),
-        MVT::i16, Align(2), ST->getMemOperand()->getFlags());
-    return DAG.getNode(ISD::TokenFactor, dl, MVT::Other, StoreLow, StoreHigh);
-  }
-
-  // Lower to a call to __misaligned_store(BasePtr, Value).
-  Type *IntPtrTy = DAG.getDataLayout().getIntPtrType(Context);
-  TargetLowering::ArgListTy Args;
-  TargetLowering::ArgListEntry Entry;
-
-  Entry.Ty = IntPtrTy;
-  Entry.Node = BasePtr;
-  Args.push_back(Entry);
-
-  Entry.Node = Value;
-  Args.push_back(Entry);
-
-  TargetLowering::CallLoweringInfo CLI(DAG);
-  CLI.setDebugLoc(dl).setChain(Chain).setCallee(
-      CallingConv::C, Type::getVoidTy(Context),
-      DAG.getExternalSymbol("__misaligned_store",
-                            getPointerTy(DAG.getDataLayout())),
-      std::move(Args));
-
-  std::pair<SDValue, SDValue> CallResult = LowerCallTo(CLI);
-  return CallResult.second;
+  llvm_unreachable("unimplemented");
 }
 
 //===----------------------------------------------------------------------===//
@@ -306,66 +224,10 @@ SDValue YCoreTargetLowering::LowerCCCArguments(
         CFRegNode.push_back(ArgIn.getValue(ArgIn->getNumValues() - 1));
       }
     } else {
-      // Only arguments passed on the stack should make it here. 
-      assert(VA.isMemLoc());
-      // Load the argument to a virtual register
-      unsigned ObjSize = VA.getLocVT().getSizeInBits()/8;
-      if (ObjSize > StackSlotSize) {
-        errs() << "LowerFormalArguments Unhandled argument type: "
-               << EVT(VA.getLocVT()).getEVTString()
-               << "\n";
-      }
-      // Create the frame index object for this incoming parameter...
-      int FI = MFI.CreateFixedObject(ObjSize,
-                                     LRSaveSize + VA.getLocMemOffset(),
-                                     true);
-
-      // Create the SelectionDAG nodes corresponding to a load
-      //from this parameter
-      SDValue FIN = DAG.getFrameIndex(FI, MVT::i32);
-      ArgIn = DAG.getLoad(VA.getLocVT(), dl, Chain, FIN,
-                          MachinePointerInfo::getFixedStack(MF, FI));
+      llvm_unreachable("unimplemented");
     }
     const ArgDataPair ADP = { ArgIn, Ins[i].Flags };
     ArgData.push_back(ADP);
-  }
-
-  // 1b. CopyFromReg vararg registers.
-  if (isVarArg) {
-    // Argument registers
-    static const MCPhysReg ArgRegs[] = {
-      YCore::R0, YCore::R1, YCore::R2, YCore::R3
-    };
-    YCoreFunctionInfo *XFI = MF.getInfo<YCoreFunctionInfo>();
-    unsigned FirstVAReg = CCInfo.getFirstUnallocated(ArgRegs);
-    if (FirstVAReg < array_lengthof(ArgRegs)) {
-      int offset = 0;
-      // Save remaining registers, storing higher register numbers at a higher
-      // address
-      for (int i = array_lengthof(ArgRegs) - 1; i >= (int)FirstVAReg; --i) {
-        // Create a stack slot
-        int FI = MFI.CreateFixedObject(4, offset, true);
-        if (i == (int)FirstVAReg) {
-          XFI->setVarArgsFrameIndex(FI);
-        }
-        offset -= StackSlotSize;
-        SDValue FIN = DAG.getFrameIndex(FI, MVT::i32);
-        // Move argument from phys reg -> virt reg
-        Register VReg = RegInfo.createVirtualRegister(&YCore::GRRegsRegClass);
-        RegInfo.addLiveIn(ArgRegs[i], VReg);
-        SDValue Val = DAG.getCopyFromReg(Chain, dl, VReg, MVT::i32);
-        CFRegNode.push_back(Val.getValue(Val->getNumValues() - 1));
-        // Move argument from virt reg -> stack
-        SDValue Store =
-            DAG.getStore(Val.getValue(1), dl, Val, FIN, MachinePointerInfo());
-        MemOps.push_back(Store);
-      }
-    } else {
-      // This will point to the next argument passed via stack.
-      XFI->setVarArgsFrameIndex(
-        MFI.CreateFixedObject(4, LRSaveSize + CCInfo.getNextStackOffset(),
-                              true));
-    }
   }
 
   // 2. chain CopyFromReg nodes into a TokenFactor.
@@ -379,27 +241,12 @@ SDValue YCoreTargetLowering::LowerCCCArguments(
   for (SmallVectorImpl<ArgDataPair>::const_iterator ArgDI = ArgData.begin(),
                                                     ArgDE = ArgData.end();
        ArgDI != ArgDE; ++ArgDI) {
+
     if (ArgDI->Flags.isByVal() && ArgDI->Flags.getByValSize()) {
-      unsigned Size = ArgDI->Flags.getByValSize();
-      Align Alignment =
-          std::max(Align(StackSlotSize), ArgDI->Flags.getNonZeroByValAlign());
-      // Create a new object on the stack and copy the pointee into it.
-      int FI = MFI.CreateStackObject(Size, Alignment, false);
-      SDValue FIN = DAG.getFrameIndex(FI, MVT::i32);
-      InVals.push_back(FIN);
-      MemOps.push_back(DAG.getMemcpy(
-          Chain, dl, FIN, ArgDI->SDV, DAG.getConstant(Size, dl, MVT::i32),
-          Alignment, false, false, false, MachinePointerInfo(),
-          MachinePointerInfo()));
+      llvm_unreachable("unimplemented");
     } else {
       InVals.push_back(ArgDI->SDV);
     }
-  }
-
-  // 4, chain mem ops nodes into a TokenFactor.
-  if (!MemOps.empty()) {
-    MemOps.push_back(Chain);
-    Chain = DAG.getNode(ISD::TokenFactor, dl, MVT::Other, MemOps);
   }
 
   return Chain;
@@ -460,22 +307,7 @@ YCoreTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
     CCValAssign &VA = RVLocs[i];
     if (VA.isRegLoc())
       continue;
-    assert(VA.isMemLoc());
-    if (isVarArg) {
-      report_fatal_error("Can't return value from vararg function in memory");
-    }
-
-    int Offset = VA.getLocMemOffset();
-    unsigned ObjSize = VA.getLocVT().getSizeInBits() / 8;
-    // Create the frame index object for the memory location.
-    int FI = MFI.CreateFixedObject(ObjSize, Offset, false);
-
-    // Create a SelectionDAG node corresponding to a store
-    // to this memory location.
-    SDValue FIN = DAG.getFrameIndex(FI, MVT::i32);
-    MemOpChains.push_back(DAG.getStore(
-        Chain, dl, OutVals[i], FIN,
-        MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), FI)));
+    llvm_unreachable("unimplemented");
   }
 
   // Transform all store nodes into one single node because
@@ -516,80 +348,6 @@ SDValue YCoreTargetLowering::PerformDAGCombine(SDNode *N,
   SDLoc dl(N);
   switch (N->getOpcode()) {
   default: break;
-  case ISD::INTRINSIC_VOID:
-    switch (cast<ConstantSDNode>(N->getOperand(1))->getZExtValue()) {
-    case Intrinsic::ycore_outt:
-    case Intrinsic::ycore_outct:
-    case Intrinsic::ycore_chkct: {
-      SDValue OutVal = N->getOperand(3);
-      // These instructions ignore the high bits.
-      if (OutVal.hasOneUse()) {
-        unsigned BitWidth = OutVal.getValueSizeInBits();
-        APInt DemandedMask = APInt::getLowBitsSet(BitWidth, 8);
-        KnownBits Known;
-        TargetLowering::TargetLoweringOpt TLO(DAG, !DCI.isBeforeLegalize(),
-                                              !DCI.isBeforeLegalizeOps());
-        const TargetLowering &TLI = DAG.getTargetLoweringInfo();
-        if (TLI.ShrinkDemandedConstant(OutVal, DemandedMask, TLO) ||
-            TLI.SimplifyDemandedBits(OutVal, DemandedMask, Known, TLO))
-          DCI.CommitTargetLoweringOpt(TLO);
-      }
-      break;
-    }
-    case Intrinsic::ycore_setpt: {
-      SDValue Time = N->getOperand(3);
-      // This instruction ignores the high bits.
-      if (Time.hasOneUse()) {
-        unsigned BitWidth = Time.getValueSizeInBits();
-        APInt DemandedMask = APInt::getLowBitsSet(BitWidth, 16);
-        KnownBits Known;
-        TargetLowering::TargetLoweringOpt TLO(DAG, !DCI.isBeforeLegalize(),
-                                              !DCI.isBeforeLegalizeOps());
-        const TargetLowering &TLI = DAG.getTargetLoweringInfo();
-        if (TLI.ShrinkDemandedConstant(Time, DemandedMask, TLO) ||
-            TLI.SimplifyDemandedBits(Time, DemandedMask, Known, TLO))
-          DCI.CommitTargetLoweringOpt(TLO);
-      }
-      break;
-    }
-    }
-    break;
-  case YCoreISD::LADD: {
-    SDValue N0 = N->getOperand(0);
-    SDValue N1 = N->getOperand(1);
-    SDValue N2 = N->getOperand(2);
-    ConstantSDNode *N0C = dyn_cast<ConstantSDNode>(N0);
-    ConstantSDNode *N1C = dyn_cast<ConstantSDNode>(N1);
-    EVT VT = N0.getValueType();
-
-    // canonicalize constant to RHS
-    if (N0C && !N1C)
-      return DAG.getNode(YCoreISD::LADD, dl, DAG.getVTList(VT, VT), N1, N0, N2);
-
-    // fold (ladd 0, 0, x) -> 0, x & 1
-    if (N0C && N0C->isZero() && N1C && N1C->isZero()) {
-      SDValue Carry = DAG.getConstant(0, dl, VT);
-      SDValue Result = DAG.getNode(ISD::AND, dl, VT, N2,
-                                   DAG.getConstant(1, dl, VT));
-      SDValue Ops[] = { Result, Carry };
-      return DAG.getMergeValues(Ops, dl);
-    }
-
-    // fold (ladd x, 0, y) -> 0, add x, y iff carry is unused and y has only the
-    // low bit set
-    if (N1C && N1C->isZero() && N->hasNUsesOfValue(0, 1)) {
-      APInt Mask = APInt::getHighBitsSet(VT.getSizeInBits(),
-                                         VT.getSizeInBits() - 1);
-      KnownBits Known = DAG.computeKnownBits(N2);
-      if ((Known.Zero & Mask) == Mask) {
-        SDValue Carry = DAG.getConstant(0, dl, VT);
-        SDValue Result = DAG.getNode(ISD::ADD, dl, VT, N0, N2);
-        SDValue Ops[] = { Result, Carry };
-        return DAG.getMergeValues(Ops, dl);
-      }
-    }
-  }
-  break;
   case ISD::ADD: {
     // Fold 32 bit expressions such as add(add(mul(x,y),a),b) ->
     // lmul(x, y, a, b). The high result of lmul will be ignored.
@@ -609,25 +367,7 @@ SDValue YCoreTargetLowering::PerformDAGCombine(SDNode *N,
         ST->isVolatile() || ST->isIndexed()) {
       break;
     }
-    SDValue Chain = ST->getChain();
-
-    unsigned StoreBits = ST->getMemoryVT().getStoreSizeInBits();
-    assert((StoreBits % 8) == 0 &&
-           "Store size in bits must be a multiple of 8");
-    unsigned Alignment = ST->getAlignment();
-
-    if (LoadSDNode *LD = dyn_cast<LoadSDNode>(ST->getValue())) {
-      if (LD->hasNUsesOfValue(1, 0) && ST->getMemoryVT() == LD->getMemoryVT() &&
-        LD->getAlignment() == Alignment &&
-        !LD->isVolatile() && !LD->isIndexed() &&
-        Chain.reachesChainWithoutSideEffects(SDValue(LD, 1))) {
-        bool isTail = isInTailCallPosition(DAG, ST, Chain);
-        return DAG.getMemmove(Chain, dl, ST->getBasePtr(), LD->getBasePtr(),
-                              DAG.getConstant(StoreBits / 8, dl, MVT::i32),
-                              Align(Alignment), false, isTail,
-                              ST->getPointerInfo(), LD->getPointerInfo());
-      }
-    }
+    llvm_unreachable("unimplemented");
     break;
   }
   }
