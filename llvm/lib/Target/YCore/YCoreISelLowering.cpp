@@ -268,6 +268,7 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 //}
 
 static bool IsSmallObject(const GlobalValue *GV, const YCoreTargetLowering &XTL) {
+  llvm_unreachable("TODO");
   if (XTL.getTargetMachine().getCodeModel() == CodeModel::Small)
     return true;
 
