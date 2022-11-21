@@ -370,51 +370,51 @@ unsigned YCoreTargetLowering::getJumpTableEncoding() const {
 //  return DAG.getNode(YCoreISD::BR_JT32, dl, MVT::Other, Chain, TargetJT,
 //                     ScaledIndex);
 //}
-
-SDValue YCoreTargetLowering::lowerLoadWordFromAlignedBasePlusOffset(
-    const SDLoc &DL, SDValue Chain, SDValue Base, int64_t Offset,
-    SelectionDAG &DAG) const {
-  llvm_unreachable("TODO");
-  auto PtrVT = getPointerTy(DAG.getDataLayout());
-  if ((Offset & 0x3) == 0) {
-    return DAG.getLoad(PtrVT, DL, Chain, Base, MachinePointerInfo());
-  }
-  // Lower to pair of consecutive word aligned loads plus some bit shifting.
-  int32_t HighOffset = alignTo(Offset, 4);
-  int32_t LowOffset = HighOffset - 4;
-  SDValue LowAddr, HighAddr;
-  if (GlobalAddressSDNode *GASD =
-        dyn_cast<GlobalAddressSDNode>(Base.getNode())) {
-    LowAddr = DAG.getGlobalAddress(GASD->getGlobal(), DL, Base.getValueType(),
-                                   LowOffset);
-    HighAddr = DAG.getGlobalAddress(GASD->getGlobal(), DL, Base.getValueType(),
-                                    HighOffset);
-  } else {
-    LowAddr = DAG.getNode(ISD::ADD, DL, MVT::i32, Base,
-                          DAG.getConstant(LowOffset, DL, MVT::i32));
-    HighAddr = DAG.getNode(ISD::ADD, DL, MVT::i32, Base,
-                           DAG.getConstant(HighOffset, DL, MVT::i32));
-  }
-  SDValue LowShift = DAG.getConstant((Offset - LowOffset) * 8, DL, MVT::i32);
-  SDValue HighShift = DAG.getConstant((HighOffset - Offset) * 8, DL, MVT::i32);
-
-  SDValue Low = DAG.getLoad(PtrVT, DL, Chain, LowAddr, MachinePointerInfo());
-  SDValue High = DAG.getLoad(PtrVT, DL, Chain, HighAddr, MachinePointerInfo());
-  SDValue LowShifted = DAG.getNode(ISD::SRL, DL, MVT::i32, Low, LowShift);
-  SDValue HighShifted = DAG.getNode(ISD::SHL, DL, MVT::i32, High, HighShift);
-  SDValue Result = DAG.getNode(ISD::OR, DL, MVT::i32, LowShifted, HighShifted);
-  Chain = DAG.getNode(ISD::TokenFactor, DL, MVT::Other, Low.getValue(1),
-                      High.getValue(1));
-  SDValue Ops[] = { Result, Chain };
-  return DAG.getMergeValues(Ops, DL);
-}
-
-static bool isWordAligned(SDValue Value, SelectionDAG &DAG)
-{
-  llvm_unreachable("TODO");
-  KnownBits Known = DAG.computeKnownBits(Value);
-  return Known.countMinTrailingZeros() >= 2;
-}
+//
+//SDValue YCoreTargetLowering::lowerLoadWordFromAlignedBasePlusOffset(
+//    const SDLoc &DL, SDValue Chain, SDValue Base, int64_t Offset,
+//    SelectionDAG &DAG) const {
+//  llvm_unreachable("TODO");
+//  auto PtrVT = getPointerTy(DAG.getDataLayout());
+//  if ((Offset & 0x3) == 0) {
+//    return DAG.getLoad(PtrVT, DL, Chain, Base, MachinePointerInfo());
+//  }
+//  // Lower to pair of consecutive word aligned loads plus some bit shifting.
+//  int32_t HighOffset = alignTo(Offset, 4);
+//  int32_t LowOffset = HighOffset - 4;
+//  SDValue LowAddr, HighAddr;
+//  if (GlobalAddressSDNode *GASD =
+//        dyn_cast<GlobalAddressSDNode>(Base.getNode())) {
+//    LowAddr = DAG.getGlobalAddress(GASD->getGlobal(), DL, Base.getValueType(),
+//                                   LowOffset);
+//    HighAddr = DAG.getGlobalAddress(GASD->getGlobal(), DL, Base.getValueType(),
+//                                    HighOffset);
+//  } else {
+//    LowAddr = DAG.getNode(ISD::ADD, DL, MVT::i32, Base,
+//                          DAG.getConstant(LowOffset, DL, MVT::i32));
+//    HighAddr = DAG.getNode(ISD::ADD, DL, MVT::i32, Base,
+//                           DAG.getConstant(HighOffset, DL, MVT::i32));
+//  }
+//  SDValue LowShift = DAG.getConstant((Offset - LowOffset) * 8, DL, MVT::i32);
+//  SDValue HighShift = DAG.getConstant((HighOffset - Offset) * 8, DL, MVT::i32);
+//
+//  SDValue Low = DAG.getLoad(PtrVT, DL, Chain, LowAddr, MachinePointerInfo());
+//  SDValue High = DAG.getLoad(PtrVT, DL, Chain, HighAddr, MachinePointerInfo());
+//  SDValue LowShifted = DAG.getNode(ISD::SRL, DL, MVT::i32, Low, LowShift);
+//  SDValue HighShifted = DAG.getNode(ISD::SHL, DL, MVT::i32, High, HighShift);
+//  SDValue Result = DAG.getNode(ISD::OR, DL, MVT::i32, LowShifted, HighShifted);
+//  Chain = DAG.getNode(ISD::TokenFactor, DL, MVT::Other, Low.getValue(1),
+//                      High.getValue(1));
+//  SDValue Ops[] = { Result, Chain };
+//  return DAG.getMergeValues(Ops, DL);
+//}
+//
+//static bool isWordAligned(SDValue Value, SelectionDAG &DAG)
+//{
+//  llvm_unreachable("TODO");
+//  KnownBits Known = DAG.computeKnownBits(Value);
+//  return Known.countMinTrailingZeros() >= 2;
+//}
 
 SDValue YCoreTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   const TargetLowering &TLI = DAG.getTargetLoweringInfo();
