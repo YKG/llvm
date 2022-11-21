@@ -26,10 +26,10 @@ include "YCoreInstrFormats.td"
 //
 
 // Call
-def SDT_YCoreBranchLink : SDTypeProfile<0, 1, [SDTCisPtrTy<0>]>;
-def YCoreBranchLink     : SDNode<"YCoreISD::BL",SDT_YCoreBranchLink,
-                            [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue,
-                             SDNPVariadic]>;
+// def SDT_YCoreBranchLink : SDTypeProfile<0, 1, [SDTCisPtrTy<0>]>;
+// def YCoreBranchLink     : SDNode<"YCoreISD::BL",SDT_YCoreBranchLink,
+//                             [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue,
+//                              SDNPVariadic]>;
 
 def YCoreRetsp : SDNode<"YCoreISD::RETSP", SDTBrind,
                       [SDNPHasChain, SDNPOptInGlue, SDNPMayLoad, SDNPVariadic]>;
