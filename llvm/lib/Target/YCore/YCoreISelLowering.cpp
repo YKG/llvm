@@ -215,9 +215,9 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::FRAMEADDR:          return LowerFRAMEADDR(Op, DAG);
   case ISD::RETURNADDR:         return LowerRETURNADDR(Op, DAG);
   case ISD::FRAME_TO_ARGS_OFFSET: return LowerFRAME_TO_ARGS_OFFSET(Op, DAG);
-  case ISD::INIT_TRAMPOLINE:    return LowerINIT_TRAMPOLINE(Op, DAG);
-  case ISD::ADJUST_TRAMPOLINE:  return LowerADJUST_TRAMPOLINE(Op, DAG);
-  case ISD::INTRINSIC_WO_CHAIN: return LowerINTRINSIC_WO_CHAIN(Op, DAG);
+//  case ISD::INIT_TRAMPOLINE:    return LowerINIT_TRAMPOLINE(Op, DAG);
+//  case ISD::ADJUST_TRAMPOLINE:  return LowerADJUST_TRAMPOLINE(Op, DAG);
+//  case ISD::INTRINSIC_WO_CHAIN: return LowerINTRINSIC_WO_CHAIN(Op, DAG);
 //  case ISD::ATOMIC_FENCE:       return LowerATOMIC_FENCE(Op, DAG);
 //  case ISD::ATOMIC_LOAD:        return LowerATOMIC_LOAD(Op, DAG);
 //  case ISD::ATOMIC_STORE:       return LowerATOMIC_STORE(Op, DAG);
@@ -851,81 +851,81 @@ LowerEH_RETURN(SDValue Op, SelectionDAG &DAG) const {
 
 }
 
-SDValue YCoreTargetLowering::
-LowerADJUST_TRAMPOLINE(SDValue Op, SelectionDAG &DAG) const {
-  return Op.getOperand(0);
-}
-
-SDValue YCoreTargetLowering::
-LowerINIT_TRAMPOLINE(SDValue Op, SelectionDAG &DAG) const {
-  SDValue Chain = Op.getOperand(0);
-  SDValue Trmp = Op.getOperand(1); // trampoline
-  SDValue FPtr = Op.getOperand(2); // nested function
-  SDValue Nest = Op.getOperand(3); // 'nest' parameter value
-
-  const Value *TrmpAddr = cast<SrcValueSDNode>(Op.getOperand(4))->getValue();
-
-  // .align 4
-  // LDAPF_u10 r11, nest
-  // LDW_2rus r11, r11[0]
-  // STWSP_ru6 r11, sp[0]
-  // LDAPF_u10 r11, fptr
-  // LDW_2rus r11, r11[0]
-  // BAU_1r r11
-  // nest:
-  // .word nest
-  // fptr:
-  // .word fptr
-  SDValue OutChains[5];
-
-  SDValue Addr = Trmp;
-
-  SDLoc dl(Op);
-  OutChains[0] =
-      DAG.getStore(Chain, dl, DAG.getConstant(0x0a3cd805, dl, MVT::i32), Addr,
-                   MachinePointerInfo(TrmpAddr));
-
-  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
-                     DAG.getConstant(4, dl, MVT::i32));
-  OutChains[1] =
-      DAG.getStore(Chain, dl, DAG.getConstant(0xd80456c0, dl, MVT::i32), Addr,
-                   MachinePointerInfo(TrmpAddr, 4));
-
-  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
-                     DAG.getConstant(8, dl, MVT::i32));
-  OutChains[2] =
-      DAG.getStore(Chain, dl, DAG.getConstant(0x27fb0a3c, dl, MVT::i32), Addr,
-                   MachinePointerInfo(TrmpAddr, 8));
-
-  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
-                     DAG.getConstant(12, dl, MVT::i32));
-  OutChains[3] =
-      DAG.getStore(Chain, dl, Nest, Addr, MachinePointerInfo(TrmpAddr, 12));
-
-  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
-                     DAG.getConstant(16, dl, MVT::i32));
-  OutChains[4] =
-      DAG.getStore(Chain, dl, FPtr, Addr, MachinePointerInfo(TrmpAddr, 16));
-
-  return DAG.getNode(ISD::TokenFactor, dl, MVT::Other, OutChains);
-}
-
-SDValue YCoreTargetLowering::
-LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const {
-  SDLoc DL(Op);
-  unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue();
-  switch (IntNo) {
-    case Intrinsic::ycore_crc8:
-      EVT VT = Op.getValueType();
-      SDValue Data =
-        DAG.getNode(YCoreISD::CRC8, DL, DAG.getVTList(VT, VT),
-                    Op.getOperand(1), Op.getOperand(2) , Op.getOperand(3));
-      SDValue Crc(Data.getNode(), 1);
-      SDValue Results[] = { Crc, Data };
-      return DAG.getMergeValues(Results, DL);
-  }
-  return SDValue();
-}
+//SDValue YCoreTargetLowering::
+//LowerADJUST_TRAMPOLINE(SDValue Op, SelectionDAG &DAG) const {
+//  return Op.getOperand(0);
+//}
+//
+//SDValue YCoreTargetLowering::
+//LowerINIT_TRAMPOLINE(SDValue Op, SelectionDAG &DAG) const {
+//  SDValue Chain = Op.getOperand(0);
+//  SDValue Trmp = Op.getOperand(1); // trampoline
+//  SDValue FPtr = Op.getOperand(2); // nested function
+//  SDValue Nest = Op.getOperand(3); // 'nest' parameter value
+//
+//  const Value *TrmpAddr = cast<SrcValueSDNode>(Op.getOperand(4))->getValue();
+//
+//  // .align 4
+//  // LDAPF_u10 r11, nest
+//  // LDW_2rus r11, r11[0]
+//  // STWSP_ru6 r11, sp[0]
+//  // LDAPF_u10 r11, fptr
+//  // LDW_2rus r11, r11[0]
+//  // BAU_1r r11
+//  // nest:
+//  // .word nest
+//  // fptr:
+//  // .word fptr
+//  SDValue OutChains[5];
+//
+//  SDValue Addr = Trmp;
+//
+//  SDLoc dl(Op);
+//  OutChains[0] =
+//      DAG.getStore(Chain, dl, DAG.getConstant(0x0a3cd805, dl, MVT::i32), Addr,
+//                   MachinePointerInfo(TrmpAddr));
+//
+//  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
+//                     DAG.getConstant(4, dl, MVT::i32));
+//  OutChains[1] =
+//      DAG.getStore(Chain, dl, DAG.getConstant(0xd80456c0, dl, MVT::i32), Addr,
+//                   MachinePointerInfo(TrmpAddr, 4));
+//
+//  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
+//                     DAG.getConstant(8, dl, MVT::i32));
+//  OutChains[2] =
+//      DAG.getStore(Chain, dl, DAG.getConstant(0x27fb0a3c, dl, MVT::i32), Addr,
+//                   MachinePointerInfo(TrmpAddr, 8));
+//
+//  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
+//                     DAG.getConstant(12, dl, MVT::i32));
+//  OutChains[3] =
+//      DAG.getStore(Chain, dl, Nest, Addr, MachinePointerInfo(TrmpAddr, 12));
+//
+//  Addr = DAG.getNode(ISD::ADD, dl, MVT::i32, Trmp,
+//                     DAG.getConstant(16, dl, MVT::i32));
+//  OutChains[4] =
+//      DAG.getStore(Chain, dl, FPtr, Addr, MachinePointerInfo(TrmpAddr, 16));
+//
+//  return DAG.getNode(ISD::TokenFactor, dl, MVT::Other, OutChains);
+//}
+//
+//SDValue YCoreTargetLowering::
+//LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const {
+//  SDLoc DL(Op);
+//  unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue();
+//  switch (IntNo) {
+//    case Intrinsic::ycore_crc8:
+//      EVT VT = Op.getValueType();
+//      SDValue Data =
+//        DAG.getNode(YCoreISD::CRC8, DL, DAG.getVTList(VT, VT),
+//                    Op.getOperand(1), Op.getOperand(2) , Op.getOperand(3));
+//      SDValue Crc(Data.getNode(), 1);
+//      SDValue Results[] = { Crc, Data };
+//      return DAG.getMergeValues(Results, DL);
+//  }
+//  return SDValue();
+//}
 
 //SDValue YCoreTargetLowering::
 //LowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const {
