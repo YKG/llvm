@@ -177,7 +177,7 @@ namespace llvm {
 //    SDValue LowerVASTART(SDValue Op, SelectionDAG &DAG) const;
 //    SDValue LowerUMUL_LOHI(SDValue Op, SelectionDAG &DAG) const;
 //    SDValue LowerSMUL_LOHI(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerFRAME_TO_ARGS_OFFSET(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const;
 //    SDValue LowerINIT_TRAMPOLINE(SDValue Op, SelectionDAG &DAG) const;
