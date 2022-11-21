@@ -730,40 +730,40 @@ defm CLRSR_branch : FU6_LU6_np<0b0111101100, "clrsr">;
 // }
 
 // Two operand short
-def NOT : _F2R<0b100010, (outs GRRegs:$dst), (ins GRRegs:$b),
-                "not $dst, $b", [(set GRRegs:$dst, (not GRRegs:$b))]>;
+// def NOT : _F2R<0b100010, (outs GRRegs:$dst), (ins GRRegs:$b),
+//                 "not $dst, $b", [(set GRRegs:$dst, (not GRRegs:$b))]>;
 
-def NEG : _F2R<0b100100, (outs GRRegs:$dst), (ins GRRegs:$b),
-                "neg $dst, $b", [(set GRRegs:$dst, (ineg GRRegs:$b))]>;
+// def NEG : _F2R<0b100100, (outs GRRegs:$dst), (ins GRRegs:$b),
+//                 "neg $dst, $b", [(set GRRegs:$dst, (ineg GRRegs:$b))]>;
 
-let Constraints = "$src1 = $dst" in {
-def SEXT_rus :
-  _FRUSSrcDstBitp<0b001101, (outs GRRegs:$dst), (ins GRRegs:$src1, i32imm:$src2),
-                  "sext $dst, $src2",
-                  [(set GRRegs:$dst, (int_ycore_sext GRRegs:$src1,
-                                                     immBitp:$src2))]>;
+// let Constraints = "$src1 = $dst" in {
+// def SEXT_rus :
+//   _FRUSSrcDstBitp<0b001101, (outs GRRegs:$dst), (ins GRRegs:$src1, i32imm:$src2),
+//                   "sext $dst, $src2",
+//                   [(set GRRegs:$dst, (int_ycore_sext GRRegs:$src1,
+//                                                      immBitp:$src2))]>;
 
-def SEXT_2r :
-  _F2RSrcDst<0b001100, (outs GRRegs:$dst), (ins GRRegs:$src1, GRRegs:$src2),
-             "sext $dst, $src2",
-             [(set GRRegs:$dst, (int_ycore_sext GRRegs:$src1, GRRegs:$src2))]>;
+// def SEXT_2r :
+//   _F2RSrcDst<0b001100, (outs GRRegs:$dst), (ins GRRegs:$src1, GRRegs:$src2),
+//              "sext $dst, $src2",
+//              [(set GRRegs:$dst, (int_ycore_sext GRRegs:$src1, GRRegs:$src2))]>;
 
-def ZEXT_rus :
-  _FRUSSrcDstBitp<0b010001, (outs GRRegs:$dst), (ins GRRegs:$src1, i32imm:$src2),
-                  "zext $dst, $src2",
-                  [(set GRRegs:$dst, (int_ycore_zext GRRegs:$src1,
-                                                     immBitp:$src2))]>;
+// def ZEXT_rus :
+//   _FRUSSrcDstBitp<0b010001, (outs GRRegs:$dst), (ins GRRegs:$src1, i32imm:$src2),
+//                   "zext $dst, $src2",
+//                   [(set GRRegs:$dst, (int_ycore_zext GRRegs:$src1,
+//                                                      immBitp:$src2))]>;
 
-def ZEXT_2r :
-  _F2RSrcDst<0b010000, (outs GRRegs:$dst), (ins GRRegs:$src1, GRRegs:$src2),
-             "zext $dst, $src2",
-             [(set GRRegs:$dst, (int_ycore_zext GRRegs:$src1, GRRegs:$src2))]>;
+// def ZEXT_2r :
+//   _F2RSrcDst<0b010000, (outs GRRegs:$dst), (ins GRRegs:$src1, GRRegs:$src2),
+//              "zext $dst, $src2",
+//              [(set GRRegs:$dst, (int_ycore_zext GRRegs:$src1, GRRegs:$src2))]>;
 
-def ANDNOT_2r :
-  _F2RSrcDst<0b001010, (outs GRRegs:$dst), (ins GRRegs:$src1, GRRegs:$src2),
-             "andnot $dst, $src2",
-             [(set GRRegs:$dst, (and GRRegs:$src1, (not GRRegs:$src2)))]>;
-}
+// def ANDNOT_2r :
+//   _F2RSrcDst<0b001010, (outs GRRegs:$dst), (ins GRRegs:$src1, GRRegs:$src2),
+//              "andnot $dst, $src2",
+//              [(set GRRegs:$dst, (and GRRegs:$src1, (not GRRegs:$src2)))]>;
+// }
 
 let isReMaterializable = 1, hasSideEffects = 0 in
 def MKMSK_rus : _FRUSBitp<0b101001, (outs GRRegs:$dst), (ins i32imm:$size),
@@ -1262,12 +1262,12 @@ def : Pat<(setne GRRegs:$lhs, immUs:$rhs),
 // def : Pat<(sub GRRegs:$addr, immUs4:$offset),
 //           (LDAWB_l2rus GRRegs:$addr, (div4_xform immUs4:$offset))>;
 
-def : Pat<(and GRRegs:$val, immMskBitp:$mask),
-          (ZEXT_rus GRRegs:$val, (msksize_xform immMskBitp:$mask))>;
+// def : Pat<(and GRRegs:$val, immMskBitp:$mask),
+//           (ZEXT_rus GRRegs:$val, (msksize_xform immMskBitp:$mask))>;
 
-// (sub X, imm) gets canonicalized to (add X, -imm).  Match this form.
-def : Pat<(add GRRegs:$src1, immUsNeg:$src2),
-          (SUB_2rus GRRegs:$src1, (neg_xform immUsNeg:$src2))>;
+// // (sub X, imm) gets canonicalized to (add X, -imm).  Match this form.
+// def : Pat<(add GRRegs:$src1, immUsNeg:$src2),
+//           (SUB_2rus GRRegs:$src1, (neg_xform immUsNeg:$src2))>;
 
 // def : Pat<(add GRRegs:$src1, immUs4Neg:$src2),
 //           (LDAWB_l2rus GRRegs:$src1, (div4neg_xform immUs4Neg:$src2))>;
