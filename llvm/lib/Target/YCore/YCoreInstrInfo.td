@@ -1066,41 +1066,41 @@ def MKMSK_rus : _FRUSBitp<0b101001, (outs GRRegs:$dst), (ins i32imm:$size),
 //                      "get r11, ksp", []>;
 // }
 
-let Defs = [SP] in
-def KRET_0R : _F0R<0b0000011101, (outs), (ins), "kret", []>;
+// let Defs = [SP] in
+// def KRET_0R : _F0R<0b0000011101, (outs), (ins), "kret", []>;
 
-let Uses = [SP], mayLoad = 1 in {
-def LDET_0R : _F0R<0b0001011110, (outs), (ins), "ldw et, sp[4]", []>;
+// let Uses = [SP], mayLoad = 1 in {
+// def LDET_0R : _F0R<0b0001011110, (outs), (ins), "ldw et, sp[4]", []>;
 
-def LDSED_0R : _F0R<0b0001011101, (outs), (ins), "ldw sed, sp[3]", []>;
+// def LDSED_0R : _F0R<0b0001011101, (outs), (ins), "ldw sed, sp[3]", []>;
 
-def LDSPC_0R : _F0R<0b0000101100, (outs), (ins), "ldw spc, sp[1]", []>;
+// def LDSPC_0R : _F0R<0b0000101100, (outs), (ins), "ldw spc, sp[1]", []>;
 
-def LDSSR_0R : _F0R<0b0000101110, (outs), (ins), "ldw ssr, sp[2]", []>;
-}
+// def LDSSR_0R : _F0R<0b0000101110, (outs), (ins), "ldw ssr, sp[2]", []>;
+// }
 
-let Uses=[R11] in
-def SETKEP_0R : _F0R<0b0000011111, (outs), (ins), "set kep, r11", []>;
+// let Uses=[R11] in
+// def SETKEP_0R : _F0R<0b0000011111, (outs), (ins), "set kep, r11", []>;
 
-def SSYNC_0r : _F0R<0b0000001110, (outs), (ins),
-                    "ssync",
-                    [(int_ycore_ssync)]>;
+// def SSYNC_0r : _F0R<0b0000001110, (outs), (ins),
+//                     "ssync",
+//                     [(int_ycore_ssync)]>;
 
-let Uses = [SP], mayStore = 1 in {
-def STET_0R : _F0R<0b0000111101, (outs), (ins), "stw et, sp[4]", []>;
+// let Uses = [SP], mayStore = 1 in {
+// def STET_0R : _F0R<0b0000111101, (outs), (ins), "stw et, sp[4]", []>;
 
-def STSED_0R : _F0R<0b0000111100, (outs), (ins), "stw sed, sp[3]", []>;
+// def STSED_0R : _F0R<0b0000111100, (outs), (ins), "stw sed, sp[3]", []>;
 
-def STSPC_0R : _F0R<0b0000101101, (outs), (ins), "stw spc, sp[1]", []>;
+// def STSPC_0R : _F0R<0b0000101101, (outs), (ins), "stw spc, sp[1]", []>;
 
-def STSSR_0R : _F0R<0b0000101111, (outs), (ins), "stw ssr, sp[2]", []>;
-}
+// def STSSR_0R : _F0R<0b0000101111, (outs), (ins), "stw ssr, sp[2]", []>;
+// }
 
-let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1,
-    hasSideEffects = 1 in
-def WAITEU_0R : _F0R<0b0000001100, (outs), (ins),
-                     "waiteu",
-                     [(brind (int_ycore_waitevent))]>;
+// let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1,
+//     hasSideEffects = 1 in
+// def WAITEU_0R : _F0R<0b0000001100, (outs), (ins),
+//                      "waiteu",
+//                      [(brind (int_ycore_waitevent))]>;
 
 //===----------------------------------------------------------------------===//
 // Non-Instruction Patterns
