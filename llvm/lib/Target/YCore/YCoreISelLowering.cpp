@@ -219,8 +219,8 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::ADJUST_TRAMPOLINE:  return LowerADJUST_TRAMPOLINE(Op, DAG);
   case ISD::INTRINSIC_WO_CHAIN: return LowerINTRINSIC_WO_CHAIN(Op, DAG);
 //  case ISD::ATOMIC_FENCE:       return LowerATOMIC_FENCE(Op, DAG);
-  case ISD::ATOMIC_LOAD:        return LowerATOMIC_LOAD(Op, DAG);
-  case ISD::ATOMIC_STORE:       return LowerATOMIC_STORE(Op, DAG);
+//  case ISD::ATOMIC_LOAD:        return LowerATOMIC_LOAD(Op, DAG);
+//  case ISD::ATOMIC_STORE:       return LowerATOMIC_STORE(Op, DAG);
   default:
     llvm_unreachable("unimplemented operand");
   }
@@ -932,67 +932,67 @@ LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const {
 //  SDLoc DL(Op);
 //  return DAG.getNode(YCoreISD::MEMBARRIER, DL, MVT::Other, Op.getOperand(0));
 //}
-
-SDValue YCoreTargetLowering::
-LowerATOMIC_LOAD(SDValue Op, SelectionDAG &DAG) const {
-  AtomicSDNode *N = cast<AtomicSDNode>(Op);
-  assert(N->getOpcode() == ISD::ATOMIC_LOAD && "Bad Atomic OP");
-  assert((N->getSuccessOrdering() == AtomicOrdering::Unordered ||
-          N->getSuccessOrdering() == AtomicOrdering::Monotonic) &&
-         "setInsertFencesForAtomic(true) expects unordered / monotonic");
-  if (N->getMemoryVT() == MVT::i32) {
-    if (N->getAlignment() < 4)
-      report_fatal_error("atomic load must be aligned");
-    return DAG.getLoad(getPointerTy(DAG.getDataLayout()), SDLoc(Op),
-                       N->getChain(), N->getBasePtr(), N->getPointerInfo(),
-                       N->getAlignment(), N->getMemOperand()->getFlags(),
-                       N->getAAInfo(), N->getRanges());
-  }
-  if (N->getMemoryVT() == MVT::i16) {
-    if (N->getAlignment() < 2)
-      report_fatal_error("atomic load must be aligned");
-    return DAG.getExtLoad(ISD::EXTLOAD, SDLoc(Op), MVT::i32, N->getChain(),
-                          N->getBasePtr(), N->getPointerInfo(), MVT::i16,
-                          N->getAlignment(), N->getMemOperand()->getFlags(),
-                          N->getAAInfo());
-  }
-  if (N->getMemoryVT() == MVT::i8)
-    return DAG.getExtLoad(ISD::EXTLOAD, SDLoc(Op), MVT::i32, N->getChain(),
-                          N->getBasePtr(), N->getPointerInfo(), MVT::i8,
-                          N->getAlignment(), N->getMemOperand()->getFlags(),
-                          N->getAAInfo());
-  return SDValue();
-}
-
-SDValue YCoreTargetLowering::
-LowerATOMIC_STORE(SDValue Op, SelectionDAG &DAG) const {
-  AtomicSDNode *N = cast<AtomicSDNode>(Op);
-  assert(N->getOpcode() == ISD::ATOMIC_STORE && "Bad Atomic OP");
-  assert((N->getSuccessOrdering() == AtomicOrdering::Unordered ||
-          N->getSuccessOrdering() == AtomicOrdering::Monotonic) &&
-         "setInsertFencesForAtomic(true) expects unordered / monotonic");
-  if (N->getMemoryVT() == MVT::i32) {
-    if (N->getAlignment() < 4)
-      report_fatal_error("atomic store must be aligned");
-    return DAG.getStore(N->getChain(), SDLoc(Op), N->getVal(), N->getBasePtr(),
-                        N->getPointerInfo(), N->getAlignment(),
-                        N->getMemOperand()->getFlags(), N->getAAInfo());
-  }
-  if (N->getMemoryVT() == MVT::i16) {
-    if (N->getAlignment() < 2)
-      report_fatal_error("atomic store must be aligned");
-    return DAG.getTruncStore(N->getChain(), SDLoc(Op), N->getVal(),
-                             N->getBasePtr(), N->getPointerInfo(), MVT::i16,
-                             N->getAlignment(), N->getMemOperand()->getFlags(),
-                             N->getAAInfo());
-  }
-  if (N->getMemoryVT() == MVT::i8)
-    return DAG.getTruncStore(N->getChain(), SDLoc(Op), N->getVal(),
-                             N->getBasePtr(), N->getPointerInfo(), MVT::i8,
-                             N->getAlignment(), N->getMemOperand()->getFlags(),
-                             N->getAAInfo());
-  return SDValue();
-}
+//
+//SDValue YCoreTargetLowering::
+//LowerATOMIC_LOAD(SDValue Op, SelectionDAG &DAG) const {
+//  AtomicSDNode *N = cast<AtomicSDNode>(Op);
+//  assert(N->getOpcode() == ISD::ATOMIC_LOAD && "Bad Atomic OP");
+//  assert((N->getSuccessOrdering() == AtomicOrdering::Unordered ||
+//          N->getSuccessOrdering() == AtomicOrdering::Monotonic) &&
+//         "setInsertFencesForAtomic(true) expects unordered / monotonic");
+//  if (N->getMemoryVT() == MVT::i32) {
+//    if (N->getAlignment() < 4)
+//      report_fatal_error("atomic load must be aligned");
+//    return DAG.getLoad(getPointerTy(DAG.getDataLayout()), SDLoc(Op),
+//                       N->getChain(), N->getBasePtr(), N->getPointerInfo(),
+//                       N->getAlignment(), N->getMemOperand()->getFlags(),
+//                       N->getAAInfo(), N->getRanges());
+//  }
+//  if (N->getMemoryVT() == MVT::i16) {
+//    if (N->getAlignment() < 2)
+//      report_fatal_error("atomic load must be aligned");
+//    return DAG.getExtLoad(ISD::EXTLOAD, SDLoc(Op), MVT::i32, N->getChain(),
+//                          N->getBasePtr(), N->getPointerInfo(), MVT::i16,
+//                          N->getAlignment(), N->getMemOperand()->getFlags(),
+//                          N->getAAInfo());
+//  }
+//  if (N->getMemoryVT() == MVT::i8)
+//    return DAG.getExtLoad(ISD::EXTLOAD, SDLoc(Op), MVT::i32, N->getChain(),
+//                          N->getBasePtr(), N->getPointerInfo(), MVT::i8,
+//                          N->getAlignment(), N->getMemOperand()->getFlags(),
+//                          N->getAAInfo());
+//  return SDValue();
+//}
+//
+//SDValue YCoreTargetLowering::
+//LowerATOMIC_STORE(SDValue Op, SelectionDAG &DAG) const {
+//  AtomicSDNode *N = cast<AtomicSDNode>(Op);
+//  assert(N->getOpcode() == ISD::ATOMIC_STORE && "Bad Atomic OP");
+//  assert((N->getSuccessOrdering() == AtomicOrdering::Unordered ||
+//          N->getSuccessOrdering() == AtomicOrdering::Monotonic) &&
+//         "setInsertFencesForAtomic(true) expects unordered / monotonic");
+//  if (N->getMemoryVT() == MVT::i32) {
+//    if (N->getAlignment() < 4)
+//      report_fatal_error("atomic store must be aligned");
+//    return DAG.getStore(N->getChain(), SDLoc(Op), N->getVal(), N->getBasePtr(),
+//                        N->getPointerInfo(), N->getAlignment(),
+//                        N->getMemOperand()->getFlags(), N->getAAInfo());
+//  }
+//  if (N->getMemoryVT() == MVT::i16) {
+//    if (N->getAlignment() < 2)
+//      report_fatal_error("atomic store must be aligned");
+//    return DAG.getTruncStore(N->getChain(), SDLoc(Op), N->getVal(),
+//                             N->getBasePtr(), N->getPointerInfo(), MVT::i16,
+//                             N->getAlignment(), N->getMemOperand()->getFlags(),
+//                             N->getAAInfo());
+//  }
+//  if (N->getMemoryVT() == MVT::i8)
+//    return DAG.getTruncStore(N->getChain(), SDLoc(Op), N->getVal(),
+//                             N->getBasePtr(), N->getPointerInfo(), MVT::i8,
+//                             N->getAlignment(), N->getMemOperand()->getFlags(),
+//                             N->getAAInfo());
+//  return SDValue();
+//}
 
 MachineMemOperand::Flags
 YCoreTargetLowering::getTargetMMOFlags(const Instruction &I) const {

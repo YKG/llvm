@@ -184,8 +184,8 @@ namespace llvm {
     SDValue LowerADJUST_TRAMPOLINE(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const;
 //    SDValue LowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerATOMIC_LOAD(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerATOMIC_STORE(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerATOMIC_LOAD(SDValue Op, SelectionDAG &DAG) const;
+//    SDValue LowerATOMIC_STORE(SDValue Op, SelectionDAG &DAG) const;
 
     MachineMemOperand::Flags getTargetMMOFlags(
       const Instruction &I) const override;
