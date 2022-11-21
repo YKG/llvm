@@ -1826,54 +1826,54 @@ SDValue YCoreTargetLowering::PerformDAGCombine(SDNode *N,
   }
   return SDValue();
 }
-
-void YCoreTargetLowering::computeKnownBitsForTargetNode(const SDValue Op,
-                                                        KnownBits &Known,
-                                                        const APInt &DemandedElts,
-                                                        const SelectionDAG &DAG,
-                                                        unsigned Depth) const {
-  llvm_unreachable("TODO");
-  Known.resetAll();
-  switch (Op.getOpcode()) {
-  default: break;
-  case YCoreISD::LADD:
-//  case YCoreISD::LSUB:
-    if (Op.getResNo() == 1) {
-      // Top bits of carry / borrow are clear.
-      Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
-                                         Known.getBitWidth() - 1);
-    }
-    break;
-  case ISD::INTRINSIC_W_CHAIN:
-    {
-      unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(1))->getZExtValue();
-      switch (IntNo) {
-      case Intrinsic::ycore_getts:
-        // High bits are known to be zero.
-        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
-                                           Known.getBitWidth() - 16);
-        break;
-      case Intrinsic::ycore_int:
-      case Intrinsic::ycore_inct:
-        // High bits are known to be zero.
-        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
-                                           Known.getBitWidth() - 8);
-        break;
-      case Intrinsic::ycore_testct:
-        // Result is either 0 or 1.
-        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
-                                           Known.getBitWidth() - 1);
-        break;
-      case Intrinsic::ycore_testwct:
-        // Result is in the range 0 - 4.
-        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
-                                           Known.getBitWidth() - 3);
-        break;
-      }
-    }
-    break;
-  }
-}
+//
+//void YCoreTargetLowering::computeKnownBitsForTargetNode(const SDValue Op,
+//                                                        KnownBits &Known,
+//                                                        const APInt &DemandedElts,
+//                                                        const SelectionDAG &DAG,
+//                                                        unsigned Depth) const {
+//  llvm_unreachable("TODO");
+//  Known.resetAll();
+//  switch (Op.getOpcode()) {
+//  default: break;
+//  case YCoreISD::LADD:
+////  case YCoreISD::LSUB:
+//    if (Op.getResNo() == 1) {
+//      // Top bits of carry / borrow are clear.
+//      Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
+//                                         Known.getBitWidth() - 1);
+//    }
+//    break;
+//  case ISD::INTRINSIC_W_CHAIN:
+//    {
+//      unsigned IntNo = cast<ConstantSDNode>(Op.getOperand(1))->getZExtValue();
+//      switch (IntNo) {
+//      case Intrinsic::ycore_getts:
+//        // High bits are known to be zero.
+//        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
+//                                           Known.getBitWidth() - 16);
+//        break;
+//      case Intrinsic::ycore_int:
+//      case Intrinsic::ycore_inct:
+//        // High bits are known to be zero.
+//        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
+//                                           Known.getBitWidth() - 8);
+//        break;
+//      case Intrinsic::ycore_testct:
+//        // Result is either 0 or 1.
+//        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
+//                                           Known.getBitWidth() - 1);
+//        break;
+//      case Intrinsic::ycore_testwct:
+//        // Result is in the range 0 - 4.
+//        Known.Zero = APInt::getHighBitsSet(Known.getBitWidth(),
+//                                           Known.getBitWidth() - 3);
+//        break;
+//      }
+//    }
+//    break;
+//  }
+//}
 
 //===----------------------------------------------------------------------===//
 //  Addressing mode description hooks
