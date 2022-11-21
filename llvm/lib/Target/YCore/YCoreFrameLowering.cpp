@@ -487,6 +487,7 @@ void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
 MachineBasicBlock::iterator YCoreFrameLowering::eliminateCallFramePseudoInstr(
     MachineFunction &MF, MachineBasicBlock &MBB,
     MachineBasicBlock::iterator I) const {
+  llvm_unreachable("TODO");
   const YCoreInstrInfo &TII = *MF.getSubtarget<YCoreSubtarget>().getInstrInfo();
   if (!hasReservedCallFrame(MF)) {
     // Turn the adjcallstackdown instruction into 'extsp <amt>' and the
