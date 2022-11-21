@@ -213,7 +213,7 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::ADD:
   case ISD::SUB:                return ExpandADDSUB(Op.getNode(), DAG);
 //  case ISD::FRAMEADDR:          return LowerFRAMEADDR(Op, DAG);
-  case ISD::RETURNADDR:         return LowerRETURNADDR(Op, DAG);
+//  case ISD::RETURNADDR:         return LowerRETURNADDR(Op, DAG);
   case ISD::FRAME_TO_ARGS_OFFSET: return LowerFRAME_TO_ARGS_OFFSET(Op, DAG);
 //  case ISD::INIT_TRAMPOLINE:    return LowerINIT_TRAMPOLINE(Op, DAG);
 //  case ISD::ADJUST_TRAMPOLINE:  return LowerADJUST_TRAMPOLINE(Op, DAG);
@@ -784,24 +784,24 @@ ExpandADDSUB(SDNode *N, SelectionDAG &DAG) const
 //                            RegInfo->getFrameRegister(MF), MVT::i32);
 //}
 
-SDValue YCoreTargetLowering::
-LowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const {
-  // This nodes represent llvm.returnaddress on the DAG.
-  // It takes one operand, the index of the return address to return.
-  // An index of zero corresponds to the current function's return address.
-  // An index of one to the parent's return address, and so on.
-  // Depths > 0 not supported yet!
-  if (cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue() > 0)
-    return SDValue();
-
-  MachineFunction &MF = DAG.getMachineFunction();
-  YCoreFunctionInfo *XFI = MF.getInfo<YCoreFunctionInfo>();
-  int FI = XFI->createLRSpillSlot(MF);
-  SDValue FIN = DAG.getFrameIndex(FI, MVT::i32);
-  return DAG.getLoad(getPointerTy(DAG.getDataLayout()), SDLoc(Op),
-                     DAG.getEntryNode(), FIN,
-                     MachinePointerInfo::getFixedStack(MF, FI));
-}
+//SDValue YCoreTargetLowering::
+//LowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const {
+//  // This nodes represent llvm.returnaddress on the DAG.
+//  // It takes one operand, the index of the return address to return.
+//  // An index of zero corresponds to the current function's return address.
+//  // An index of one to the parent's return address, and so on.
+//  // Depths > 0 not supported yet!
+//  if (cast<ConstantSDNode>(Op.getOperand(0))->getZExtValue() > 0)
+//    return SDValue();
+//
+//  MachineFunction &MF = DAG.getMachineFunction();
+//  YCoreFunctionInfo *XFI = MF.getInfo<YCoreFunctionInfo>();
+//  int FI = XFI->createLRSpillSlot(MF);
+//  SDValue FIN = DAG.getFrameIndex(FI, MVT::i32);
+//  return DAG.getLoad(getPointerTy(DAG.getDataLayout()), SDLoc(Op),
+//                     DAG.getEntryNode(), FIN,
+//                     MachinePointerInfo::getFixedStack(MF, FI));
+//}
 
 SDValue YCoreTargetLowering::
 LowerFRAME_TO_ARGS_OFFSET(SDValue Op, SelectionDAG &DAG) const {
