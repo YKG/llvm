@@ -121,18 +121,6 @@ static void GetSpillList(SmallVectorImpl<StackSlotInfo> &SpillList,
   llvm::sort(SpillList, CompareSSIOffset);
 }
 
-
-/// Restore clobbered registers with their spill slot value.
-/// The SP will be adjusted at the same time, thus the SpillList must be ordered
-/// with the largest (negative) offsets first.
-//static void RestoreSpillList(MachineBasicBlock &MBB,
-//                             MachineBasicBlock::iterator MBBI,
-//                             const DebugLoc &dl, const TargetInstrInfo &TII,
-//                             int &RemainingAdj,
-//                             SmallVectorImpl<StackSlotInfo> &SpillList) {
-////  llvm_unreachable("TODO");
-//}
-
 //===----------------------------------------------------------------------===//
 // YCoreFrameLowering:
 //===----------------------------------------------------------------------===//
