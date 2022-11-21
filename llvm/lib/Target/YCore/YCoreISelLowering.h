@@ -53,35 +53,35 @@ namespace llvm {
       LADD,
 
       // Corresponds to LSUB instruction
-      LSUB,
+//      LSUB,
 
-      // Corresponds to LMUL instruction
-      LMUL,
-
-      // Corresponds to MACCU instruction
-      MACCU,
-
-      // Corresponds to MACCS instruction
-      MACCS,
-
-      // Corresponds to CRC8 instruction
-      CRC8,
-
-      // Jumptable branch.
-      BR_JT,
-
-      // Jumptable branch using long branches for each entry.
-      BR_JT32,
-
+//      // Corresponds to LMUL instruction
+//      LMUL,
+//
+//      // Corresponds to MACCU instruction
+//      MACCU,
+//
+//      // Corresponds to MACCS instruction
+//      MACCS,
+//
+//      // Corresponds to CRC8 instruction
+//      CRC8,
+//
+//      // Jumptable branch.
+//      BR_JT,
+//
+//      // Jumptable branch using long branches for each entry.
+//      BR_JT32,
+//
       // Offset from frame pointer to the first (possible) on-stack argument
       FRAME_TO_ARGS_OFFSET,
-
-      // Exception handler return. The stack is restored to the first
-      // followed by a jump to the second argument.
-      EH_RETURN,
-
-      // Memory barrier.
-      MEMBARRIER
+//
+//      // Exception handler return. The stack is restored to the first
+//      // followed by a jump to the second argument.
+//      EH_RETURN,
+//
+//      // Memory barrier.
+//      MEMBARRIER
     };
   }
 
@@ -196,7 +196,7 @@ namespace llvm {
                                  StringRef Constraint, MVT VT) const override;
 
     // Expand specifics
-    SDValue TryExpandADDWithMul(SDNode *Op, SelectionDAG &DAG) const;
+//    SDValue TryExpandADDWithMul(SDNode *Op, SelectionDAG &DAG) const;
     SDValue ExpandADDSUB(SDNode *Op, SelectionDAG &DAG) const;
 
     SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
