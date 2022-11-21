@@ -648,21 +648,21 @@ defm RETSP : FU6_LU6<0b0111011111, "retsp", YCoreRetsp>;
 // def BRFU_lu6 : _FLU6<0b0111001100, (outs), (ins brtarget:$a), "bu $a", []>;
 // }
 
-//let Uses = [CP] in ...
-let Defs = [R11], hasSideEffects = 0, isReMaterializable = 1 in
-def LDAWCP_u6: _FU6<0b0111111101, (outs), (ins i32imm:$a), "ldaw r11, cp[$a]",
-                    []>;
+// //let Uses = [CP] in ...
+// let Defs = [R11], hasSideEffects = 0, isReMaterializable = 1 in
+// def LDAWCP_u6: _FU6<0b0111111101, (outs), (ins i32imm:$a), "ldaw r11, cp[$a]",
+//                     []>;
 
-let Defs = [R11], isReMaterializable = 1 in
-def LDAWCP_lu6: _FLU6<0b0111111101, (outs), (ins i32imm:$a), "ldaw r11, cp[$a]",
-                      [(set R11, (cprelwrapper tglobaladdr:$a))]>;
+// let Defs = [R11], isReMaterializable = 1 in
+// def LDAWCP_lu6: _FLU6<0b0111111101, (outs), (ins i32imm:$a), "ldaw r11, cp[$a]",
+//                       [(set R11, (cprelwrapper tglobaladdr:$a))]>;
 
-let Defs = [R11] in
-defm GETSR : FU6_LU6_np<0b0111111100, "getsr r11,">;
+// let Defs = [R11] in
+// defm GETSR : FU6_LU6_np<0b0111111100, "getsr r11,">;
 
-defm SETSR : FU6_LU6_int<0b0111101101, "setsr", int_ycore_setsr>;
+// defm SETSR : FU6_LU6_int<0b0111101101, "setsr", int_ycore_setsr>;
 
-defm CLRSR : FU6_LU6_int<0b0111101100, "clrsr", int_ycore_clrsr>;
+// defm CLRSR : FU6_LU6_int<0b0111101100, "clrsr", int_ycore_clrsr>;
 
 // setsr may cause a branch if it is used to enable events. clrsr may
 // branch if it is executed while events are enabled.
@@ -672,62 +672,62 @@ defm SETSR_branch : FU6_LU6_np<0b0111101101, "setsr">;
 defm CLRSR_branch : FU6_LU6_np<0b0111101100, "clrsr">;
 }
 
-defm KCALL : FU6_LU6_np<0b0111001111, "kcall">;
+// defm KCALL : FU6_LU6_np<0b0111001111, "kcall">;
 
-let Uses = [SP], Defs = [SP], mayStore = 1 in
-defm KENTSP : FU6_LU6_np<0b0111101110, "kentsp">;
+// let Uses = [SP], Defs = [SP], mayStore = 1 in
+// defm KENTSP : FU6_LU6_np<0b0111101110, "kentsp">;
 
-let Uses = [SP], Defs = [SP], mayLoad = 1 in
-defm KRESTSP : FU6_LU6_np<0b0111101111, "krestsp">;
+// let Uses = [SP], Defs = [SP], mayLoad = 1 in
+// defm KRESTSP : FU6_LU6_np<0b0111101111, "krestsp">;
 
-// U10
+// // U10
 
-let Defs = [R11], isReMaterializable = 1 in {
-let hasSideEffects = 0 in
-def LDAPF_u10 : _FU10<0b110110, (outs), (ins pcrel_imm:$a), "ldap r11, $a", []>;
+// let Defs = [R11], isReMaterializable = 1 in {
+// let hasSideEffects = 0 in
+// def LDAPF_u10 : _FU10<0b110110, (outs), (ins pcrel_imm:$a), "ldap r11, $a", []>;
 
-def LDAPF_lu10 : _FLU10<0b110110, (outs), (ins pcrel_imm:$a), "ldap r11, $a",
-                        [(set R11, (pcrelwrapper tglobaladdr:$a))]>;
+// def LDAPF_lu10 : _FLU10<0b110110, (outs), (ins pcrel_imm:$a), "ldap r11, $a",
+//                         [(set R11, (pcrelwrapper tglobaladdr:$a))]>;
 
-let hasSideEffects = 0 in
-def LDAPB_u10 : _FU10<0b110111, (outs), (ins pcrel_imm_neg:$a), "ldap r11, $a",
-                      []>;
+// let hasSideEffects = 0 in
+// def LDAPB_u10 : _FU10<0b110111, (outs), (ins pcrel_imm_neg:$a), "ldap r11, $a",
+//                       []>;
 
-let hasSideEffects = 0 in
-def LDAPB_lu10 : _FLU10<0b110111, (outs), (ins pcrel_imm_neg:$a),
-                        "ldap r11, $a",
-                        [(set R11, (pcrelwrapper tglobaladdr:$a))]>;
+// let hasSideEffects = 0 in
+// def LDAPB_lu10 : _FLU10<0b110111, (outs), (ins pcrel_imm_neg:$a),
+//                         "ldap r11, $a",
+//                         [(set R11, (pcrelwrapper tglobaladdr:$a))]>;
 
-let isCodeGenOnly = 1 in
-def LDAPF_lu10_ba : _FLU10<0b110110, (outs), (ins pcrel_imm:$a), "ldap r11, $a",
-                           [(set R11, (pcrelwrapper tblockaddress:$a))]>;
-}
+// let isCodeGenOnly = 1 in
+// def LDAPF_lu10_ba : _FLU10<0b110110, (outs), (ins pcrel_imm:$a), "ldap r11, $a",
+//                            [(set R11, (pcrelwrapper tblockaddress:$a))]>;
+// }
 
-let isCall=1,
-// All calls clobber the link register and the non-callee-saved registers:
-Defs = [R0, R1, R2, R3, R11, LR], Uses = [SP] in {
-def BLACP_u10 : _FU10<0b111000, (outs), (ins i32imm:$a), "bla cp[$a]", []>;
+// let isCall=1,
+// // All calls clobber the link register and the non-callee-saved registers:
+// Defs = [R0, R1, R2, R3, R11, LR], Uses = [SP] in {
+// def BLACP_u10 : _FU10<0b111000, (outs), (ins i32imm:$a), "bla cp[$a]", []>;
 
-def BLACP_lu10 : _FLU10<0b111000, (outs), (ins i32imm:$a), "bla cp[$a]", []>;
+// def BLACP_lu10 : _FLU10<0b111000, (outs), (ins i32imm:$a), "bla cp[$a]", []>;
 
-def BLRF_u10 : _FU10<0b110100, (outs), (ins pcrel_imm:$a), "bl $a",
-                     []>;
+// def BLRF_u10 : _FU10<0b110100, (outs), (ins pcrel_imm:$a), "bl $a",
+//                      []>;
 
-def BLRF_lu10 : _FLU10<0b110100, (outs), (ins pcrel_imm:$a), "bl $a",
-                       [(YCoreBranchLink tglobaladdr:$a)]>;
+// def BLRF_lu10 : _FLU10<0b110100, (outs), (ins pcrel_imm:$a), "bl $a",
+//                        [(YCoreBranchLink tglobaladdr:$a)]>;
 
-def BLRB_u10 : _FU10<0b110101, (outs), (ins pcrel_imm_neg:$a), "bl $a", []>;
+// def BLRB_u10 : _FU10<0b110101, (outs), (ins pcrel_imm_neg:$a), "bl $a", []>;
 
-def BLRB_lu10 : _FLU10<0b110101, (outs), (ins pcrel_imm_neg:$a), "bl $a", []>;
-}
+// def BLRB_lu10 : _FLU10<0b110101, (outs), (ins pcrel_imm_neg:$a), "bl $a", []>;
+// }
 
-let Defs = [R11], mayLoad = 1, isReMaterializable = 1,
-    hasSideEffects = 0 in {
-def LDWCP_u10 : _FU10<0b111001, (outs), (ins i32imm:$a), "ldw r11, cp[$a]", []>;
+// let Defs = [R11], mayLoad = 1, isReMaterializable = 1,
+//     hasSideEffects = 0 in {
+// def LDWCP_u10 : _FU10<0b111001, (outs), (ins i32imm:$a), "ldw r11, cp[$a]", []>;
 
-def LDWCP_lu10 : _FLU10<0b111001, (outs), (ins i32imm:$a), "ldw r11, cp[$a]",
-                        []>;
-}
+// def LDWCP_lu10 : _FLU10<0b111001, (outs), (ins i32imm:$a), "ldw r11, cp[$a]",
+//                         []>;
+// }
 
 // Two operand short
 def NOT : _F2R<0b100010, (outs GRRegs:$dst), (ins GRRegs:$b),
@@ -1106,12 +1106,12 @@ def WAITEU_0R : _F0R<0b0000001100, (outs), (ins),
 // Non-Instruction Patterns
 //===----------------------------------------------------------------------===//
 
-def : Pat<(YCoreBranchLink texternalsym:$addr), (BLRF_lu10 texternalsym:$addr)>;
+// def : Pat<(YCoreBranchLink texternalsym:$addr), (BLRF_lu10 texternalsym:$addr)>;
 
-/// sext_inreg
-def : Pat<(sext_inreg GRRegs:$b, i1), (SEXT_rus GRRegs:$b, 1)>;
-def : Pat<(sext_inreg GRRegs:$b, i8), (SEXT_rus GRRegs:$b, 8)>;
-def : Pat<(sext_inreg GRRegs:$b, i16), (SEXT_rus GRRegs:$b, 16)>;
+// /// sext_inreg
+// def : Pat<(sext_inreg GRRegs:$b, i1), (SEXT_rus GRRegs:$b, 1)>;
+// def : Pat<(sext_inreg GRRegs:$b, i8), (SEXT_rus GRRegs:$b, 8)>;
+// def : Pat<(sext_inreg GRRegs:$b, i16), (SEXT_rus GRRegs:$b, 16)>;
 
 // /// loads
 // def : Pat<(zextloadi8 (add GRRegs:$addr, GRRegs:$offset)),
