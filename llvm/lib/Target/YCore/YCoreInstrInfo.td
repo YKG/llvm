@@ -632,21 +632,21 @@ defm RETSP : FU6_LU6<0b0111011111, "retsp", YCoreRetsp>;
 }
 }
 
-let hasSideEffects = 0 in
-defm EXTDP : FU6_LU6_np<0b0111001110, "extdp">;
+// let hasSideEffects = 0 in
+// defm EXTDP : FU6_LU6_np<0b0111001110, "extdp">;
 
-let Uses = [R11], isCall=1 in
-defm BLAT : FU6_LU6_np<0b0111001101, "blat">;
+// let Uses = [R11], isCall=1 in
+// defm BLAT : FU6_LU6_np<0b0111001101, "blat">;
 
-let isBranch = 1, isTerminator = 1, isBarrier = 1 in {
-def BRBU_u6 : _FU6<0b0111011100, (outs), (ins brtarget_neg:$a), "bu $a", []>;
+// let isBranch = 1, isTerminator = 1, isBarrier = 1 in {
+// def BRBU_u6 : _FU6<0b0111011100, (outs), (ins brtarget_neg:$a), "bu $a", []>;
 
-def BRBU_lu6 : _FLU6<0b0111011100, (outs), (ins brtarget_neg:$a), "bu $a", []>;
+// def BRBU_lu6 : _FLU6<0b0111011100, (outs), (ins brtarget_neg:$a), "bu $a", []>;
 
-def BRFU_u6 : _FU6<0b0111001100, (outs), (ins brtarget:$a), "bu $a", []>;
+// def BRFU_u6 : _FU6<0b0111001100, (outs), (ins brtarget:$a), "bu $a", []>;
 
-def BRFU_lu6 : _FLU6<0b0111001100, (outs), (ins brtarget:$a), "bu $a", []>;
-}
+// def BRFU_lu6 : _FLU6<0b0111001100, (outs), (ins brtarget:$a), "bu $a", []>;
+// }
 
 //let Uses = [CP] in ...
 let Defs = [R11], hasSideEffects = 0, isReMaterializable = 1 in

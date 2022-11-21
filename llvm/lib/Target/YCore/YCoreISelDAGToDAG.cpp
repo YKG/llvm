@@ -270,12 +270,12 @@ bool YCoreDAGToDAGISel::tryBRIND(SDNode *N) {
   Glue =
     SDValue(CurDAG->getMachineNode(YCore::CLRSR_branch_u6, dl, MVT::Glue,
                                    constOne, Glue), 0);
-  if (nextAddr->getOpcode() == YCoreISD::PCRelativeWrapper &&
-      nextAddr->getOperand(0)->getOpcode() == ISD::TargetBlockAddress) {
-    CurDAG->SelectNodeTo(N, YCore::BRFU_lu6, MVT::Other,
-                         nextAddr->getOperand(0), Glue);
-    return true;
-  }
+//  if (nextAddr->getOpcode() == YCoreISD::PCRelativeWrapper &&
+//      nextAddr->getOperand(0)->getOpcode() == ISD::TargetBlockAddress) {
+//    CurDAG->SelectNodeTo(N, YCore::BRFU_lu6, MVT::Other,
+//                         nextAddr->getOperand(0), Glue);
+//    return true;
+//  }
   CurDAG->SelectNodeTo(N, YCore::BAU_1r, MVT::Other, nextAddr, Glue);
   return true;
 }
