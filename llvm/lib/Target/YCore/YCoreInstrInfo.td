@@ -97,46 +97,46 @@ def callseq_end   : SDNode<"ISD::CALLSEQ_END",   SDT_YCoreCallSeqEnd,
 //   return getI32Imm(N->getZExtValue()/4, SDLoc(N));
 // }]>;
 
-def msksize_xform : SDNodeXForm<imm, [{
-  // Transformation function: get the size of a mask
-  assert(isMask_32(N->getZExtValue()));
-  // look for the first non-zero bit
-  return getI32Imm(32 - countLeadingZeros((uint32_t)N->getZExtValue()),
-                   SDLoc(N));
-}]>;
+// def msksize_xform : SDNodeXForm<imm, [{
+//   // Transformation function: get the size of a mask
+//   assert(isMask_32(N->getZExtValue()));
+//   // look for the first non-zero bit
+//   return getI32Imm(32 - countLeadingZeros((uint32_t)N->getZExtValue()),
+//                    SDLoc(N));
+// }]>;
 
-def neg_xform : SDNodeXForm<imm, [{
-  // Transformation function: -imm
-  uint32_t value = N->getZExtValue();
-  return getI32Imm(-value, SDLoc(N));
-}]>;
+// def neg_xform : SDNodeXForm<imm, [{
+//   // Transformation function: -imm
+//   uint32_t value = N->getZExtValue();
+//   return getI32Imm(-value, SDLoc(N));
+// }]>;
 
-def bpwsub_xform : SDNodeXForm<imm, [{
-  // Transformation function: 32-imm
-  uint32_t value = N->getZExtValue();
-  return getI32Imm(32 - value, SDLoc(N));
-}]>;
+// def bpwsub_xform : SDNodeXForm<imm, [{
+//   // Transformation function: 32-imm
+//   uint32_t value = N->getZExtValue();
+//   return getI32Imm(32 - value, SDLoc(N));
+// }]>;
 
-def div4neg_xform : SDNodeXForm<imm, [{
-  // Transformation function: -imm/4
-  uint32_t value = N->getZExtValue();
-  assert(-value % 4 == 0);
-  return getI32Imm(-value/4, SDLoc(N));
-}]>;
+// def div4neg_xform : SDNodeXForm<imm, [{
+//   // Transformation function: -imm/4
+//   uint32_t value = N->getZExtValue();
+//   assert(-value % 4 == 0);
+//   return getI32Imm(-value/4, SDLoc(N));
+// }]>;
 
-def immUs4Neg : PatLeaf<(imm), [{
-  uint32_t value = (uint32_t)N->getZExtValue();
-  return (-value)%4 == 0 && (-value)/4 <= 11;
-}]>;
+// def immUs4Neg : PatLeaf<(imm), [{
+//   uint32_t value = (uint32_t)N->getZExtValue();
+//   return (-value)%4 == 0 && (-value)/4 <= 11;
+// }]>;
 
-def immUs4 : PatLeaf<(imm), [{
-  uint32_t value = (uint32_t)N->getZExtValue();
-  return value%4 == 0 && value/4 <= 11;
-}]>;
+// def immUs4 : PatLeaf<(imm), [{
+//   uint32_t value = (uint32_t)N->getZExtValue();
+//   return value%4 == 0 && value/4 <= 11;
+// }]>;
 
-def immUsNeg : PatLeaf<(imm), [{
-  return -((uint32_t)N->getZExtValue()) <= 11;
-}]>;
+// def immUsNeg : PatLeaf<(imm), [{
+//   return -((uint32_t)N->getZExtValue()) <= 11;
+// }]>;
 
 def immUs : PatLeaf<(imm), [{
   return (uint32_t)N->getZExtValue() <= 11;
@@ -150,23 +150,23 @@ def immU16 : PatLeaf<(imm), [{
   return (uint32_t)N->getZExtValue() < (1 << 16);
 }]>;
 
-def immMskBitp : PatLeaf<(imm), [{ return immMskBitp(N); }]>;
+// def immMskBitp : PatLeaf<(imm), [{ return immMskBitp(N); }]>;
 
-def immBitp : PatLeaf<(imm), [{
-  uint32_t value = (uint32_t)N->getZExtValue();
-  return (value >= 1 && value <= 8)
-          || value == 16
-          || value == 24
-          || value == 32;
-}]>;
+// def immBitp : PatLeaf<(imm), [{
+//   uint32_t value = (uint32_t)N->getZExtValue();
+//   return (value >= 1 && value <= 8)
+//           || value == 16
+//           || value == 24
+//           || value == 32;
+// }]>;
 
-def immBpwSubBitp : PatLeaf<(imm), [{
-  uint32_t value = (uint32_t)N->getZExtValue();
-  return (value >= 24 && value <= 31)
-          || value == 16
-          || value == 8
-          || value == 0;
-}]>;
+// def immBpwSubBitp : PatLeaf<(imm), [{
+//   uint32_t value = (uint32_t)N->getZExtValue();
+//   return (value >= 24 && value <= 31)
+//           || value == 16
+//           || value == 8
+//           || value == 0;
+// }]>;
 
 def lda16f : PatFrag<(ops node:$addr, node:$offset),
                      (add node:$addr, (shl node:$offset, 1))>;
@@ -226,15 +226,15 @@ multiclass F3R_2RUS_np<bits<5> opc1, bits<5> opc2, string OpcStr> {
                      !strconcat(OpcStr, " $dst, $b, $c"), []>;
 }
 
-multiclass F3R_2RBITP<bits<5> opc1, bits<5> opc2, string OpcStr,
-                      SDNode OpNode> {
-  def _3r: _F3R<opc1, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
-                !strconcat(OpcStr, " $dst, $b, $c"),
-                [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
-  def _2rus : _F2RUSBitp<opc2, (outs GRRegs:$dst), (ins GRRegs:$b, i32imm:$c),
-                         !strconcat(OpcStr, " $dst, $b, $c"),
-                         [(set GRRegs:$dst, (OpNode GRRegs:$b, immBitp:$c))]>;
-}
+// multiclass F3R_2RBITP<bits<5> opc1, bits<5> opc2, string OpcStr,
+//                       SDNode OpNode> {
+//   def _3r: _F3R<opc1, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
+//                 !strconcat(OpcStr, " $dst, $b, $c"),
+//                 [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
+//   def _2rus : _F2RUSBitp<opc2, (outs GRRegs:$dst), (ins GRRegs:$b, i32imm:$c),
+//                          !strconcat(OpcStr, " $dst, $b, $c"),
+//                          [(set GRRegs:$dst, (OpNode GRRegs:$b, immBitp:$c))]>;
+// }
 
 class F3R<bits<5> opc, string OpcStr, SDNode OpNode> :
   _F3R<opc, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
@@ -247,26 +247,26 @@ class F3R_np<bits<5> opc, string OpcStr> :
 // Three operand long
 
 /// FL3R_L2RUS multiclass - Define a normal FL3R/FL2RUS pattern in one shot.
-multiclass FL3R_L2RUS<bits<9> opc1, bits<9> opc2, string OpcStr,
-                      SDNode OpNode> {
-  def _l3r: _FL3R<opc1, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
-                  !strconcat(OpcStr, " $dst, $b, $c"),
-                  [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
-  def _l2rus : _FL2RUS<opc2, (outs GRRegs:$dst), (ins GRRegs:$b, i32imm:$c),
-                       !strconcat(OpcStr, " $dst, $b, $c"),
-                       [(set GRRegs:$dst, (OpNode GRRegs:$b, immUs:$c))]>;
-}
+// multiclass FL3R_L2RUS<bits<9> opc1, bits<9> opc2, string OpcStr,
+//                       SDNode OpNode> {
+//   def _l3r: _FL3R<opc1, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
+//                   !strconcat(OpcStr, " $dst, $b, $c"),
+//                   [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
+//   def _l2rus : _FL2RUS<opc2, (outs GRRegs:$dst), (ins GRRegs:$b, i32imm:$c),
+//                        !strconcat(OpcStr, " $dst, $b, $c"),
+//                        [(set GRRegs:$dst, (OpNode GRRegs:$b, immUs:$c))]>;
+// }
 
 /// FL3R_L2RUS multiclass - Define a normal FL3R/FL2RUS pattern in one shot.
-multiclass FL3R_L2RBITP<bits<9> opc1, bits<9> opc2, string OpcStr,
-                        SDNode OpNode> {
-  def _l3r: _FL3R<opc1, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
-                  !strconcat(OpcStr, " $dst, $b, $c"),
-                  [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
-  def _l2rus : _FL2RUSBitp<opc2, (outs GRRegs:$dst), (ins GRRegs:$b, i32imm:$c),
-                           !strconcat(OpcStr, " $dst, $b, $c"),
-                           [(set GRRegs:$dst, (OpNode GRRegs:$b, immBitp:$c))]>;
-}
+// multiclass FL3R_L2RBITP<bits<9> opc1, bits<9> opc2, string OpcStr,
+//                         SDNode OpNode> {
+//   def _l3r: _FL3R<opc1, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
+//                   !strconcat(OpcStr, " $dst, $b, $c"),
+//                   [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
+//   def _l2rus : _FL2RUSBitp<opc2, (outs GRRegs:$dst), (ins GRRegs:$b, i32imm:$c),
+//                            !strconcat(OpcStr, " $dst, $b, $c"),
+//                            [(set GRRegs:$dst, (OpNode GRRegs:$b, immBitp:$c))]>;
+// }
 
 class FL3R<bits<9> opc, string OpcStr, SDNode OpNode> :
   _FL3R<opc, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
@@ -298,12 +298,12 @@ multiclass FU6_LU6<bits<10> opc, string OpcStr, SDNode OpNode> {
                   [(OpNode immU16:$a)]>;
 }
 
-multiclass FU6_LU6_int<bits<10> opc, string OpcStr, Intrinsic Int> {
-  def _u6: _FU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"),
-                [(Int immU6:$a)]>;
-  def _lu6: _FLU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"),
-                  [(Int immU16:$a)]>;
-}
+// multiclass FU6_LU6_int<bits<10> opc, string OpcStr, Intrinsic Int> {
+//   def _u6: _FU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"),
+//                 [(Int immU6:$a)]>;
+//   def _lu6: _FLU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"),
+//                   [(Int immU16:$a)]>;
+// }
 
 multiclass FU6_LU6_np<bits<10> opc, string OpcStr> {
   def _u6: _FU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"), []>;
