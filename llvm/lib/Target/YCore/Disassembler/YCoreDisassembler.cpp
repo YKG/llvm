@@ -437,18 +437,18 @@ static DecodeStatus
 DecodeL2OpInstructionFail(MCInst &Inst, unsigned Insn, uint64_t Address,
                           const void *Decoder) {
   // Try and decode as a L3R / L2RUS instruction.
-  unsigned Opcode = fieldFromInstruction(Insn, 16, 4) |
-                    fieldFromInstruction(Insn, 27, 5) << 4;
-  switch (Opcode) {
-  case 0x0c:
-    Inst.setOpcode(YCore::STW_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x1c:
-    Inst.setOpcode(YCore::XOR_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x2c:
-    Inst.setOpcode(YCore::ASHR_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  unsigned Opcode = fieldFromInstruction(Insn, 16, 4) |
+//                    fieldFromInstruction(Insn, 27, 5) << 4;
+//  switch (Opcode) {
+//  case 0x0c:
+//    Inst.setOpcode(YCore::STW_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x1c:
+//    Inst.setOpcode(YCore::XOR_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x2c:
+//    Inst.setOpcode(YCore::ASHR_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
 //  case 0x3c:
 //    Inst.setOpcode(YCore::LDAWF_l3r);
 //    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
@@ -461,46 +461,46 @@ DecodeL2OpInstructionFail(MCInst &Inst, unsigned Insn, uint64_t Address,
 //  case 0x6c:
 //    Inst.setOpcode(YCore::LDA16B_l3r);
 //    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x7c:
-    Inst.setOpcode(YCore::MUL_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x8c:
-    Inst.setOpcode(YCore::DIVS_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x9c:
-    Inst.setOpcode(YCore::DIVU_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x10c:
-    Inst.setOpcode(YCore::ST16_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x11c:
-    Inst.setOpcode(YCore::ST8_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x12c:
-    Inst.setOpcode(YCore::ASHR_l2rus);
-    return DecodeL2RUSBitpInstruction(Inst, Insn, Address, Decoder);
-  case 0x12d:
-    Inst.setOpcode(YCore::OUTPW_l2rus);
-    return DecodeL2RUSBitpInstruction(Inst, Insn, Address, Decoder);
-  case 0x12e:
-    Inst.setOpcode(YCore::INPW_l2rus);
-    return DecodeL2RUSBitpInstruction(Inst, Insn, Address, Decoder);
-  case 0x13c:
+//  case 0x7c:
+//    Inst.setOpcode(YCore::MUL_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x8c:
+//    Inst.setOpcode(YCore::DIVS_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x9c:
+//    Inst.setOpcode(YCore::DIVU_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x10c:
+//    Inst.setOpcode(YCore::ST16_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x11c:
+//    Inst.setOpcode(YCore::ST8_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x12c:
+//    Inst.setOpcode(YCore::ASHR_l2rus);
+//    return DecodeL2RUSBitpInstruction(Inst, Insn, Address, Decoder);
+//  case 0x12d:
+//    Inst.setOpcode(YCore::OUTPW_l2rus);
+//    return DecodeL2RUSBitpInstruction(Inst, Insn, Address, Decoder);
+//  case 0x12e:
+//    Inst.setOpcode(YCore::INPW_l2rus);
+//    return DecodeL2RUSBitpInstruction(Inst, Insn, Address, Decoder);
+//  case 0x13c:
 //    Inst.setOpcode(YCore::LDAWF_l2rus);
 //    return DecodeL2RUSInstruction(Inst, Insn, Address, Decoder);
 //  case 0x14c:
 //    Inst.setOpcode(YCore::LDAWB_l2rus);
 //    return DecodeL2RUSInstruction(Inst, Insn, Address, Decoder);
-  case 0x15c:
-    Inst.setOpcode(YCore::CRC_l3r);
-    return DecodeL3RSrcDstInstruction(Inst, Insn, Address, Decoder);
-  case 0x18c:
-    Inst.setOpcode(YCore::REMS_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x19c:
-    Inst.setOpcode(YCore::REMU_l3r);
-    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
-  }
+//  case 0x15c:
+//    Inst.setOpcode(YCore::CRC_l3r);
+//    return DecodeL3RSrcDstInstruction(Inst, Insn, Address, Decoder);
+//  case 0x18c:
+//    Inst.setOpcode(YCore::REMS_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x19c:
+//    Inst.setOpcode(YCore::REMU_l3r);
+//    return DecodeL3RInstruction(Inst, Insn, Address, Decoder);
+//  }
   return MCDisassembler::Fail;
 }
 

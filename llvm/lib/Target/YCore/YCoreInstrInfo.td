@@ -453,42 +453,42 @@ def STW_2rus : _F2RUS<0b00000, (outs),
 //                        [(set GRRegs:$dst,
 //                           (lda16b GRRegs:$addr, GRRegs:$offset))]>;
 
-def MUL_l3r : FL3R<0b001111100, "mul", mul>;
-// Instructions which may trap are marked as side effecting.
-let hasSideEffects = 1 in {
-def DIVS_l3r : FL3R<0b010001100, "divs", sdiv>;
-def DIVU_l3r : FL3R<0b010011100, "divu", udiv>;
-def REMS_l3r : FL3R<0b110001100, "rems", srem>;
-def REMU_l3r : FL3R<0b110011100, "remu", urem>;
-}
-def XOR_l3r : FL3R<0b000011100, "xor", xor>;
-defm ASHR : FL3R_L2RBITP<0b000101100, 0b100101100, "ashr", sra>;
+// def MUL_l3r : FL3R<0b001111100, "mul", mul>;
+// // Instructions which may trap are marked as side effecting.
+// let hasSideEffects = 1 in {
+// def DIVS_l3r : FL3R<0b010001100, "divs", sdiv>;
+// def DIVU_l3r : FL3R<0b010011100, "divu", udiv>;
+// def REMS_l3r : FL3R<0b110001100, "rems", srem>;
+// def REMU_l3r : FL3R<0b110011100, "remu", urem>;
+// }
+// def XOR_l3r : FL3R<0b000011100, "xor", xor>;
+// defm ASHR : FL3R_L2RBITP<0b000101100, 0b100101100, "ashr", sra>;
 
-let Constraints = "$src1 = $dst" in
-def CRC_l3r : _FL3RSrcDst<0b101011100, (outs GRRegs:$dst),
-                          (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
-                          "crc32 $dst, $src2, $src3",
-                          [(set GRRegs:$dst,
-                             (int_ycore_crc32 GRRegs:$src1, GRRegs:$src2,
-                                              GRRegs:$src3))]>;
+// let Constraints = "$src1 = $dst" in
+// def CRC_l3r : _FL3RSrcDst<0b101011100, (outs GRRegs:$dst),
+//                           (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
+//                           "crc32 $dst, $src2, $src3",
+//                           [(set GRRegs:$dst,
+//                              (int_ycore_crc32 GRRegs:$src1, GRRegs:$src2,
+//                                               GRRegs:$src3))]>;
 
-let mayStore=1 in {
-def ST16_l3r : _FL3R<0b100001100, (outs),
-                     (ins GRRegs:$val, GRRegs:$addr, GRRegs:$offset),
-                     "st16 $val, $addr[$offset]", []>;
+// let mayStore=1 in {
+// def ST16_l3r : _FL3R<0b100001100, (outs),
+//                      (ins GRRegs:$val, GRRegs:$addr, GRRegs:$offset),
+//                      "st16 $val, $addr[$offset]", []>;
 
-def ST8_l3r : _FL3R<0b100011100, (outs),
-                    (ins GRRegs:$val, GRRegs:$addr, GRRegs:$offset),
-                    "st8 $val, $addr[$offset]", []>;
-}
+// def ST8_l3r : _FL3R<0b100011100, (outs),
+//                     (ins GRRegs:$val, GRRegs:$addr, GRRegs:$offset),
+//                     "st8 $val, $addr[$offset]", []>;
+// }
 
-def INPW_l2rus : _FL2RUSBitp<0b100101110, (outs GRRegs:$a),
-                             (ins GRRegs:$b, i32imm:$c), "inpw $a, res[$b], $c",
-                             []>;
+// def INPW_l2rus : _FL2RUSBitp<0b100101110, (outs GRRegs:$a),
+//                              (ins GRRegs:$b, i32imm:$c), "inpw $a, res[$b], $c",
+//                              []>;
 
-def OUTPW_l2rus : _FL2RUSBitp<0b100101101, (outs),
-                              (ins GRRegs:$a, GRRegs:$b, i32imm:$c),
-                              "outpw res[$b], $a, $c", []>;
+// def OUTPW_l2rus : _FL2RUSBitp<0b100101101, (outs),
+//                               (ins GRRegs:$a, GRRegs:$b, i32imm:$c),
+//                               "outpw res[$b], $a, $c", []>;
 
 // // Four operand long
 // let Constraints = "$e = $a,$f = $b" in {
@@ -1137,22 +1137,22 @@ def : Pat<(extloadi16 (lda16f GRRegs:$addr, GRRegs:$offset)),
 def : Pat<(extloadi16 GRRegs:$addr), (LD16S_3r GRRegs:$addr, (LDC_ru6 0))>;
 
 /// stores
-def : Pat<(truncstorei8 GRRegs:$val, (add GRRegs:$addr, GRRegs:$offset)),
-          (ST8_l3r GRRegs:$val, GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(truncstorei8 GRRegs:$val, GRRegs:$addr),
-          (ST8_l3r GRRegs:$val, GRRegs:$addr, (LDC_ru6 0))>;
+// def : Pat<(truncstorei8 GRRegs:$val, (add GRRegs:$addr, GRRegs:$offset)),
+//           (ST8_l3r GRRegs:$val, GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(truncstorei8 GRRegs:$val, GRRegs:$addr),
+//           (ST8_l3r GRRegs:$val, GRRegs:$addr, (LDC_ru6 0))>;
 
-def : Pat<(truncstorei16 GRRegs:$val, (lda16f GRRegs:$addr, GRRegs:$offset)),
-          (ST16_l3r GRRegs:$val, GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(truncstorei16 GRRegs:$val, GRRegs:$addr),
-          (ST16_l3r GRRegs:$val, GRRegs:$addr, (LDC_ru6 0))>;
+// def : Pat<(truncstorei16 GRRegs:$val, (lda16f GRRegs:$addr, GRRegs:$offset)),
+//           (ST16_l3r GRRegs:$val, GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(truncstorei16 GRRegs:$val, GRRegs:$addr),
+//           (ST16_l3r GRRegs:$val, GRRegs:$addr, (LDC_ru6 0))>;
 
-def : Pat<(store GRRegs:$val, (ldawf GRRegs:$addr, GRRegs:$offset)),
-          (STW_l3r GRRegs:$val, GRRegs:$addr, GRRegs:$offset)>;
-def : Pat<(store GRRegs:$val, (add GRRegs:$addr, immUs4:$offset)),
-          (STW_2rus GRRegs:$val, GRRegs:$addr, (div4_xform immUs4:$offset))>;
-def : Pat<(store GRRegs:$val, GRRegs:$addr),
-          (STW_2rus GRRegs:$val, GRRegs:$addr, 0)>;
+// def : Pat<(store GRRegs:$val, (ldawf GRRegs:$addr, GRRegs:$offset)),
+//           (STW_l3r GRRegs:$val, GRRegs:$addr, GRRegs:$offset)>;
+// def : Pat<(store GRRegs:$val, (add GRRegs:$addr, immUs4:$offset)),
+//           (STW_2rus GRRegs:$val, GRRegs:$addr, (div4_xform immUs4:$offset))>;
+// def : Pat<(store GRRegs:$val, GRRegs:$addr),
+//           (STW_2rus GRRegs:$val, GRRegs:$addr, 0)>;
 
 /// bitrev
 def : Pat<(bitreverse GRRegs:$src), (BITREV_l2r GRRegs:$src)>;
@@ -1286,27 +1286,27 @@ def : Pat<(add GRRegs:$src1, immUsNeg:$src2),
 //           (LDAWB_l3r GRRegs:$src, GRRegs:$src)>;
 
 // ashr X, 32 is equivalent to ashr X, 31 on the YCore.
-def : Pat<(sra GRRegs:$src, 31),
-          (ASHR_l2rus GRRegs:$src, 32)>;
+// def : Pat<(sra GRRegs:$src, 31),
+//           (ASHR_l2rus GRRegs:$src, 32)>;
 
-def : Pat<(brcond (setlt GRRegs:$lhs, 0), bb:$dst),
-          (BRFT_lru6 (ASHR_l2rus GRRegs:$lhs, 32), bb:$dst)>;
+// def : Pat<(brcond (setlt GRRegs:$lhs, 0), bb:$dst),
+//           (BRFT_lru6 (ASHR_l2rus GRRegs:$lhs, 32), bb:$dst)>;
 
-// setge X, 0 is canonicalized to setgt X, -1
-def : Pat<(brcond (setgt GRRegs:$lhs, -1), bb:$dst),
-          (BRFF_lru6 (ASHR_l2rus GRRegs:$lhs, 32), bb:$dst)>;
+// // setge X, 0 is canonicalized to setgt X, -1
+// def : Pat<(brcond (setgt GRRegs:$lhs, -1), bb:$dst),
+//           (BRFF_lru6 (ASHR_l2rus GRRegs:$lhs, 32), bb:$dst)>;
 
-def : Pat<(select (setlt GRRegs:$lhs, 0), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (ASHR_l2rus GRRegs:$lhs, 32), GRRegs:$T, GRRegs:$F)>;
+// def : Pat<(select (setlt GRRegs:$lhs, 0), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (ASHR_l2rus GRRegs:$lhs, 32), GRRegs:$T, GRRegs:$F)>;
 
-def : Pat<(select (setgt GRRegs:$lhs, -1), GRRegs:$T, GRRegs:$F),
-          (SELECT_CC (ASHR_l2rus GRRegs:$lhs, 32), GRRegs:$F, GRRegs:$T)>;
+// def : Pat<(select (setgt GRRegs:$lhs, -1), GRRegs:$T, GRRegs:$F),
+//           (SELECT_CC (ASHR_l2rus GRRegs:$lhs, 32), GRRegs:$F, GRRegs:$T)>;
 
-def : Pat<(setgt GRRegs:$lhs, -1),
-          (EQ_2rus (ASHR_l2rus GRRegs:$lhs, 32), 0)>;
+// def : Pat<(setgt GRRegs:$lhs, -1),
+//           (EQ_2rus (ASHR_l2rus GRRegs:$lhs, 32), 0)>;
 
-def : Pat<(sra (shl GRRegs:$src, immBpwSubBitp:$imm), immBpwSubBitp:$imm),
-          (SEXT_rus GRRegs:$src, (bpwsub_xform immBpwSubBitp:$imm))>;
+// def : Pat<(sra (shl GRRegs:$src, immBpwSubBitp:$imm), immBpwSubBitp:$imm),
+//           (SEXT_rus GRRegs:$src, (bpwsub_xform immBpwSubBitp:$imm))>;
 
 // def : Pat<(load (cprelwrapper tconstpool:$b)),
 //           (LDWCP_lru6 tconstpool:$b)>;
