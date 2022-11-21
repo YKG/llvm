@@ -343,6 +343,7 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 //}
 
 unsigned YCoreTargetLowering::getJumpTableEncoding() const {
+  llvm_unreachable("TODO");
   return MachineJumpTableInfo::EK_Inline;
 }
 //
