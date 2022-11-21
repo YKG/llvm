@@ -176,23 +176,25 @@ YCoreTargetLowering::YCoreTargetLowering(const TargetMachine &TM,
   setPrefFunctionAlignment(Align(4));
 }
 
-bool YCoreTargetLowering::isZExtFree(SDValue Val, EVT VT2) const {
-  if (Val.getOpcode() != ISD::LOAD)
-    return false;
-
-  EVT VT1 = Val.getValueType();
-  if (!VT1.isSimple() || !VT1.isInteger() ||
-      !VT2.isSimple() || !VT2.isInteger())
-    return false;
-
-  switch (VT1.getSimpleVT().SimpleTy) {
-  default: break;
-  case MVT::i8:
-    return true;
-  }
-
-  return false;
-}
+//bool YCoreTargetLowering::isZExtFree(SDValue Val, EVT VT2) const {
+//  llvm_unreachable("TODO");
+//
+//  if (Val.getOpcode() != ISD::LOAD)
+//    return false;
+//
+//  EVT VT1 = Val.getValueType();
+//  if (!VT1.isSimple() || !VT1.isInteger() ||
+//      !VT2.isSimple() || !VT2.isInteger())
+//    return false;
+//
+//  switch (VT1.getSimpleVT().SimpleTy) {
+//  default: break;
+//  case MVT::i8:
+//    return true;
+//  }
+//
+//  return false;
+//}
 
 SDValue YCoreTargetLowering::
 LowerOperation(SDValue Op, SelectionDAG &DAG) const {
@@ -229,18 +231,20 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 
 /// ReplaceNodeResults - Replace the results of node with an illegal result
 /// type with new values built out of custom code.
-void YCoreTargetLowering::ReplaceNodeResults(SDNode *N,
-                                             SmallVectorImpl<SDValue>&Results,
-                                             SelectionDAG &DAG) const {
-  switch (N->getOpcode()) {
-  default:
-    llvm_unreachable("Don't know how to custom expand this!");
-  case ISD::ADD:
-  case ISD::SUB:
-    Results.push_back(ExpandADDSUB(N, DAG));
-    return;
-  }
-}
+//void YCoreTargetLowering::ReplaceNodeResults(SDNode *N,
+//                                             SmallVectorImpl<SDValue>&Results,
+//                                             SelectionDAG &DAG) const {
+//  llvm_unreachable("TODO");
+//
+//  switch (N->getOpcode()) {
+//  default:
+//    llvm_unreachable("Don't know how to custom expand this!");
+//  case ISD::ADD:
+//  case ISD::SUB:
+//    Results.push_back(ExpandADDSUB(N, DAG));
+//    return;
+//  }
+//}
 
 //===----------------------------------------------------------------------===//
 //  Misc Lower Operation implementation

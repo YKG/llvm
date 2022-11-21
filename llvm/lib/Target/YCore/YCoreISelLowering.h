@@ -95,7 +95,7 @@ namespace llvm {
                                  const YCoreSubtarget &Subtarget);
 
     using TargetLowering::isZExtFree;
-    bool isZExtFree(SDValue Val, EVT VT2) const override;
+//    bool isZExtFree(SDValue Val, EVT VT2) const override;
 
 
     unsigned getJumpTableEncoding() const override;
@@ -109,8 +109,8 @@ namespace llvm {
     /// ReplaceNodeResults - Replace the results of node with an illegal result
     /// type with new values built out of custom code.
     ///
-    void ReplaceNodeResults(SDNode *N, SmallVectorImpl<SDValue>&Results,
-                            SelectionDAG &DAG) const override;
+//    void ReplaceNodeResults(SDNode *N, SmallVectorImpl<SDValue>&Results,
+//                            SelectionDAG &DAG) const override;
 
     /// getTargetNodeName - This method returns the name of a target specific
     //  DAG node.
