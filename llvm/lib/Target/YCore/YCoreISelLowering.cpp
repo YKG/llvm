@@ -1879,20 +1879,20 @@ SDValue YCoreTargetLowering::PerformDAGCombine(SDNode *N,
 //  Addressing mode description hooks
 //===----------------------------------------------------------------------===//
 
-static inline bool isImmUs(int64_t val)
-{
-  return (val >= 0 && val <= 11);
-}
-
-static inline bool isImmUs2(int64_t val)
-{
-  return (val%2 == 0 && isImmUs(val/2));
-}
-
-static inline bool isImmUs4(int64_t val)
-{
-  return (val%4 == 0 && isImmUs(val/4));
-}
+//static inline bool isImmUs(int64_t val)
+//{
+//  return (val >= 0 && val <= 11);
+//}
+//
+//static inline bool isImmUs2(int64_t val)
+//{
+//  return (val%2 == 0 && isImmUs(val/2));
+//}
+//
+//static inline bool isImmUs4(int64_t val)
+//{
+//  return (val%4 == 0 && isImmUs(val/4));
+//}
 //
 ///// isLegalAddressingMode - Return true if the addressing mode represented
 ///// by AM is legal for this target, for a load/store of the specified type.
