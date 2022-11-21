@@ -56,38 +56,41 @@ struct StackSlotInfo {
 static bool CompareSSIOffset(const StackSlotInfo& a, const StackSlotInfo& b) {
   return a.Offset < b.Offset;
 }
-
-static void EmitDefCfaRegister(MachineBasicBlock &MBB,
-                               MachineBasicBlock::iterator MBBI,
-                               const DebugLoc &dl, const TargetInstrInfo &TII,
-                               MachineFunction &MF, unsigned DRegNum) {
-  unsigned CFIIndex = MF.addFrameInst(
-      MCCFIInstruction::createDefCfaRegister(nullptr, DRegNum));
-  BuildMI(MBB, MBBI, dl, TII.get(TargetOpcode::CFI_INSTRUCTION))
-      .addCFIIndex(CFIIndex);
-}
-
-static void EmitDefCfaOffset(MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator MBBI,
-                             const DebugLoc &dl, const TargetInstrInfo &TII,
-                             int Offset) {
-  MachineFunction &MF = *MBB.getParent();
-  unsigned CFIIndex =
-      MF.addFrameInst(MCCFIInstruction::cfiDefCfaOffset(nullptr, Offset));
-  BuildMI(MBB, MBBI, dl, TII.get(TargetOpcode::CFI_INSTRUCTION))
-      .addCFIIndex(CFIIndex);
-}
-
-static void EmitCfiOffset(MachineBasicBlock &MBB,
-                          MachineBasicBlock::iterator MBBI, const DebugLoc &dl,
-                          const TargetInstrInfo &TII, unsigned DRegNum,
-                          int Offset) {
-  MachineFunction &MF = *MBB.getParent();
-  unsigned CFIIndex = MF.addFrameInst(
-      MCCFIInstruction::createOffset(nullptr, DRegNum, Offset));
-  BuildMI(MBB, MBBI, dl, TII.get(TargetOpcode::CFI_INSTRUCTION))
-      .addCFIIndex(CFIIndex);
-}
+//
+//static void EmitDefCfaRegister(MachineBasicBlock &MBB,
+//                               MachineBasicBlock::iterator MBBI,
+//                               const DebugLoc &dl, const TargetInstrInfo &TII,
+//                               MachineFunction &MF, unsigned DRegNum) {
+//  llvm_unreachable("TODO");
+//  unsigned CFIIndex = MF.addFrameInst(
+//      MCCFIInstruction::createDefCfaRegister(nullptr, DRegNum));
+//  BuildMI(MBB, MBBI, dl, TII.get(TargetOpcode::CFI_INSTRUCTION))
+//      .addCFIIndex(CFIIndex);
+//}
+//
+//static void EmitDefCfaOffset(MachineBasicBlock &MBB,
+//                             MachineBasicBlock::iterator MBBI,
+//                             const DebugLoc &dl, const TargetInstrInfo &TII,
+//                             int Offset) {
+//  llvm_unreachable("TODO");
+//  MachineFunction &MF = *MBB.getParent();
+//  unsigned CFIIndex =
+//      MF.addFrameInst(MCCFIInstruction::cfiDefCfaOffset(nullptr, Offset));
+//  BuildMI(MBB, MBBI, dl, TII.get(TargetOpcode::CFI_INSTRUCTION))
+//      .addCFIIndex(CFIIndex);
+//}
+//
+//static void EmitCfiOffset(MachineBasicBlock &MBB,
+//                          MachineBasicBlock::iterator MBBI, const DebugLoc &dl,
+//                          const TargetInstrInfo &TII, unsigned DRegNum,
+//                          int Offset) {
+//  llvm_unreachable("TODO");
+//  MachineFunction &MF = *MBB.getParent();
+//  unsigned CFIIndex = MF.addFrameInst(
+//      MCCFIInstruction::createOffset(nullptr, DRegNum, Offset));
+//  BuildMI(MBB, MBBI, dl, TII.get(TargetOpcode::CFI_INSTRUCTION))
+//      .addCFIIndex(CFIIndex);
+//}
 
 /// The SP register is moved in steps of 'MaxImmU16' towards the bottom of the
 /// frame. During these steps, it may be necessary to spill registers.
@@ -106,8 +109,8 @@ static void IfNeededExtSP(MachineBasicBlock &MBB,
     int Opcode = isImmU6(OpImm) ? YCore::EXTSP_u6 : YCore::EXTSP_lu6;
     BuildMI(MBB, MBBI, dl, TII.get(Opcode)).addImm(OpImm);
     Adjusted += OpImm;
-    if (emitFrameMoves)
-      EmitDefCfaOffset(MBB, MBBI, dl, TII, Adjusted*4);
+//    if (emitFrameMoves)
+//      EmitDefCfaOffset(MBB, MBBI, dl, TII, Adjusted*4);
   }
 }
 
@@ -157,31 +160,33 @@ static void GetSpillList(SmallVectorImpl<StackSlotInfo> &SpillList,
 /// These slots are only used by the unwinder and calls to llvm.eh.return().
 /// Registers are ordered according to their frame offset.
 /// As offsets are negative, the largest offsets will be first.
-static void GetEHSpillList(SmallVectorImpl<StackSlotInfo> &SpillList,
-                           MachineFrameInfo &MFI, YCoreFunctionInfo *XFI,
-                           const Constant *PersonalityFn,
-                           const TargetLowering *TL) {
-  assert(XFI->hasEHSpillSlot() && "There are no EH register spill slots");
-  const int *EHSlot = XFI->getEHSpillSlot();
-  SpillList.push_back(
-      StackSlotInfo(EHSlot[0], MFI.getObjectOffset(EHSlot[0]),
-                    TL->getExceptionPointerRegister(PersonalityFn)));
-  SpillList.push_back(
-      StackSlotInfo(EHSlot[0], MFI.getObjectOffset(EHSlot[1]),
-                    TL->getExceptionSelectorRegister(PersonalityFn)));
-  llvm::sort(SpillList, CompareSSIOffset);
-}
-
-static MachineMemOperand *getFrameIndexMMO(MachineBasicBlock &MBB,
-                                           int FrameIndex,
-                                           MachineMemOperand::Flags flags) {
-  MachineFunction *MF = MBB.getParent();
-  const MachineFrameInfo &MFI = MF->getFrameInfo();
-  MachineMemOperand *MMO = MF->getMachineMemOperand(
-      MachinePointerInfo::getFixedStack(*MF, FrameIndex), flags,
-      MFI.getObjectSize(FrameIndex), MFI.getObjectAlign(FrameIndex));
-  return MMO;
-}
+//static void GetEHSpillList(SmallVectorImpl<StackSlotInfo> &SpillList,
+//                           MachineFrameInfo &MFI, YCoreFunctionInfo *XFI,
+//                           const Constant *PersonalityFn,
+//                           const TargetLowering *TL) {
+//  llvm_unreachable("TODO");
+//  assert(XFI->hasEHSpillSlot() && "There are no EH register spill slots");
+//  const int *EHSlot = XFI->getEHSpillSlot();
+//  SpillList.push_back(
+//      StackSlotInfo(EHSlot[0], MFI.getObjectOffset(EHSlot[0]),
+//                    TL->getExceptionPointerRegister(PersonalityFn)));
+//  SpillList.push_back(
+//      StackSlotInfo(EHSlot[0], MFI.getObjectOffset(EHSlot[1]),
+//                    TL->getExceptionSelectorRegister(PersonalityFn)));
+//  llvm::sort(SpillList, CompareSSIOffset);
+//}
+//
+//static MachineMemOperand *getFrameIndexMMO(MachineBasicBlock &MBB,
+//                                           int FrameIndex,
+//                                           MachineMemOperand::Flags flags) {
+//  llvm_unreachable("TODO");
+//  MachineFunction *MF = MBB.getParent();
+//  const MachineFrameInfo &MFI = MF->getFrameInfo();
+//  MachineMemOperand *MMO = MF->getMachineMemOperand(
+//      MachinePointerInfo::getFixedStack(*MF, FrameIndex), flags,
+//      MFI.getObjectSize(FrameIndex), MFI.getObjectAlign(FrameIndex));
+//  return MMO;
+//}
 
 
 /// Restore clobbered registers with their spill slot value.
@@ -192,18 +197,19 @@ static void RestoreSpillList(MachineBasicBlock &MBB,
                              const DebugLoc &dl, const TargetInstrInfo &TII,
                              int &RemainingAdj,
                              SmallVectorImpl<StackSlotInfo> &SpillList) {
-  for (unsigned i = 0, e = SpillList.size(); i != e; ++i) {
-    assert(SpillList[i].Offset % 4 == 0 && "Misaligned stack offset");
-    assert(SpillList[i].Offset <= 0 && "Unexpected positive stack offset");
-    int OffsetFromTop = - SpillList[i].Offset/4;
-    IfNeededLDAWSP(MBB, MBBI, dl, TII, OffsetFromTop, RemainingAdj);
-    int Offset = RemainingAdj - OffsetFromTop;
-    int Opcode = isImmU6(Offset) ? YCore::LDWSP_ru6 : YCore::LDWSP_lru6;
-    BuildMI(MBB, MBBI, dl, TII.get(Opcode), SpillList[i].Reg)
-      .addImm(Offset)
-      .addMemOperand(getFrameIndexMMO(MBB, SpillList[i].FI,
-                                      MachineMemOperand::MOLoad));
-  }
+//  for (unsigned i = 0, e = SpillList.size(); i != e; ++i) {
+//    assert(SpillList[i].Offset % 4 == 0 && "Misaligned stack offset");
+//    assert(SpillList[i].Offset <= 0 && "Unexpected positive stack offset");
+//    int OffsetFromTop = - SpillList[i].Offset/4;
+//    IfNeededLDAWSP(MBB, MBBI, dl, TII, OffsetFromTop, RemainingAdj);
+//    int Offset = RemainingAdj - OffsetFromTop;
+//    int Opcode = isImmU6(Offset) ? YCore::LDWSP_ru6 : YCore::LDWSP_lru6;
+//    llvm_unreachable("TODO");
+//    BuildMI(MBB, MBBI, dl, TII.get(Opcode), SpillList[i].Reg)
+//      .addImm(Offset)
+//      .addMemOperand(getFrameIndexMMO(MBB, SpillList[i].FI,
+//                                      MachineMemOperand::MOLoad));
+//  }
 }
 
 //===----------------------------------------------------------------------===//
@@ -265,11 +271,11 @@ void YCoreFrameLowering::emitPrologue(MachineFunction &MF,
     MIB.addImm(Adjusted);
     MIB->addRegisterKilled(YCore::LR, MF.getSubtarget().getRegisterInfo(),
                            true);
-    if (emitFrameMoves) {
-      EmitDefCfaOffset(MBB, MBBI, dl, TII, Adjusted*4);
-      unsigned DRegNum = MRI->getDwarfRegNum(YCore::LR, true);
-      EmitCfiOffset(MBB, MBBI, dl, TII, DRegNum, 0);
-    }
+//    if (emitFrameMoves) {
+//      EmitDefCfaOffset(MBB, MBBI, dl, TII, Adjusted*4);
+//      unsigned DRegNum = MRI->getDwarfRegNum(YCore::LR, true);
+//      EmitCfiOffset(MBB, MBBI, dl, TII, DRegNum, 0);
+//    }
   }
 
   // If necessary, save LR and FP to the stack, as we EXTSP.
@@ -277,25 +283,26 @@ void YCoreFrameLowering::emitPrologue(MachineFunction &MF,
   GetSpillList(SpillList, MFI, XFI, saveLR, FP);
   // We want the nearest (negative) offsets first, so reverse list.
   std::reverse(SpillList.begin(), SpillList.end());
-  for (unsigned i = 0, e = SpillList.size(); i != e; ++i) {
-    assert(SpillList[i].Offset % 4 == 0 && "Misaligned stack offset");
-    assert(SpillList[i].Offset <= 0 && "Unexpected positive stack offset");
-    int OffsetFromTop = - SpillList[i].Offset/4;
-    IfNeededExtSP(MBB, MBBI, dl, TII, OffsetFromTop, Adjusted, FrameSize,
-                  emitFrameMoves);
-    int Offset = Adjusted - OffsetFromTop;
-    int Opcode = isImmU6(Offset) ? YCore::STWSP_ru6 : YCore::STWSP_lru6;
-    MBB.addLiveIn(SpillList[i].Reg);
-    BuildMI(MBB, MBBI, dl, TII.get(Opcode))
-      .addReg(SpillList[i].Reg, RegState::Kill)
-      .addImm(Offset)
-      .addMemOperand(getFrameIndexMMO(MBB, SpillList[i].FI,
-                                      MachineMemOperand::MOStore));
-    if (emitFrameMoves) {
-      unsigned DRegNum = MRI->getDwarfRegNum(SpillList[i].Reg, true);
-      EmitCfiOffset(MBB, MBBI, dl, TII, DRegNum, SpillList[i].Offset);
-    }
-  }
+//  for (unsigned i = 0, e = SpillList.size(); i != e; ++i) {
+//    assert(SpillList[i].Offset % 4 == 0 && "Misaligned stack offset");
+//    assert(SpillList[i].Offset <= 0 && "Unexpected positive stack offset");
+//    int OffsetFromTop = - SpillList[i].Offset/4;
+//    IfNeededExtSP(MBB, MBBI, dl, TII, OffsetFromTop, Adjusted, FrameSize,
+//                  emitFrameMoves);
+//    int Offset = Adjusted - OffsetFromTop;
+//    int Opcode = isImmU6(Offset) ? YCore::STWSP_ru6 : YCore::STWSP_lru6;
+//    MBB.addLiveIn(SpillList[i].Reg);
+//    llvm_unreachable("TODO");
+//    BuildMI(MBB, MBBI, dl, TII.get(Opcode))
+//      .addReg(SpillList[i].Reg, RegState::Kill)
+//      .addImm(Offset)
+//      .addMemOperand(getFrameIndexMMO(MBB, SpillList[i].FI,
+//                                      MachineMemOperand::MOStore));
+////    if (emitFrameMoves) {
+////      unsigned DRegNum = MRI->getDwarfRegNum(SpillList[i].Reg, true);
+////      EmitCfiOffset(MBB, MBBI, dl, TII, DRegNum, SpillList[i].Offset);
+////    }
+//  }
 
   // Complete any remaining Stack adjustment.
   IfNeededExtSP(MBB, MBBI, dl, TII, FrameSize, Adjusted, FrameSize,
@@ -305,39 +312,39 @@ void YCoreFrameLowering::emitPrologue(MachineFunction &MF,
   if (FP) {
     // Set the FP from the SP.
     BuildMI(MBB, MBBI, dl, TII.get(YCore::LDAWSP_ru6), FramePtr).addImm(0);
-    if (emitFrameMoves)
-      EmitDefCfaRegister(MBB, MBBI, dl, TII, MF,
-                         MRI->getDwarfRegNum(FramePtr, true));
+//    if (emitFrameMoves)
+//      EmitDefCfaRegister(MBB, MBBI, dl, TII, MF,
+//                         MRI->getDwarfRegNum(FramePtr, true));
   }
 
-  if (emitFrameMoves) {
-    // Frame moves for callee saved.
-    for (const auto &SpillLabel : XFI->getSpillLabels()) {
-      MachineBasicBlock::iterator Pos = SpillLabel.first;
-      ++Pos;
-      const CalleeSavedInfo &CSI = SpillLabel.second;
-      int Offset = MFI.getObjectOffset(CSI.getFrameIdx());
-      unsigned DRegNum = MRI->getDwarfRegNum(CSI.getReg(), true);
-      EmitCfiOffset(MBB, Pos, dl, TII, DRegNum, Offset);
-    }
-    if (XFI->hasEHSpillSlot()) {
-      // The unwinder requires stack slot & CFI offsets for the exception info.
-      // We do not save/spill these registers.
-      const Function *Fn = &MF.getFunction();
-      const Constant *PersonalityFn =
-          Fn->hasPersonalityFn() ? Fn->getPersonalityFn() : nullptr;
-      SmallVector<StackSlotInfo, 2> SpillList;
-      GetEHSpillList(SpillList, MFI, XFI, PersonalityFn,
-                     MF.getSubtarget().getTargetLowering());
-      assert(SpillList.size()==2 && "Unexpected SpillList size");
-      EmitCfiOffset(MBB, MBBI, dl, TII,
-                    MRI->getDwarfRegNum(SpillList[0].Reg, true),
-                    SpillList[0].Offset);
-      EmitCfiOffset(MBB, MBBI, dl, TII,
-                    MRI->getDwarfRegNum(SpillList[1].Reg, true),
-                    SpillList[1].Offset);
-    }
-  }
+//  if (emitFrameMoves) {
+//    // Frame moves for callee saved.
+//    for (const auto &SpillLabel : XFI->getSpillLabels()) {
+//      MachineBasicBlock::iterator Pos = SpillLabel.first;
+//      ++Pos;
+//      const CalleeSavedInfo &CSI = SpillLabel.second;
+//      int Offset = MFI.getObjectOffset(CSI.getFrameIdx());
+//      unsigned DRegNum = MRI->getDwarfRegNum(CSI.getReg(), true);
+//      EmitCfiOffset(MBB, Pos, dl, TII, DRegNum, Offset);
+//    }
+//    if (XFI->hasEHSpillSlot()) {
+//      // The unwinder requires stack slot & CFI offsets for the exception info.
+//      // We do not save/spill these registers.
+//      const Function *Fn = &MF.getFunction();
+//      const Constant *PersonalityFn =
+//          Fn->hasPersonalityFn() ? Fn->getPersonalityFn() : nullptr;
+//      SmallVector<StackSlotInfo, 2> SpillList;
+//      GetEHSpillList(SpillList, MFI, XFI, PersonalityFn,
+//                     MF.getSubtarget().getTargetLowering());
+//      assert(SpillList.size()==2 && "Unexpected SpillList size");
+//      EmitCfiOffset(MBB, MBBI, dl, TII,
+//                    MRI->getDwarfRegNum(SpillList[0].Reg, true),
+//                    SpillList[0].Offset);
+//      EmitCfiOffset(MBB, MBBI, dl, TII,
+//                    MRI->getDwarfRegNum(SpillList[1].Reg, true),
+//                    SpillList[1].Offset);
+//    }
+//  }
 }
 
 void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
