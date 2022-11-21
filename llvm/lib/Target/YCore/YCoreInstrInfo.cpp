@@ -430,21 +430,21 @@ MachineBasicBlock::iterator YCoreInstrInfo::loadImmediate(
   DebugLoc dl;
   if (MI != MBB.end() && !MI->isDebugInstr())
     dl = MI->getDebugLoc();
-  if (isImmMskBitp(Value)) {
+//  if (isImmMskBitp(Value)) {
     int N = Log2_32(Value) + 1;
     return BuildMI(MBB, MI, dl, get(YCore::MKMSK_rus), Reg)
         .addImm(N)
         .getInstr();
-  }
-  if (isImmU16(Value)) {
-    int Opcode = isImmU6(Value) ? YCore::LDC_ru6 : YCore::LDC_lru6;
-    return BuildMI(MBB, MI, dl, get(Opcode), Reg).addImm(Value).getInstr();
-  }
-  MachineConstantPool *ConstantPool = MBB.getParent()->getConstantPool();
-  const Constant *C = ConstantInt::get(
-        Type::getInt32Ty(MBB.getParent()->getFunction().getContext()), Value);
-  unsigned Idx = ConstantPool->getConstantPoolIndex(C, Align(4));
-  return BuildMI(MBB, MI, dl, get(YCore::LDWCP_lru6), Reg)
-      .addConstantPoolIndex(Idx)
-      .getInstr();
+//  }
+//  if (isImmU16(Value)) {
+//    int Opcode = isImmU6(Value) ? YCore::LDC_ru6 : YCore::LDC_lru6;
+//    return BuildMI(MBB, MI, dl, get(Opcode), Reg).addImm(Value).getInstr();
+//  }
+//  MachineConstantPool *ConstantPool = MBB.getParent()->getConstantPool();
+//  const Constant *C = ConstantInt::get(
+//        Type::getInt32Ty(MBB.getParent()->getFunction().getContext()), Value);
+//  unsigned Idx = ConstantPool->getConstantPoolIndex(C, Align(4));
+//  return BuildMI(MBB, MI, dl, get(YCore::LDWCP_lru6), Reg)
+//      .addConstantPoolIndex(Idx)
+//      .getInstr();
 }

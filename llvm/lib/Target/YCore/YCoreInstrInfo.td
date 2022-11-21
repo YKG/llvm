@@ -557,13 +557,13 @@ def OUTPW_l2rus : _FL2RUSBitp<0b100101101, (outs),
 //                         [(store RRegs:$a, (dprelwrapper tglobaladdr:$b))]>;
 
 //let Uses = [CP] in ..
-let mayLoad = 1, isReMaterializable = 1, hasSideEffects = 0 in {
-def LDWCP_ru6 : _FRU6<0b011011, (outs RRegs:$a), (ins i32imm:$b),
-                      "ldw $a, cp[$b]", []>;
-def LDWCP_lru6: _FLRU6<0b011011, (outs RRegs:$a), (ins i32imm:$b),
-                       "ldw $a, cp[$b]",
-                       [(set RRegs:$a, (load (cprelwrapper tglobaladdr:$b)))]>;
-}
+// let mayLoad = 1, isReMaterializable = 1, hasSideEffects = 0 in {
+// def LDWCP_ru6 : _FRU6<0b011011, (outs RRegs:$a), (ins i32imm:$b),
+//                       "ldw $a, cp[$b]", []>;
+// def LDWCP_lru6: _FLRU6<0b011011, (outs RRegs:$a), (ins i32imm:$b),
+//                        "ldw $a, cp[$b]",
+//                        [(set RRegs:$a, (load (cprelwrapper tglobaladdr:$b)))]>;
+// }
 
 let Uses = [SP] in {
 let mayStore=1 in {
@@ -1308,8 +1308,8 @@ def : Pat<(setgt GRRegs:$lhs, -1),
 def : Pat<(sra (shl GRRegs:$src, immBpwSubBitp:$imm), immBpwSubBitp:$imm),
           (SEXT_rus GRRegs:$src, (bpwsub_xform immBpwSubBitp:$imm))>;
 
-def : Pat<(load (cprelwrapper tconstpool:$b)),
-          (LDWCP_lru6 tconstpool:$b)>;
+// def : Pat<(load (cprelwrapper tconstpool:$b)),
+//           (LDWCP_lru6 tconstpool:$b)>;
 
-def : Pat<(cprelwrapper tconstpool:$b),
-          (LDAWCP_lu6 tconstpool:$b)>;
+// def : Pat<(cprelwrapper tconstpool:$b),
+//           (LDAWCP_lu6 tconstpool:$b)>;
