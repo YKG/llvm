@@ -214,7 +214,7 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::SUB:                return ExpandADDSUB(Op.getNode(), DAG);
 //  case ISD::FRAMEADDR:          return LowerFRAMEADDR(Op, DAG);
 //  case ISD::RETURNADDR:         return LowerRETURNADDR(Op, DAG);
-  case ISD::FRAME_TO_ARGS_OFFSET: return LowerFRAME_TO_ARGS_OFFSET(Op, DAG);
+//  case ISD::FRAME_TO_ARGS_OFFSET: return LowerFRAME_TO_ARGS_OFFSET(Op, DAG);
 //  case ISD::INIT_TRAMPOLINE:    return LowerINIT_TRAMPOLINE(Op, DAG);
 //  case ISD::ADJUST_TRAMPOLINE:  return LowerADJUST_TRAMPOLINE(Op, DAG);
 //  case ISD::INTRINSIC_WO_CHAIN: return LowerINTRINSIC_WO_CHAIN(Op, DAG);
@@ -803,14 +803,14 @@ ExpandADDSUB(SDNode *N, SelectionDAG &DAG) const
 //                     MachinePointerInfo::getFixedStack(MF, FI));
 //}
 
-SDValue YCoreTargetLowering::
-LowerFRAME_TO_ARGS_OFFSET(SDValue Op, SelectionDAG &DAG) const {
-  // This node represents offset from frame pointer to first on-stack argument.
-  // This is needed for correct stack adjustment during unwind.
-  // However, we don't know the offset until after the frame has be finalised.
-  // This is done during the YCoreFTAOElim pass.
-  return DAG.getNode(YCoreISD::FRAME_TO_ARGS_OFFSET, SDLoc(Op), MVT::i32);
-}
+//SDValue YCoreTargetLowering::
+//LowerFRAME_TO_ARGS_OFFSET(SDValue Op, SelectionDAG &DAG) const {
+//  // This node represents offset from frame pointer to first on-stack argument.
+//  // This is needed for correct stack adjustment during unwind.
+//  // However, we don't know the offset until after the frame has be finalised.
+//  // This is done during the YCoreFTAOElim pass.
+//  return DAG.getNode(YCoreISD::FRAME_TO_ARGS_OFFSET, SDLoc(Op), MVT::i32);
+//}
 //
 //SDValue YCoreTargetLowering::
 //LowerEH_RETURN(SDValue Op, SelectionDAG &DAG) const {
