@@ -82,10 +82,10 @@ def callseq_start : SDNode<"ISD::CALLSEQ_START", SDT_YCoreCallSeqStart,
 def callseq_end   : SDNode<"ISD::CALLSEQ_END",   SDT_YCoreCallSeqEnd,
                            [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue]>;
 
-def SDT_YCoreMEMBARRIER : SDTypeProfile<0, 0, []>;
+// def SDT_YCoreMEMBARRIER : SDTypeProfile<0, 0, []>;
 
-def YCoreMemBarrier : SDNode<"YCoreISD::MEMBARRIER", SDT_YCoreMEMBARRIER,
-                             [SDNPHasChain]>;
+// def YCoreMemBarrier : SDNode<"YCoreISD::MEMBARRIER", SDT_YCoreMEMBARRIER,
+//                              [SDNPHasChain]>;
 
 //===----------------------------------------------------------------------===//
 // Instruction Pattern Stuff
@@ -363,9 +363,9 @@ let usesCustomInserter = 1 in {
                                  (select GRRegs:$cond, GRRegs:$T, GRRegs:$F))]>;
 }
 
-let hasSideEffects = 1 in
-def Int_MemBarrier : PseudoInstYCore<(outs), (ins), "#MEMBARRIER",
-                                     [(YCoreMemBarrier)]>;
+// let hasSideEffects = 1 in
+// def Int_MemBarrier : PseudoInstYCore<(outs), (ins), "#MEMBARRIER",
+//                                      [(YCoreMemBarrier)]>;
 
 //===----------------------------------------------------------------------===//
 // Instructions
