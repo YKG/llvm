@@ -34,22 +34,22 @@ def YCoreBranchLink     : SDNode<"YCoreISD::BL",SDT_YCoreBranchLink,
 def YCoreRetsp : SDNode<"YCoreISD::RETSP", SDTBrind,
                       [SDNPHasChain, SDNPOptInGlue, SDNPMayLoad, SDNPVariadic]>;
 
-def SDT_YCoreEhRet : SDTypeProfile<0, 2,
-                            [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
-def YCoreEhRet       : SDNode<"YCoreISD::EH_RETURN", SDT_YCoreEhRet,
-                         [SDNPHasChain, SDNPOptInGlue]>;
+// def SDT_YCoreEhRet : SDTypeProfile<0, 2,
+//                             [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
+// def YCoreEhRet       : SDNode<"YCoreISD::EH_RETURN", SDT_YCoreEhRet,
+//                          [SDNPHasChain, SDNPOptInGlue]>;
 
-def SDT_YCoreBR_JT    : SDTypeProfile<0, 2,
-                                      [SDTCisVT<0, i32>, SDTCisVT<1, i32>]>;
+// def SDT_YCoreBR_JT    : SDTypeProfile<0, 2,
+//                                       [SDTCisVT<0, i32>, SDTCisVT<1, i32>]>;
 
-def YCoreBR_JT : SDNode<"YCoreISD::BR_JT", SDT_YCoreBR_JT,
-                        [SDNPHasChain]>;
+// def YCoreBR_JT : SDNode<"YCoreISD::BR_JT", SDT_YCoreBR_JT,
+//                         [SDNPHasChain]>;
 
-def YCoreBR_JT32 : SDNode<"YCoreISD::BR_JT32", SDT_YCoreBR_JT,
-                        [SDNPHasChain]>;
+// def YCoreBR_JT32 : SDNode<"YCoreISD::BR_JT32", SDT_YCoreBR_JT,
+//                         [SDNPHasChain]>;
 
-def SDT_YCoreAddress    : SDTypeProfile<1, 1,
-                            [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
+// def SDT_YCoreAddress    : SDTypeProfile<1, 1,
+//                             [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 
 // def pcrelwrapper : SDNode<"YCoreISD::PCRelativeWrapper", SDT_YCoreAddress,
 //                            []>;
@@ -336,10 +336,10 @@ def FRAME_TO_ARGS_OFFSET : PseudoInstYCore<(outs GRRegs:$dst), (ins),
                                "# FRAME_TO_ARGS_OFFSET $dst",
                                [(set GRRegs:$dst, (frametoargsoffset))]>;
 
-let isReturn = 1, isTerminator = 1, isBarrier = 1 in
-def EH_RETURN : PseudoInstYCore<(outs), (ins GRRegs:$s, GRRegs:$handler),
-                               "# EH_RETURN $s, $handler",
-                               [(YCoreEhRet GRRegs:$s, GRRegs:$handler)]>;
+// let isReturn = 1, isTerminator = 1, isBarrier = 1 in
+// def EH_RETURN : PseudoInstYCore<(outs), (ins GRRegs:$s, GRRegs:$handler),
+//                                "# EH_RETURN $s, $handler",
+//                                [(YCoreEhRet GRRegs:$s, GRRegs:$handler)]>;
 
 def LDWFI : PseudoInstYCore<(outs GRRegs:$dst), (ins MEMii:$addr),
                              "# LDWFI $dst, $addr",
