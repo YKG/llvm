@@ -612,12 +612,12 @@ def LDAWSP_lru6 : _FLRU6<0b011001, (outs RRegs:$a), (ins i32imm:$b),
 //                        [(int_ycore_setc GRRegs:$a, immU16:$b)]>;
 
 // Operand register - U6
-let isBranch = 1, isTerminator = 1 in {
-defm BRFT: FRU6_LRU6_branch<0b011100, "bt">;
-defm BRBT: FRU6_LRU6_backwards_branch<0b011101, "bt">;
-defm BRFF: FRU6_LRU6_branch<0b011110, "bf">;
-defm BRBF: FRU6_LRU6_backwards_branch<0b011111, "bf">;
-}
+// let isBranch = 1, isTerminator = 1 in {
+// defm BRFT: FRU6_LRU6_branch<0b011100, "bt">;
+// defm BRBT: FRU6_LRU6_backwards_branch<0b011101, "bt">;
+// defm BRFF: FRU6_LRU6_branch<0b011110, "bf">;
+// defm BRBF: FRU6_LRU6_backwards_branch<0b011111, "bf">;
+// }
 
 // U6
 let Defs = [SP], Uses = [SP] in {
@@ -1168,29 +1168,29 @@ def : Pat<(cttz GRRegs:$src), (CLZ_l2r (BITREV_l2r GRRegs:$src))>;
 ///
 
 // unconditional branch
-def : Pat<(br bb:$addr), (BRFU_lu6 bb:$addr)>;
+// def : Pat<(br bb:$addr), (BRFU_lu6 bb:$addr)>;
 
-// direct match equal/notequal zero brcond
-def : Pat<(brcond (setne GRRegs:$lhs, 0), bb:$dst),
-          (BRFT_lru6 GRRegs:$lhs, bb:$dst)>;
-def : Pat<(brcond (seteq GRRegs:$lhs, 0), bb:$dst),
-          (BRFF_lru6 GRRegs:$lhs, bb:$dst)>;
+// // direct match equal/notequal zero brcond
+// def : Pat<(brcond (setne GRRegs:$lhs, 0), bb:$dst),
+//           (BRFT_lru6 GRRegs:$lhs, bb:$dst)>;
+// def : Pat<(brcond (seteq GRRegs:$lhs, 0), bb:$dst),
+//           (BRFF_lru6 GRRegs:$lhs, bb:$dst)>;
 
-def : Pat<(brcond (setle GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
-          (BRFF_lru6 (LSS_3r GRRegs:$rhs, GRRegs:$lhs), bb:$dst)>;
-def : Pat<(brcond (setule GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
-          (BRFF_lru6 (LSU_3r GRRegs:$rhs, GRRegs:$lhs), bb:$dst)>;
-def : Pat<(brcond (setge GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
-          (BRFF_lru6 (LSS_3r GRRegs:$lhs, GRRegs:$rhs), bb:$dst)>;
-def : Pat<(brcond (setuge GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
-          (BRFF_lru6 (LSU_3r GRRegs:$lhs, GRRegs:$rhs), bb:$dst)>;
-def : Pat<(brcond (setne GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
-          (BRFF_lru6 (EQ_3r GRRegs:$lhs, GRRegs:$rhs), bb:$dst)>;
-def : Pat<(brcond (setne GRRegs:$lhs, immUs:$rhs), bb:$dst),
-          (BRFF_lru6 (EQ_2rus GRRegs:$lhs, immUs:$rhs), bb:$dst)>;
+// def : Pat<(brcond (setle GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
+//           (BRFF_lru6 (LSS_3r GRRegs:$rhs, GRRegs:$lhs), bb:$dst)>;
+// def : Pat<(brcond (setule GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
+//           (BRFF_lru6 (LSU_3r GRRegs:$rhs, GRRegs:$lhs), bb:$dst)>;
+// def : Pat<(brcond (setge GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
+//           (BRFF_lru6 (LSS_3r GRRegs:$lhs, GRRegs:$rhs), bb:$dst)>;
+// def : Pat<(brcond (setuge GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
+//           (BRFF_lru6 (LSU_3r GRRegs:$lhs, GRRegs:$rhs), bb:$dst)>;
+// def : Pat<(brcond (setne GRRegs:$lhs, GRRegs:$rhs), bb:$dst),
+//           (BRFF_lru6 (EQ_3r GRRegs:$lhs, GRRegs:$rhs), bb:$dst)>;
+// def : Pat<(brcond (setne GRRegs:$lhs, immUs:$rhs), bb:$dst),
+//           (BRFF_lru6 (EQ_2rus GRRegs:$lhs, immUs:$rhs), bb:$dst)>;
 
-// generic brcond pattern
-def : Pat<(brcond GRRegs:$cond, bb:$addr), (BRFT_lru6 GRRegs:$cond, bb:$addr)>;
+// // generic brcond pattern
+// def : Pat<(brcond GRRegs:$cond, bb:$addr), (BRFT_lru6 GRRegs:$cond, bb:$addr)>;
 
 
 ///

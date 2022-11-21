@@ -98,59 +98,61 @@ unsigned YCoreInstrInfo::isStoreToStackSlot(const MachineInstr &MI,
 // Branch Analysis
 //===----------------------------------------------------------------------===//
 
-static inline bool IsBRU(unsigned BrOpc) {
-  return BrOpc == YCore::BRFU_u6
-      || BrOpc == YCore::BRFU_lu6
-      || BrOpc == YCore::BRBU_u6
-      || BrOpc == YCore::BRBU_lu6;
-}
-
-static inline bool IsBRT(unsigned BrOpc) {
-  return BrOpc == YCore::BRFT_ru6
-      || BrOpc == YCore::BRFT_lru6
-      || BrOpc == YCore::BRBT_ru6
-      || BrOpc == YCore::BRBT_lru6;
-}
-
-static inline bool IsBRF(unsigned BrOpc) {
-  return BrOpc == YCore::BRFF_ru6
-      || BrOpc == YCore::BRFF_lru6
-      || BrOpc == YCore::BRBF_ru6
-      || BrOpc == YCore::BRBF_lru6;
-}
+//static inline bool IsBRU(unsigned BrOpc) {
+//  return BrOpc == YCore::BRFU_u6
+//      || BrOpc == YCore::BRFU_lu6
+//      || BrOpc == YCore::BRBU_u6
+//      || BrOpc == YCore::BRBU_lu6;
+//}
+//
+//static inline bool IsBRT(unsigned BrOpc) {
+//  return BrOpc == YCore::BRFT_ru6
+//      || BrOpc == YCore::BRFT_lru6
+//      || BrOpc == YCore::BRBT_ru6
+//      || BrOpc == YCore::BRBT_lru6;
+//}
+//
+//static inline bool IsBRF(unsigned BrOpc) {
+//  return BrOpc == YCore::BRFF_ru6
+//      || BrOpc == YCore::BRFF_lru6
+//      || BrOpc == YCore::BRBF_ru6
+//      || BrOpc == YCore::BRBF_lru6;
+//}
 
 static inline bool IsCondBranch(unsigned BrOpc) {
-  return IsBRF(BrOpc) || IsBRT(BrOpc);
+//  return IsBRF(BrOpc) || IsBRT(BrOpc);
+    return false;
 }
 
 static inline bool IsBR_JT(unsigned BrOpc) {
-  return BrOpc == YCore::BR_JT
-      || BrOpc == YCore::BR_JT32;
+//  return BrOpc == YCore::BR_JT
+//      || BrOpc == YCore::BR_JT32;
+    return false;
 }
 
 /// GetCondFromBranchOpc - Return the YCore CC that matches
 /// the correspondent Branch instruction opcode.
-static YCore::CondCode GetCondFromBranchOpc(unsigned BrOpc)
-{
-  if (IsBRT(BrOpc)) {
-    return YCore::COND_TRUE;
-  } else if (IsBRF(BrOpc)) {
-    return YCore::COND_FALSE;
-  } else {
-    return YCore::COND_INVALID;
-  }
-}
+//static YCore::CondCode GetCondFromBranchOpc(unsigned BrOpc)
+//{
+//  if (IsBRT(BrOpc)) {
+//    return YCore::COND_TRUE;
+//  } else if (IsBRF(BrOpc)) {
+//    return YCore::COND_FALSE;
+//  } else {
+//    return YCore::COND_INVALID;
+//  }
+//}
 
 /// GetCondBranchFromCond - Return the Branch instruction
 /// opcode that matches the cc.
-static inline unsigned GetCondBranchFromCond(YCore::CondCode CC)
-{
-  switch (CC) {
-  default: llvm_unreachable("Illegal condition code!");
-  case YCore::COND_TRUE   : return YCore::BRFT_lru6;
-  case YCore::COND_FALSE  : return YCore::BRFF_lru6;
-  }
-}
+//static inline unsigned GetCondBranchFromCond(YCore::CondCode CC)
+//{
+//  switch (CC) {
+//  default: llvm_unreachable("Illegal condition code!");
+//  case YCore::COND_TRUE   : return YCore::BRFT_lru6;
+//  case YCore::COND_FALSE  : return YCore::BRFF_lru6;
+//  }
+//}
 
 /// GetOppositeBranchCondition - Return the inverse of the specified
 /// condition, e.g. turning COND_E to COND_NE.
@@ -192,80 +194,81 @@ bool YCoreInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
                                    SmallVectorImpl<MachineOperand> &Cond,
                                    bool AllowModify) const {
   // If the block has no terminators, it just falls into the block after it.
-  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
-  if (I == MBB.end())
-    return false;
-
-  if (!isUnpredicatedTerminator(*I))
-    return false;
-
-  // Get the last instruction in the block.
-  MachineInstr *LastInst = &*I;
-
-  // If there is only one terminator instruction, process it.
-  if (I == MBB.begin() || !isUnpredicatedTerminator(*--I)) {
-    if (IsBRU(LastInst->getOpcode())) {
-      TBB = LastInst->getOperand(0).getMBB();
-      return false;
-    }
-
-    YCore::CondCode BranchCode = GetCondFromBranchOpc(LastInst->getOpcode());
-    if (BranchCode == YCore::COND_INVALID)
-      return true;  // Can't handle indirect branch.
-
-    // Conditional branch
-    // Block ends with fall-through condbranch.
-
-    TBB = LastInst->getOperand(1).getMBB();
-    Cond.push_back(MachineOperand::CreateImm(BranchCode));
-    Cond.push_back(LastInst->getOperand(0));
-    return false;
-  }
-
-  // Get the instruction before it if it's a terminator.
-  MachineInstr *SecondLastInst = &*I;
-
-  // If there are three terminators, we don't know what sort of block this is.
-  if (SecondLastInst && I != MBB.begin() && isUnpredicatedTerminator(*--I))
-    return true;
-
-  unsigned SecondLastOpc    = SecondLastInst->getOpcode();
-  YCore::CondCode BranchCode = GetCondFromBranchOpc(SecondLastOpc);
-
-  // If the block ends with conditional branch followed by unconditional,
-  // handle it.
-  if (BranchCode != YCore::COND_INVALID
-    && IsBRU(LastInst->getOpcode())) {
-
-    TBB = SecondLastInst->getOperand(1).getMBB();
-    Cond.push_back(MachineOperand::CreateImm(BranchCode));
-    Cond.push_back(SecondLastInst->getOperand(0));
-
-    FBB = LastInst->getOperand(0).getMBB();
-    return false;
-  }
-
-  // If the block ends with two unconditional branches, handle it.  The second
-  // one is not executed, so remove it.
-  if (IsBRU(SecondLastInst->getOpcode()) &&
-      IsBRU(LastInst->getOpcode())) {
-    TBB = SecondLastInst->getOperand(0).getMBB();
-    I = LastInst;
-    if (AllowModify)
-      I->eraseFromParent();
-    return false;
-  }
-
-  // Likewise if it ends with a branch table followed by an unconditional branch.
-  if (IsBR_JT(SecondLastInst->getOpcode()) && IsBRU(LastInst->getOpcode())) {
-    I = LastInst;
-    if (AllowModify)
-      I->eraseFromParent();
-    return true;
-  }
-
-  // Otherwise, can't handle this.
-  return true;
+  return false;
+//  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
+//  if (I == MBB.end())
+//    return false;
+//
+//  if (!isUnpredicatedTerminator(*I))
+//    return false;
+//
+//  // Get the last instruction in the block.
+//  MachineInstr *LastInst = &*I;
+//
+//  // If there is only one terminator instruction, process it.
+//  if (I == MBB.begin() || !isUnpredicatedTerminator(*--I)) {
+////    if (IsBRU(LastInst->getOpcode())) {
+////      TBB = LastInst->getOperand(0).getMBB();
+////      return false;
+////    }
+////
+////    YCore::CondCode BranchCode = GetCondFromBranchOpc(LastInst->getOpcode());
+////    if (BranchCode == YCore::COND_INVALID)
+////      return true;  // Can't handle indirect branch.
+////
+////    // Conditional branch
+////    // Block ends with fall-through condbranch.
+////
+////    TBB = LastInst->getOperand(1).getMBB();
+////    Cond.push_back(MachineOperand::CreateImm(BranchCode));
+////    Cond.push_back(LastInst->getOperand(0));
+//    return false;
+//  }
+//
+//  // Get the instruction before it if it's a terminator.
+//  MachineInstr *SecondLastInst = &*I;
+//
+//  // If there are three terminators, we don't know what sort of block this is.
+//  if (SecondLastInst && I != MBB.begin() && isUnpredicatedTerminator(*--I))
+//    return true;
+//
+//  unsigned SecondLastOpc    = SecondLastInst->getOpcode();
+//  YCore::CondCode BranchCode = GetCondFromBranchOpc(SecondLastOpc);
+//
+//  // If the block ends with conditional branch followed by unconditional,
+//  // handle it.
+//  if (BranchCode != YCore::COND_INVALID
+//    && IsBRU(LastInst->getOpcode())) {
+//
+//    TBB = SecondLastInst->getOperand(1).getMBB();
+//    Cond.push_back(MachineOperand::CreateImm(BranchCode));
+//    Cond.push_back(SecondLastInst->getOperand(0));
+//
+//    FBB = LastInst->getOperand(0).getMBB();
+//    return false;
+//  }
+//
+//  // If the block ends with two unconditional branches, handle it.  The second
+//  // one is not executed, so remove it.
+//  if (IsBRU(SecondLastInst->getOpcode()) &&
+//      IsBRU(LastInst->getOpcode())) {
+//    TBB = SecondLastInst->getOperand(0).getMBB();
+//    I = LastInst;
+//    if (AllowModify)
+//      I->eraseFromParent();
+//    return false;
+//  }
+//
+//  // Likewise if it ends with a branch table followed by an unconditional branch.
+//  if (IsBR_JT(SecondLastInst->getOpcode()) && IsBRU(LastInst->getOpcode())) {
+//    I = LastInst;
+//    if (AllowModify)
+//      I->eraseFromParent();
+//    return true;
+//  }
+//
+//  // Otherwise, can't handle this.
+//  return true;
 }
 
 unsigned YCoreInstrInfo::insertBranch(MachineBasicBlock &MBB,
@@ -274,58 +277,60 @@ unsigned YCoreInstrInfo::insertBranch(MachineBasicBlock &MBB,
                                       ArrayRef<MachineOperand> Cond,
                                       const DebugLoc &DL,
                                       int *BytesAdded) const {
-  // Shouldn't be a fall through.
-  assert(TBB && "insertBranch must not be told to insert a fallthrough");
-  assert((Cond.size() == 2 || Cond.size() == 0) &&
-         "Unexpected number of components!");
-  assert(!BytesAdded && "code size not handled");
-
-  if (!FBB) { // One way branch.
-    if (Cond.empty()) {
-      // Unconditional branch
-      BuildMI(&MBB, DL, get(YCore::BRFU_lu6)).addMBB(TBB);
-    } else {
-      // Conditional branch.
-      unsigned Opc = GetCondBranchFromCond((YCore::CondCode)Cond[0].getImm());
-      BuildMI(&MBB, DL, get(Opc)).addReg(Cond[1].getReg())
-                             .addMBB(TBB);
-    }
-    return 1;
-  }
-
-  // Two-way Conditional branch.
-  assert(Cond.size() == 2 && "Unexpected number of components!");
-  unsigned Opc = GetCondBranchFromCond((YCore::CondCode)Cond[0].getImm());
-  BuildMI(&MBB, DL, get(Opc)).addReg(Cond[1].getReg())
-                         .addMBB(TBB);
-  BuildMI(&MBB, DL, get(YCore::BRFU_lu6)).addMBB(FBB);
-  return 2;
+  return 1;
+//  // Shouldn't be a fall through.
+//  assert(TBB && "insertBranch must not be told to insert a fallthrough");
+//  assert((Cond.size() == 2 || Cond.size() == 0) &&
+//         "Unexpected number of components!");
+//  assert(!BytesAdded && "code size not handled");
+//
+//  if (!FBB) { // One way branch.
+//    if (Cond.empty()) {
+//      // Unconditional branch
+//      BuildMI(&MBB, DL, get(YCore::BRFU_lu6)).addMBB(TBB);
+//    } else {
+//      // Conditional branch.
+//      unsigned Opc = GetCondBranchFromCond((YCore::CondCode)Cond[0].getImm());
+//      BuildMI(&MBB, DL, get(Opc)).addReg(Cond[1].getReg())
+//                             .addMBB(TBB);
+//    }
+//    return 1;
+//  }
+//
+//  // Two-way Conditional branch.
+//  assert(Cond.size() == 2 && "Unexpected number of components!");
+//  unsigned Opc = GetCondBranchFromCond((YCore::CondCode)Cond[0].getImm());
+//  BuildMI(&MBB, DL, get(Opc)).addReg(Cond[1].getReg())
+//                         .addMBB(TBB);
+//  BuildMI(&MBB, DL, get(YCore::BRFU_lu6)).addMBB(FBB);
+//  return 2;
 }
 
 unsigned
 YCoreInstrInfo::removeBranch(MachineBasicBlock &MBB, int *BytesRemoved) const {
   assert(!BytesRemoved && "code size not handled");
 
-  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
-  if (I == MBB.end())
-    return 0;
-
-  if (!IsBRU(I->getOpcode()) && !IsCondBranch(I->getOpcode()))
-    return 0;
-
-  // Remove the branch.
-  I->eraseFromParent();
-
-  I = MBB.end();
-
-  if (I == MBB.begin()) return 1;
-  --I;
-  if (!IsCondBranch(I->getOpcode()))
-    return 1;
-
-  // Remove the branch.
-  I->eraseFromParent();
-  return 2;
+  return 0;
+//  MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
+//  if (I == MBB.end())
+//    return 0;
+//
+//  if (!IsBRU(I->getOpcode()) && !IsCondBranch(I->getOpcode()))
+//    return 0;
+//
+//  // Remove the branch.
+//  I->eraseFromParent();
+//
+//  I = MBB.end();
+//
+//  if (I == MBB.begin()) return 1;
+//  --I;
+//  if (!IsCondBranch(I->getOpcode()))
+//    return 1;
+//
+//  // Remove the branch.
+//  I->eraseFromParent();
+//  return 2;
 }
 
 void YCoreInstrInfo::copyPhysReg(MachineBasicBlock &MBB,

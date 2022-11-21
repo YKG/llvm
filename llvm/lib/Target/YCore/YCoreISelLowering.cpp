@@ -1556,9 +1556,9 @@ YCoreTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
   BB->addSuccessor(copy0MBB);
   BB->addSuccessor(sinkMBB);
 
-  BuildMI(BB, dl, TII.get(YCore::BRFT_lru6))
-      .addReg(MI.getOperand(1).getReg())
-      .addMBB(sinkMBB);
+//  BuildMI(BB, dl, TII.get(YCore::BRFT_lru6))
+//      .addReg(MI.getOperand(1).getReg())
+//      .addMBB(sinkMBB);
 
   //  copy0MBB:
   //   %FalseValue = ...
