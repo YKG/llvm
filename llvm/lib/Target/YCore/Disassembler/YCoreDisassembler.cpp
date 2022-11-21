@@ -274,69 +274,69 @@ static DecodeStatus
 Decode2OpInstructionFail(MCInst &Inst, unsigned Insn, uint64_t Address,
                          const void *Decoder) {
   // Try and decode as a 3R instruction.
-  unsigned Opcode = fieldFromInstruction(Insn, 11, 5);
-  switch (Opcode) {
-  case 0x0:
-    Inst.setOpcode(YCore::STW_2rus);
-    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
-  case 0x1:
-    Inst.setOpcode(YCore::LDW_2rus);
-    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
-  case 0x2:
-    Inst.setOpcode(YCore::ADD_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x3:
-    Inst.setOpcode(YCore::SUB_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x4:
-    Inst.setOpcode(YCore::SHL_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x5:
-    Inst.setOpcode(YCore::SHR_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x6:
-    Inst.setOpcode(YCore::EQ_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x7:
-    Inst.setOpcode(YCore::AND_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x8:
-    Inst.setOpcode(YCore::OR_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x9:
-    Inst.setOpcode(YCore::LDW_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x10:
-    Inst.setOpcode(YCore::LD16S_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x11:
-    Inst.setOpcode(YCore::LD8U_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x12:
-    Inst.setOpcode(YCore::ADD_2rus);
-    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
-  case 0x13:
-    Inst.setOpcode(YCore::SUB_2rus);
-    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
-  case 0x14:
-    Inst.setOpcode(YCore::SHL_2rus);
-    return Decode2RUSBitpInstruction(Inst, Insn, Address, Decoder);
-  case 0x15:
-    Inst.setOpcode(YCore::SHR_2rus);
-    return Decode2RUSBitpInstruction(Inst, Insn, Address, Decoder);
-  case 0x16:
-    Inst.setOpcode(YCore::EQ_2rus);
-    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
-  case 0x17:
-    Inst.setOpcode(YCore::TSETR_3r);
-    return Decode3RImmInstruction(Inst, Insn, Address, Decoder);
-  case 0x18:
-    Inst.setOpcode(YCore::LSS_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  case 0x19:
-    Inst.setOpcode(YCore::LSU_3r);
-    return Decode3RInstruction(Inst, Insn, Address, Decoder);
-  }
+//  unsigned Opcode = fieldFromInstruction(Insn, 11, 5);
+//  switch (Opcode) {
+//  case 0x0:
+//    Inst.setOpcode(YCore::STW_2rus);
+//    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
+//  case 0x1:
+//    Inst.setOpcode(YCore::LDW_2rus);
+//    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
+//  case 0x2:
+//    Inst.setOpcode(YCore::ADD_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x3:
+//    Inst.setOpcode(YCore::SUB_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x4:
+//    Inst.setOpcode(YCore::SHL_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x5:
+//    Inst.setOpcode(YCore::SHR_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x6:
+//    Inst.setOpcode(YCore::EQ_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x7:
+//    Inst.setOpcode(YCore::AND_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x8:
+//    Inst.setOpcode(YCore::OR_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x9:
+//    Inst.setOpcode(YCore::LDW_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x10:
+//    Inst.setOpcode(YCore::LD16S_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x11:
+//    Inst.setOpcode(YCore::LD8U_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x12:
+//    Inst.setOpcode(YCore::ADD_2rus);
+//    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
+//  case 0x13:
+//    Inst.setOpcode(YCore::SUB_2rus);
+//    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
+//  case 0x14:
+//    Inst.setOpcode(YCore::SHL_2rus);
+//    return Decode2RUSBitpInstruction(Inst, Insn, Address, Decoder);
+//  case 0x15:
+//    Inst.setOpcode(YCore::SHR_2rus);
+//    return Decode2RUSBitpInstruction(Inst, Insn, Address, Decoder);
+//  case 0x16:
+//    Inst.setOpcode(YCore::EQ_2rus);
+//    return Decode2RUSInstruction(Inst, Insn, Address, Decoder);
+//  case 0x17:
+//    Inst.setOpcode(YCore::TSETR_3r);
+//    return Decode3RImmInstruction(Inst, Insn, Address, Decoder);
+//  case 0x18:
+//    Inst.setOpcode(YCore::LSS_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  case 0x19:
+//    Inst.setOpcode(YCore::LSU_3r);
+//    return Decode3RInstruction(Inst, Insn, Address, Decoder);
+//  }
   return MCDisassembler::Fail;
 }
 
