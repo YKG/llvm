@@ -416,40 +416,40 @@ void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
   } // else Don't erase the return instruction.
 }
 
-bool YCoreFrameLowering::spillCalleeSavedRegisters(
-    MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
-    ArrayRef<CalleeSavedInfo> CSI, const TargetRegisterInfo *TRI) const {
-  llvm_unreachable("TODO");
-  
-  if (CSI.empty())
-    return true;
-
-  MachineFunction *MF = MBB.getParent();
-  const TargetInstrInfo &TII = *MF->getSubtarget().getInstrInfo();
-  YCoreFunctionInfo *XFI = MF->getInfo<YCoreFunctionInfo>();
-  bool emitFrameMoves = YCoreRegisterInfo::needsFrameMoves(*MF);
-
-  DebugLoc DL;
-  if (MI != MBB.end() && !MI->isDebugInstr())
-    DL = MI->getDebugLoc();
-
-  for (const CalleeSavedInfo &I : CSI) {
-    Register Reg = I.getReg();
-    assert(Reg != YCore::LR && !(Reg == YCore::R10 && hasFP(*MF)) &&
-           "LR & FP are always handled in emitPrologue");
-
-    // Add the callee-saved register as live-in. It's killed at the spill.
-    MBB.addLiveIn(Reg);
-    const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
-    TII.storeRegToStackSlot(MBB, MI, Reg, true, I.getFrameIdx(), RC, TRI);
-    if (emitFrameMoves) {
-      auto Store = MI;
-      --Store;
-      XFI->getSpillLabels().push_back(std::make_pair(Store, I));
-    }
-  }
-  return true;
-}
+//bool YCoreFrameLowering::spillCalleeSavedRegisters(
+//    MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
+//    ArrayRef<CalleeSavedInfo> CSI, const TargetRegisterInfo *TRI) const {
+//  llvm_unreachable("TODO");
+//
+//  if (CSI.empty())
+//    return true;
+//
+//  MachineFunction *MF = MBB.getParent();
+//  const TargetInstrInfo &TII = *MF->getSubtarget().getInstrInfo();
+//  YCoreFunctionInfo *XFI = MF->getInfo<YCoreFunctionInfo>();
+//  bool emitFrameMoves = YCoreRegisterInfo::needsFrameMoves(*MF);
+//
+//  DebugLoc DL;
+//  if (MI != MBB.end() && !MI->isDebugInstr())
+//    DL = MI->getDebugLoc();
+//
+//  for (const CalleeSavedInfo &I : CSI) {
+//    Register Reg = I.getReg();
+//    assert(Reg != YCore::LR && !(Reg == YCore::R10 && hasFP(*MF)) &&
+//           "LR & FP are always handled in emitPrologue");
+//
+//    // Add the callee-saved register as live-in. It's killed at the spill.
+//    MBB.addLiveIn(Reg);
+//    const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
+//    TII.storeRegToStackSlot(MBB, MI, Reg, true, I.getFrameIdx(), RC, TRI);
+//    if (emitFrameMoves) {
+//      auto Store = MI;
+//      --Store;
+//      XFI->getSpillLabels().push_back(std::make_pair(Store, I));
+//    }
+//  }
+//  return true;
+//}
 
 bool YCoreFrameLowering::restoreCalleeSavedRegisters(
     MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,
