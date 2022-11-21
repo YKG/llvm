@@ -113,16 +113,16 @@ SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
   SDValue Reg;
   switch (ConstraintID) {
   default: return true;
-  case InlineAsm::Constraint_m: // Memory.
-    switch (Op.getOpcode()) {
-    default: return true;
-    case YCoreISD::CPRelativeWrapper:
-      Reg = CurDAG->getRegister(YCore::CP, MVT::i32);
-      break;
-    case YCoreISD::DPRelativeWrapper:
-      Reg = CurDAG->getRegister(YCore::DP, MVT::i32);
-      break;
-    }
+//  case InlineAsm::Constraint_m: // Memory.
+//    switch (Op.getOpcode()) {
+//    default: return true;
+//    case YCoreISD::CPRelativeWrapper:
+//      Reg = CurDAG->getRegister(YCore::CP, MVT::i32);
+//      break;
+//    case YCoreISD::DPRelativeWrapper:
+//      Reg = CurDAG->getRegister(YCore::DP, MVT::i32);
+//      break;
+//    }
   }
   OutOps.push_back(Reg);
   OutOps.push_back(Op.getOperand(0));

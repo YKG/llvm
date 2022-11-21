@@ -47,10 +47,10 @@ getTargetNodeName(unsigned Opcode) const
   switch ((YCoreISD::NodeType)Opcode)
   {
     case YCoreISD::FIRST_NUMBER      : break;
-    case YCoreISD::BL                : return "YCoreISD::BL";
-    case YCoreISD::PCRelativeWrapper : return "YCoreISD::PCRelativeWrapper";
-    case YCoreISD::DPRelativeWrapper : return "YCoreISD::DPRelativeWrapper";
-    case YCoreISD::CPRelativeWrapper : return "YCoreISD::CPRelativeWrapper";
+//    case YCoreISD::BL                : return "YCoreISD::BL";
+//    case YCoreISD::PCRelativeWrapper : return "YCoreISD::PCRelativeWrapper";
+//    case YCoreISD::DPRelativeWrapper : return "YCoreISD::DPRelativeWrapper";
+//    case YCoreISD::CPRelativeWrapper : return "YCoreISD::CPRelativeWrapper";
     case YCoreISD::LDWSP             : return "YCoreISD::LDWSP";
     case YCoreISD::STWSP             : return "YCoreISD::STWSP";
     case YCoreISD::RETSP             : return "YCoreISD::RETSP";
@@ -246,22 +246,22 @@ void YCoreTargetLowering::ReplaceNodeResults(SDNode *N,
 //  Misc Lower Operation implementation
 //===----------------------------------------------------------------------===//
 
-SDValue YCoreTargetLowering::getGlobalAddressWrapper(SDValue GA,
-                                                     const GlobalValue *GV,
-                                                     SelectionDAG &DAG) const {
-  // FIXME there is no actual debug info here
-  SDLoc dl(GA);
-
-  if (GV->getValueType()->isFunctionTy())
-    return DAG.getNode(YCoreISD::PCRelativeWrapper, dl, MVT::i32, GA);
-
-  const auto *GVar = dyn_cast<GlobalVariable>(GV);
-  if ((GV->hasSection() && GV->getSection().startswith(".cp.")) ||
-      (GVar && GVar->isConstant() && GV->hasLocalLinkage()))
-    return DAG.getNode(YCoreISD::CPRelativeWrapper, dl, MVT::i32, GA);
-
-  return DAG.getNode(YCoreISD::DPRelativeWrapper, dl, MVT::i32, GA);
-}
+//SDValue YCoreTargetLowering::getGlobalAddressWrapper(SDValue GA,
+//                                                     const GlobalValue *GV,
+//                                                     SelectionDAG &DAG) const {
+//  // FIXME there is no actual debug info here
+//  SDLoc dl(GA);
+//
+////  if (GV->getValueType()->isFunctionTy())
+////    return DAG.getNode(YCoreISD::PCRelativeWrapper, dl, MVT::i32, GA);
+//
+//  const auto *GVar = dyn_cast<GlobalVariable>(GV);
+////  if ((GV->hasSection() && GV->getSection().startswith(".cp.")) ||
+////      (GVar && GVar->isConstant() && GV->hasLocalLinkage()))
+////    return DAG.getNode(YCoreISD::CPRelativeWrapper, dl, MVT::i32, GA);
+//
+//  return DAG.getNode(YCoreISD::DPRelativeWrapper, dl, MVT::i32, GA);
+//}
 
 static bool IsSmallObject(const GlobalValue *GV, const YCoreTargetLowering &XTL) {
   if (XTL.getTargetMachine().getCodeModel() == CodeModel::Small)
@@ -1217,7 +1217,8 @@ SDValue YCoreTargetLowering::LowerCCCCallTo(
   if (InFlag.getNode())
     Ops.push_back(InFlag);
 
-  Chain  = DAG.getNode(YCoreISD::BL, dl, NodeTys, Ops);
+//  Chain  = DAG.getNode(YCoreISD::BL, dl, NodeTys, Ops);
+  llvm_unreachable("TODO");
   InFlag = Chain.getValue(1);
 
   // Create the CALLSEQ_END node.

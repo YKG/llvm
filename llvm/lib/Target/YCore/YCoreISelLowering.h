@@ -28,17 +28,17 @@ namespace llvm {
       // Start the numbering where the builtin ops and target ops leave off.
       FIRST_NUMBER = ISD::BUILTIN_OP_END,
 
-      // Branch and link (call)
-      BL,
-
-      // pc relative address
-      PCRelativeWrapper,
-
-      // dp relative address
-      DPRelativeWrapper,
-
-      // cp relative address
-      CPRelativeWrapper,
+//      // Branch and link (call)
+//      BL,
+//
+//      // pc relative address
+//      PCRelativeWrapper,
+//
+//      // dp relative address
+//      DPRelativeWrapper,
+//
+//      // cp relative address
+//      CPRelativeWrapper,
 
       // Load word from stack
       LDWSP,
@@ -157,8 +157,8 @@ namespace llvm {
                            const SDLoc &dl, SelectionDAG &DAG,
                            SmallVectorImpl<SDValue> &InVals) const;
     SDValue getReturnAddressFrameIndex(SelectionDAG &DAG) const;
-    SDValue getGlobalAddressWrapper(SDValue GA, const GlobalValue *GV,
-                                    SelectionDAG &DAG) const;
+//    SDValue getGlobalAddressWrapper(SDValue GA, const GlobalValue *GV,
+//                                    SelectionDAG &DAG) const;
     SDValue lowerLoadWordFromAlignedBasePlusOffset(const SDLoc &DL,
                                                    SDValue Chain, SDValue Base,
                                                    int64_t Offset,
