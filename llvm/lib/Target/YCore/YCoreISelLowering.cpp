@@ -1538,64 +1538,64 @@ MachineBasicBlock *
 YCoreTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
                                                  MachineBasicBlock *BB) const {
   llvm_unreachable("TODO");
-  const TargetInstrInfo &TII = *Subtarget.getInstrInfo();
-  DebugLoc dl = MI.getDebugLoc();
-  assert((MI.getOpcode() == YCore::SELECT_CC) &&
-         "Unexpected instr type to insert");
-
-  // To "insert" a SELECT_CC instruction, we actually have to insert the diamond
-  // control-flow pattern.  The incoming instruction knows the destination vreg
-  // to set, the condition code register to branch on, the true/false values to
-  // select between, and a branch opcode to use.
-  const BasicBlock *LLVM_BB = BB->getBasicBlock();
-  MachineFunction::iterator It = ++BB->getIterator();
-
-  //  thisMBB:
-  //  ...
-  //   TrueVal = ...
-  //   cmpTY ccX, r1, r2
-  //   bCC copy1MBB
-  //   fallthrough --> copy0MBB
-  MachineBasicBlock *thisMBB = BB;
-  MachineFunction *F = BB->getParent();
-  MachineBasicBlock *copy0MBB = F->CreateMachineBasicBlock(LLVM_BB);
-  MachineBasicBlock *sinkMBB = F->CreateMachineBasicBlock(LLVM_BB);
-  F->insert(It, copy0MBB);
-  F->insert(It, sinkMBB);
-
-  // Transfer the remainder of BB and its successor edges to sinkMBB.
-  sinkMBB->splice(sinkMBB->begin(), BB,
-                  std::next(MachineBasicBlock::iterator(MI)), BB->end());
-  sinkMBB->transferSuccessorsAndUpdatePHIs(BB);
-
-  // Next, add the true and fallthrough blocks as its successors.
-  BB->addSuccessor(copy0MBB);
-  BB->addSuccessor(sinkMBB);
-
-//  BuildMI(BB, dl, TII.get(YCore::BRFT_lru6))
-//      .addReg(MI.getOperand(1).getReg())
-//      .addMBB(sinkMBB);
-
-  //  copy0MBB:
-  //   %FalseValue = ...
-  //   # fallthrough to sinkMBB
-  BB = copy0MBB;
-
-  // Update machine-CFG edges
-  BB->addSuccessor(sinkMBB);
-
-  //  sinkMBB:
-  //   %Result = phi [ %FalseValue, copy0MBB ], [ %TrueValue, thisMBB ]
-  //  ...
-  BB = sinkMBB;
-  BuildMI(*BB, BB->begin(), dl, TII.get(YCore::PHI), MI.getOperand(0).getReg())
-      .addReg(MI.getOperand(3).getReg())
-      .addMBB(copy0MBB)
-      .addReg(MI.getOperand(2).getReg())
-      .addMBB(thisMBB);
-
-  MI.eraseFromParent(); // The pseudo instruction is gone now.
-  return BB;
+//  const TargetInstrInfo &TII = *Subtarget.getInstrInfo();
+//  DebugLoc dl = MI.getDebugLoc();
+//  assert((MI.getOpcode() == YCore::SELECT_CC) &&
+//         "Unexpected instr type to insert");
+//
+//  // To "insert" a SELECT_CC instruction, we actually have to insert the diamond
+//  // control-flow pattern.  The incoming instruction knows the destination vreg
+//  // to set, the condition code register to branch on, the true/false values to
+//  // select between, and a branch opcode to use.
+//  const BasicBlock *LLVM_BB = BB->getBasicBlock();
+//  MachineFunction::iterator It = ++BB->getIterator();
+//
+//  //  thisMBB:
+//  //  ...
+//  //   TrueVal = ...
+//  //   cmpTY ccX, r1, r2
+//  //   bCC copy1MBB
+//  //   fallthrough --> copy0MBB
+//  MachineBasicBlock *thisMBB = BB;
+//  MachineFunction *F = BB->getParent();
+//  MachineBasicBlock *copy0MBB = F->CreateMachineBasicBlock(LLVM_BB);
+//  MachineBasicBlock *sinkMBB = F->CreateMachineBasicBlock(LLVM_BB);
+//  F->insert(It, copy0MBB);
+//  F->insert(It, sinkMBB);
+//
+//  // Transfer the remainder of BB and its successor edges to sinkMBB.
+//  sinkMBB->splice(sinkMBB->begin(), BB,
+//                  std::next(MachineBasicBlock::iterator(MI)), BB->end());
+//  sinkMBB->transferSuccessorsAndUpdatePHIs(BB);
+//
+//  // Next, add the true and fallthrough blocks as its successors.
+//  BB->addSuccessor(copy0MBB);
+//  BB->addSuccessor(sinkMBB);
+//
+////  BuildMI(BB, dl, TII.get(YCore::BRFT_lru6))
+////      .addReg(MI.getOperand(1).getReg())
+////      .addMBB(sinkMBB);
+//
+//  //  copy0MBB:
+//  //   %FalseValue = ...
+//  //   # fallthrough to sinkMBB
+//  BB = copy0MBB;
+//
+//  // Update machine-CFG edges
+//  BB->addSuccessor(sinkMBB);
+//
+//  //  sinkMBB:
+//  //   %Result = phi [ %FalseValue, copy0MBB ], [ %TrueValue, thisMBB ]
+//  //  ...
+//  BB = sinkMBB;
+//  BuildMI(*BB, BB->begin(), dl, TII.get(YCore::PHI), MI.getOperand(0).getReg())
+//      .addReg(MI.getOperand(3).getReg())
+//      .addMBB(copy0MBB)
+//      .addReg(MI.getOperand(2).getReg())
+//      .addMBB(thisMBB);
+//
+//  MI.eraseFromParent(); // The pseudo instruction is gone now.
+//  return BB;
 }
 
 //===----------------------------------------------------------------------===//
