@@ -1534,10 +1534,10 @@ YCoreTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
 //  Other Lowering Code
 //===----------------------------------------------------------------------===//
 
-MachineBasicBlock *
-YCoreTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
-                                                 MachineBasicBlock *BB) const {
-  llvm_unreachable("TODO");
+//MachineBasicBlock *
+//YCoreTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
+//                                                 MachineBasicBlock *BB) const {
+//  llvm_unreachable("TODO");
 //  const TargetInstrInfo &TII = *Subtarget.getInstrInfo();
 //  DebugLoc dl = MI.getDebugLoc();
 //  assert((MI.getOpcode() == YCore::SELECT_CC) &&
@@ -1596,7 +1596,7 @@ YCoreTargetLowering::EmitInstrWithCustomInserter(MachineInstr &MI,
 //
 //  MI.eraseFromParent(); // The pseudo instruction is gone now.
 //  return BB;
-}
+//}
 
 //===----------------------------------------------------------------------===//
 // Target Optimization Hooks
