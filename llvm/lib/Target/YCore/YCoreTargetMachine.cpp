@@ -14,7 +14,6 @@
 #include "TargetInfo/YCoreTargetInfo.h"
 #include "YCore.h"
 #include "YCoreTargetObjectFile.h"
-#include "YCoreTargetTransformInfo.h"
 #include "llvm/ADT/Optional.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Analysis/TargetTransformInfo.h"
@@ -105,9 +104,4 @@ void YCorePassConfig::addPreEmitPass() {
 // Force static initialization.
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeYCoreTarget() {
   RegisterTargetMachine<YCoreTargetMachine> X(getTheYCoreTarget());
-}
-
-TargetTransformInfo
-YCoreTargetMachine::getTargetTransformInfo(const Function &F) {
-  return TargetTransformInfo(YCoreTTIImpl(this, F));
 }
