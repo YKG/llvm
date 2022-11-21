@@ -1893,48 +1893,48 @@ static inline bool isImmUs4(int64_t val)
 {
   return (val%4 == 0 && isImmUs(val/4));
 }
-
-/// isLegalAddressingMode - Return true if the addressing mode represented
-/// by AM is legal for this target, for a load/store of the specified type.
-bool YCoreTargetLowering::isLegalAddressingMode(const DataLayout &DL,
-                                                const AddrMode &AM, Type *Ty,
-                                                unsigned AS,
-                                                Instruction *I) const {
-  llvm_unreachable("TODO");
-  if (Ty->getTypeID() == Type::VoidTyID)
-    return AM.Scale == 0 && isImmUs(AM.BaseOffs) && isImmUs4(AM.BaseOffs);
-
-  unsigned Size = DL.getTypeAllocSize(Ty);
-  if (AM.BaseGV) {
-    return Size >= 4 && !AM.HasBaseReg && AM.Scale == 0 &&
-                 AM.BaseOffs%4 == 0;
-  }
-
-  switch (Size) {
-  case 1:
-    // reg + imm
-    if (AM.Scale == 0) {
-      return isImmUs(AM.BaseOffs);
-    }
-    // reg + reg
-    return AM.Scale == 1 && AM.BaseOffs == 0;
-  case 2:
-  case 3:
-    // reg + imm
-    if (AM.Scale == 0) {
-      return isImmUs2(AM.BaseOffs);
-    }
-    // reg + reg<<1
-    return AM.Scale == 2 && AM.BaseOffs == 0;
-  default:
-    // reg + imm
-    if (AM.Scale == 0) {
-      return isImmUs4(AM.BaseOffs);
-    }
-    // reg + reg<<2
-    return AM.Scale == 4 && AM.BaseOffs == 0;
-  }
-}
+//
+///// isLegalAddressingMode - Return true if the addressing mode represented
+///// by AM is legal for this target, for a load/store of the specified type.
+//bool YCoreTargetLowering::isLegalAddressingMode(const DataLayout &DL,
+//                                                const AddrMode &AM, Type *Ty,
+//                                                unsigned AS,
+//                                                Instruction *I) const {
+//  llvm_unreachable("TODO");
+//  if (Ty->getTypeID() == Type::VoidTyID)
+//    return AM.Scale == 0 && isImmUs(AM.BaseOffs) && isImmUs4(AM.BaseOffs);
+//
+//  unsigned Size = DL.getTypeAllocSize(Ty);
+//  if (AM.BaseGV) {
+//    return Size >= 4 && !AM.HasBaseReg && AM.Scale == 0 &&
+//                 AM.BaseOffs%4 == 0;
+//  }
+//
+//  switch (Size) {
+//  case 1:
+//    // reg + imm
+//    if (AM.Scale == 0) {
+//      return isImmUs(AM.BaseOffs);
+//    }
+//    // reg + reg
+//    return AM.Scale == 1 && AM.BaseOffs == 0;
+//  case 2:
+//  case 3:
+//    // reg + imm
+//    if (AM.Scale == 0) {
+//      return isImmUs2(AM.BaseOffs);
+//    }
+//    // reg + reg<<1
+//    return AM.Scale == 2 && AM.BaseOffs == 0;
+//  default:
+//    // reg + imm
+//    if (AM.Scale == 0) {
+//      return isImmUs4(AM.BaseOffs);
+//    }
+//    // reg + reg<<2
+//    return AM.Scale == 4 && AM.BaseOffs == 0;
+//  }
+//}
 
 //===----------------------------------------------------------------------===//
 //                           YCore Inline Assembly Support
