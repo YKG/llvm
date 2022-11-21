@@ -267,19 +267,19 @@ LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 //  return DAG.getNode(YCoreISD::DPRelativeWrapper, dl, MVT::i32, GA);
 //}
 
-static bool IsSmallObject(const GlobalValue *GV, const YCoreTargetLowering &XTL) {
-  llvm_unreachable("TODO");
-  if (XTL.getTargetMachine().getCodeModel() == CodeModel::Small)
-    return true;
-
-  Type *ObjType = GV->getValueType();
-  if (!ObjType->isSized())
-    return false;
-
-  auto &DL = GV->getParent()->getDataLayout();
-  unsigned ObjSize = DL.getTypeAllocSize(ObjType);
-  return ObjSize < CodeModelLargeSize && ObjSize != 0;
-}
+//static bool IsSmallObject(const GlobalValue *GV, const YCoreTargetLowering &XTL) {
+//  llvm_unreachable("TODO");
+//  if (XTL.getTargetMachine().getCodeModel() == CodeModel::Small)
+//    return true;
+//
+//  Type *ObjType = GV->getValueType();
+//  if (!ObjType->isSized())
+//    return false;
+//
+//  auto &DL = GV->getParent()->getDataLayout();
+//  unsigned ObjSize = DL.getTypeAllocSize(ObjType);
+//  return ObjSize < CodeModelLargeSize && ObjSize != 0;
+//}
 //
 //SDValue YCoreTargetLowering::
 //LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const
