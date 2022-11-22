@@ -112,6 +112,8 @@ static DecodeStatus DecodeGRRegsRegisterClass(MCInst &Inst,
                                               uint64_t Address,
                                               const void *Decoder)
 {
+  llvm_unreachable("TODO");
+
   if (RegNo > 11)
     return MCDisassembler::Fail;
   unsigned Reg = getReg(Decoder, YCore::GRRegsRegClassID, RegNo);
@@ -124,6 +126,8 @@ static DecodeStatus DecodeRRegsRegisterClass(MCInst &Inst,
                                              uint64_t Address,
                                              const void *Decoder)
 {
+  llvm_unreachable("TODO");
+
   if (RegNo > 15)
     return MCDisassembler::Fail;
   unsigned Reg = getReg(Decoder, YCore::RRegsRegClassID, RegNo);
@@ -133,6 +137,7 @@ static DecodeStatus DecodeRRegsRegisterClass(MCInst &Inst,
 
 static DecodeStatus DecodeBitpOperand(MCInst &Inst, unsigned Val,
                                       uint64_t Address, const void *Decoder) {
+  llvm_unreachable("TODO");
   if (Val > 11)
     return MCDisassembler::Fail;
   static const unsigned Values[] = {
@@ -144,6 +149,8 @@ static DecodeStatus DecodeBitpOperand(MCInst &Inst, unsigned Val,
 
 static DecodeStatus
 Decode2OpInstruction(unsigned Insn, unsigned &Op1, unsigned &Op2) {
+  llvm_unreachable("TODO");
+
   unsigned Combined = fieldFromInstruction(Insn, 6, 5);
   if (Combined < 27)
     return MCDisassembler::Fail;
@@ -163,6 +170,8 @@ Decode2OpInstruction(unsigned Insn, unsigned &Op1, unsigned &Op2) {
 static DecodeStatus
 Decode3OpInstruction(unsigned Insn, unsigned &Op1, unsigned &Op2,
                      unsigned &Op3) {
+  llvm_unreachable("TODO");
+
   unsigned Combined = fieldFromInstruction(Insn, 6, 5);
   if (Combined >= 27)
     return MCDisassembler::Fail;
@@ -179,12 +188,16 @@ Decode3OpInstruction(unsigned Insn, unsigned &Op1, unsigned &Op2,
 static DecodeStatus
 DecodeL2OpInstructionFail(MCInst &Inst, unsigned Insn, uint64_t Address,
                           const void *Decoder) {
+  llvm_unreachable("TODO");
+
   return MCDisassembler::Fail;
 }
 
 static DecodeStatus
 Decode3RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                     const void *Decoder) {
+  llvm_unreachable("TODO");
+
   unsigned Op1, Op2, Op3;
   DecodeStatus S = Decode3OpInstruction(Insn, Op1, Op2, Op3);
   if (S == MCDisassembler::Success) {
@@ -198,6 +211,8 @@ Decode3RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 Decode3RImmInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                        const void *Decoder) {
+  llvm_unreachable("TODO");
+
   unsigned Op1, Op2, Op3;
   DecodeStatus S = Decode3OpInstruction(Insn, Op1, Op2, Op3);
   if (S == MCDisassembler::Success) {
@@ -211,6 +226,8 @@ Decode3RImmInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 Decode2RUSInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                       const void *Decoder) {
+  llvm_unreachable("TODO");
+
   unsigned Op1, Op2, Op3;
   DecodeStatus S = Decode3OpInstruction(Insn, Op1, Op2, Op3);
   if (S == MCDisassembler::Success) {
@@ -224,6 +241,8 @@ Decode2RUSInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 Decode2RUSBitpInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                       const void *Decoder) {
+  llvm_unreachable("TODO");
+
   unsigned Op1, Op2, Op3;
   DecodeStatus S = Decode3OpInstruction(Insn, Op1, Op2, Op3);
   if (S == MCDisassembler::Success) {
@@ -237,6 +256,7 @@ Decode2RUSBitpInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 DecodeL3RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                      const void *Decoder) {
+  llvm_unreachable("TODO");
   unsigned Op1, Op2, Op3;
   DecodeStatus S =
     Decode3OpInstruction(fieldFromInstruction(Insn, 0, 16), Op1, Op2, Op3);
@@ -251,6 +271,7 @@ DecodeL3RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 DecodeL3RSrcDstInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                            const void *Decoder) {
+  llvm_unreachable("TODO");
   unsigned Op1, Op2, Op3;
   DecodeStatus S =
   Decode3OpInstruction(fieldFromInstruction(Insn, 0, 16), Op1, Op2, Op3);
@@ -266,6 +287,8 @@ DecodeL3RSrcDstInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 DecodeL2RUSInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                        const void *Decoder) {
+  llvm_unreachable("TODO");
+
   unsigned Op1, Op2, Op3;
   DecodeStatus S =
   Decode3OpInstruction(fieldFromInstruction(Insn, 0, 16), Op1, Op2, Op3);
@@ -280,6 +303,8 @@ DecodeL2RUSInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 DecodeL2RUSBitpInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                            const void *Decoder) {
+  llvm_unreachable("TODO");
+
   unsigned Op1, Op2, Op3;
   DecodeStatus S =
   Decode3OpInstruction(fieldFromInstruction(Insn, 0, 16), Op1, Op2, Op3);
@@ -294,6 +319,8 @@ DecodeL2RUSBitpInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 static DecodeStatus
 DecodeL6RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                      const void *Decoder) {
+  llvm_unreachable("TODO");
+
   unsigned Op1, Op2, Op3, Op4, Op5, Op6;
   DecodeStatus S =
     Decode3OpInstruction(fieldFromInstruction(Insn, 0, 16), Op1, Op2, Op3);
