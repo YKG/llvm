@@ -217,10 +217,6 @@ let mayStore=1 in {
 def STWSP_ru6 : _FRU6<0b010101, (outs), (ins RRegs:$a, i32imm:$b),
                       "stw $a, sp[$b]",
                       [(YCoreStwsp RRegs:$a, immU6:$b)]>;
-
-def STWSP_lru6 : _FLRU6<0b010101, (outs), (ins RRegs:$a, i32imm:$b),
-                        "stw $a, sp[$b]",
-                        [(YCoreStwsp RRegs:$a, immU16:$b)]>;
 }
 
 let mayLoad=1 in {
@@ -228,9 +224,6 @@ def LDWSP_ru6 : _FRU6<0b010111, (outs RRegs:$a), (ins i32imm:$b),
                       "ldw $a, sp[$b]",
                       [(set RRegs:$a, (YCoreLdwsp immU6:$b))]>;
 
-def LDWSP_lru6 : _FLRU6<0b010111, (outs RRegs:$a), (ins i32imm:$b),
-                        "ldw $a, sp[$b]",
-                        [(set RRegs:$a, (YCoreLdwsp immU16:$b))]>;
 }
 }
 

@@ -64,13 +64,13 @@ static void InsertSPImmInst(MachineBasicBlock::iterator II,
   switch (MI.getOpcode()) {
   int NewOpcode;
   case YCore::LDWFI:
-    NewOpcode = (isU6) ? YCore::LDWSP_ru6 : YCore::LDWSP_lru6;
+    NewOpcode = YCore::LDWSP_ru6;//(isU6) ? YCore::LDWSP_ru6 : YCore::LDWSP_lru6;
     BuildMI(MBB, II, dl, TII.get(NewOpcode), Reg)
           .addImm(Offset)
           .addMemOperand(*MI.memoperands_begin());
     break;
   case YCore::STWFI:
-    NewOpcode = (isU6) ? YCore::STWSP_ru6 : YCore::STWSP_lru6;
+    NewOpcode = YCore::STWSP_ru6;//(isU6) ? YCore::STWSP_ru6 : YCore::STWSP_lru6;
     BuildMI(MBB, II, dl, TII.get(NewOpcode))
           .addReg(Reg, getKillRegState(MI.getOperand(0).isKill()))
           .addImm(Offset)
