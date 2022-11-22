@@ -138,7 +138,7 @@ void YCoreFrameLowering::emitPrologue(MachineFunction &MF,
   if (UseENTSP) {
     // Allocate space on the stack at the same time as saving LR.
     Adjusted = (FrameSize > MaxImmU16) ? MaxImmU16 : FrameSize;
-    int Opcode = isImmU6(Adjusted) ? YCore::ENTSP_u6 : YCore::ENTSP_lu6;
+    int Opcode = YCore::ENTSP_u6;//isImmU6(Adjusted) ? YCore::ENTSP_u6 : YCore::ENTSP_lu6;
     MBB.addLiveIn(YCore::LR);
     MachineInstrBuilder MIB = BuildMI(MBB, MBBI, dl, TII.get(Opcode));
     MIB.addImm(Adjusted);
@@ -190,9 +190,9 @@ void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
     IfNeededLDAWSP(MBB, MBBI, dl, TII, 0, RemainingAdj);
     if (UseRETSP) {
       // Fold prologue into return instruction
-      assert(RetOpcode == YCore::RETSP_u6
-             || RetOpcode == YCore::RETSP_lu6);
-      int Opcode = isImmU6(RemainingAdj) ? YCore::RETSP_u6 : YCore::RETSP_lu6;
+//      assert(RetOpcode == YCore::RETSP_u6
+//             || RetOpcode == YCore::RETSP_lu6);
+      int Opcode = YCore::ENTSP_u6;//isImmU6(RemainingAdj) ? YCore::RETSP_u6 : YCore::RETSP_lu6;
       MachineInstrBuilder MIB = BuildMI(MBB, MBBI, dl, TII.get(Opcode))
                                   .addImm(RemainingAdj);
       for (unsigned i = 3, e = MBBI->getNumOperands(); i < e; ++i)

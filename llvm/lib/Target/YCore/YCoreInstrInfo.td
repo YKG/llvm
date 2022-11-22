@@ -89,8 +89,6 @@ multiclass F3R_2RUS<bits<5> opc1, bits<5> opc2, string OpcStr, SDNode OpNode> {
                      [(set GRRegs:$dst, (OpNode GRRegs:$b, immUs:$c))]>;
 }
 
-// Three operand long
-
 // U6
 multiclass FU6_LU6<bits<10> opc, string OpcStr, SDNode OpNode> {
   def _u6: _FU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"),
@@ -103,11 +101,6 @@ multiclass FU6_LU6_np<bits<10> opc, string OpcStr> {
   def _u6: _FU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"), []>;
   def _lu6: _FLU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"), []>;
 }
-
-// Two operand short
-
-
-// Two operand long
 
 //===----------------------------------------------------------------------===//
 // Pseudo Instructions
