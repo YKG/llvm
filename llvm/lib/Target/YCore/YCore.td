@@ -34,7 +34,6 @@ class Proc<string Name, list<SubtargetFeature> Features>
  : Processor<Name, NoItineraries, Features>;
 
 def : Proc<"generic",      []>;
-def : Proc<"xs1b-generic", []>;
 
 //===----------------------------------------------------------------------===//
 // Declare the target which we are implementing
