@@ -32,9 +32,6 @@ bool YCoreFunctionInfo::isLargeFrame(const MachineFunction &MF) const {
 }
 
 int YCoreFunctionInfo::createLRSpillSlot(MachineFunction &MF) {
-  if (LRSpillSlotSet) {
-    return LRSpillSlot;
-  }
   const TargetRegisterClass &RC = YCore::GRRegsRegClass;
   const TargetRegisterInfo &TRI = *MF.getSubtarget().getRegisterInfo();
   MachineFrameInfo &MFI = MF.getFrameInfo();
@@ -42,8 +39,7 @@ int YCoreFunctionInfo::createLRSpillSlot(MachineFunction &MF) {
     // A fixed offset of 0 allows us to save / restore LR using entsp / retsp.
     LRSpillSlot = MFI.CreateFixedObject(TRI.getSpillSize(RC), 0, true);
   } else {
-    LRSpillSlot = MFI.CreateStackObject(TRI.getSpillSize(RC),
-                                        TRI.getSpillAlign(RC), true);
+    // never reach
   }
   LRSpillSlotSet = true;
   return LRSpillSlot;

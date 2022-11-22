@@ -46,22 +46,22 @@ namespace {
 
     /// getI32Imm - Return a target constant with the specified value, of type
     /// i32.
-    inline SDValue getI32Imm(unsigned Imm, const SDLoc &dl) {
-      return CurDAG->getTargetConstant(Imm, dl, MVT::i32);
-    }
-
-    inline bool immMskBitp(SDNode *inN) const {
-      ConstantSDNode *N = cast<ConstantSDNode>(inN);
-      uint32_t value = (uint32_t)N->getZExtValue();
-      if (!isMask_32(value)) {
-        return false;
-      }
-      int msksize = 32 - countLeadingZeros(value);
-      return (msksize >= 1 && msksize <= 8) ||
-              msksize == 16 || msksize == 24 || msksize == 32;
-    }
-
-    // Complex Pattern Selectors.
+//    inline SDValue getI32Imm(unsigned Imm, const SDLoc &dl) {
+//      return CurDAG->getTargetConstant(Imm, dl, MVT::i32);
+//    }
+//
+//    inline bool immMskBitp(SDNode *inN) const {
+//      ConstantSDNode *N = cast<ConstantSDNode>(inN);
+//      uint32_t value = (uint32_t)N->getZExtValue();
+//      if (!isMask_32(value)) {
+//        return false;
+//      }
+//      int msksize = 32 - countLeadingZeros(value);
+//      return (msksize >= 1 && msksize <= 8) ||
+//              msksize == 16 || msksize == 24 || msksize == 32;
+//    }
+//
+//    // Complex Pattern Selectors.
     bool SelectADDRspii(SDValue Addr, SDValue &Base, SDValue &Offset);
 
 //    bool SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
@@ -92,19 +92,6 @@ bool YCoreDAGToDAGISel::SelectADDRspii(SDValue Addr, SDValue &Base,
     Offset = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i32);
     return true;
   }
-  if (Addr.getOpcode() == ISD::ADD) {
-    ConstantSDNode *CN = nullptr;
-    if ((FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0)))
-      && (CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1)))
-      && (CN->getSExtValue() % 4 == 0 && CN->getSExtValue() >= 0)) {
-      // Constant positive word offset from frame index
-      Base = CurDAG->getTargetFrameIndex(FIN->getIndex(), MVT::i32);
-      Offset = CurDAG->getTargetConstant(CN->getSExtValue(), SDLoc(Addr),
-                                         MVT::i32);
-      return true;
-    }
-  }
-  return false;
 }
 
 void YCoreDAGToDAGISel::Select(SDNode *N) {
@@ -116,25 +103,25 @@ void YCoreDAGToDAGISel::Select(SDNode *N) {
 /// by New. There must be at most one instruction between Old and Chain and
 /// this instruction must be a TokenFactor. Returns an empty SDValue if
 /// these conditions don't hold.
-static SDValue
-replaceInChain(SelectionDAG *CurDAG, SDValue Chain, SDValue Old, SDValue New)
-{
-  llvm_unreachable("TODO");
-  if (Chain == Old)
-    return New;
-  if (Chain->getOpcode() != ISD::TokenFactor)
-    return SDValue();
-  SmallVector<SDValue, 8> Ops;
-  bool found = false;
-  for (unsigned i = 0, e = Chain->getNumOperands(); i != e; ++i) {
-    if (Chain->getOperand(i) == Old) {
-      Ops.push_back(New);
-      found = true;
-    } else {
-      Ops.push_back(Chain->getOperand(i));
-    }
-  }
-  if (!found)
-    return SDValue();
-  return CurDAG->getNode(ISD::TokenFactor, SDLoc(Chain), MVT::Other, Ops);
-}
+//static SDValue
+//replaceInChain(SelectionDAG *CurDAG, SDValue Chain, SDValue Old, SDValue New)
+//{
+//  llvm_unreachable("TODO");
+//  if (Chain == Old)
+//    return New;
+//  if (Chain->getOpcode() != ISD::TokenFactor)
+//    return SDValue();
+//  SmallVector<SDValue, 8> Ops;
+//  bool found = false;
+//  for (unsigned i = 0, e = Chain->getNumOperands(); i != e; ++i) {
+//    if (Chain->getOperand(i) == Old) {
+//      Ops.push_back(New);
+//      found = true;
+//    } else {
+//      Ops.push_back(Chain->getOperand(i));
+//    }
+//  }
+//  if (!found)
+//    return SDValue();
+//  return CurDAG->getNode(ISD::TokenFactor, SDLoc(Chain), MVT::Other, Ops);
+//}

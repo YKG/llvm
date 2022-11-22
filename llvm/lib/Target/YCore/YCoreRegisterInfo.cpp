@@ -136,19 +136,9 @@ YCoreRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   int Offset = MF.getFrameInfo().getObjectOffset(FrameIndex);
   int StackSize = MF.getFrameInfo().getStackSize();
 
-  #ifndef NDEBUG
-  LLVM_DEBUG(errs() << "\nFunction         : " << MF.getName() << "\n");
-  LLVM_DEBUG(errs() << "<--------->\n");
-  LLVM_DEBUG(MI.print(errs()));
-  LLVM_DEBUG(errs() << "FrameIndex         : " << FrameIndex << "\n");
-  LLVM_DEBUG(errs() << "FrameOffset        : " << Offset << "\n");
-  LLVM_DEBUG(errs() << "StackSize          : " << StackSize << "\n");
-#endif
-
   Offset += StackSize;
 
   Register FrameReg = getFrameRegister(MF);
-
 
   // fold constant into offset.
   Offset += MI.getOperand(FIOperandNum + 1).getImm();
