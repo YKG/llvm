@@ -192,9 +192,6 @@ def LDWSP_ru6 : _FRU6<0b010111, (outs RRegs:$a), (ins i32imm:$b),
 
 // U6
 let Defs = [SP], Uses = [SP] in {
-let hasSideEffects = 0 in
-defm EXTSP : FU6_LU6_np<0b0111011110, "extsp">;
-
 let mayStore = 1 in
 defm ENTSP : FU6_LU6_np<0b0111011101, "entsp">;
 
