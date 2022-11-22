@@ -126,9 +126,6 @@ multiclass FU6_LU6_np<bits<10> opc, string OpcStr> {
 
 // Two operand short
 
-class F2R_np<bits<6> opc, string OpcStr> :
-  _F2R<opc, (outs GRRegs:$dst), (ins GRRegs:$b),
-       !strconcat(OpcStr, " $dst, $b"), []>;
 
 // Two operand long
 
