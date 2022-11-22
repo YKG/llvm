@@ -183,25 +183,6 @@ Decode3OpInstruction(unsigned Insn, unsigned &Op1, unsigned &Op2,
 }
 
 static DecodeStatus
-Decode2OpInstructionFail(MCInst &Inst, unsigned Insn, uint64_t Address,
-                         const void *Decoder) {
-  return MCDisassembler::Fail;
-}
-
-static DecodeStatus
-Decode2RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
-                    const void *Decoder) {
-  unsigned Op1, Op2;
-  DecodeStatus S = Decode2OpInstruction(Insn, Op1, Op2);
-  if (S != MCDisassembler::Success)
-    return Decode2OpInstructionFail(Inst, Insn, Address, Decoder);
-
-  DecodeGRRegsRegisterClass(Inst, Op1, Address, Decoder);
-  DecodeGRRegsRegisterClass(Inst, Op2, Address, Decoder);
-  return S;
-}
-
-static DecodeStatus
 DecodeL2OpInstructionFail(MCInst &Inst, unsigned Insn, uint64_t Address,
                           const void *Decoder) {
   return MCDisassembler::Fail;
