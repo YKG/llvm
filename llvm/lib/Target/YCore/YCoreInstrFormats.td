@@ -88,10 +88,3 @@ class _F2R<bits<6> opc, dag outs, dag ins, string asmstr, list<dag> pattern>
   let Inst{4} = opc{0};
   let DecoderMethod = "Decode2RInstruction";
 }
-
-class _FRUS<bits<6> opc, dag outs, dag ins, string asmstr, list<dag> pattern>
-    : InstYCore<2, outs, ins, asmstr, pattern> {
-  let Inst{15-11} = opc{5-1};
-  let Inst{4} = opc{0};
-  let DecoderMethod = "DecodeRUSInstruction";
-}
