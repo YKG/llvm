@@ -107,10 +107,3 @@ class _FRUS<bits<6> opc, dag outs, dag ins, string asmstr, list<dag> pattern>
   let Inst{4} = opc{0};
   let DecoderMethod = "DecodeRUSInstruction";
 }
-
-// RUS with bitp operand
-class _FRUSBitp<bits<6> opc, dag outs, dag ins, string asmstr,
-                list<dag> pattern>
-    : _FRUS<opc, outs, ins, asmstr, pattern> {
-  let DecoderMethod = "DecodeRUSBitpInstruction";
-}
