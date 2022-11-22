@@ -153,46 +153,6 @@ static DecodeStatus Decode2RUSBitpInstruction(MCInst &Inst,
                                               uint64_t Address,
                                               const void *Decoder);
 
-static DecodeStatus DecodeL3RInstruction(MCInst &Inst,
-                                         unsigned Insn,
-                                         uint64_t Address,
-                                         const void *Decoder);
-
-static DecodeStatus DecodeL3RSrcDstInstruction(MCInst &Inst,
-                                               unsigned Insn,
-                                               uint64_t Address,
-                                               const void *Decoder);
-
-static DecodeStatus DecodeL2RUSInstruction(MCInst &Inst,
-                                           unsigned Insn,
-                                           uint64_t Address,
-                                           const void *Decoder);
-
-static DecodeStatus DecodeL2RUSBitpInstruction(MCInst &Inst,
-                                               unsigned Insn,
-                                               uint64_t Address,
-                                               const void *Decoder);
-
-static DecodeStatus DecodeL6RInstruction(MCInst &Inst,
-                                         unsigned Insn,
-                                         uint64_t Address,
-                                         const void *Decoder);
-
-static DecodeStatus DecodeL5RInstruction(MCInst &Inst,
-                                         unsigned Insn,
-                                         uint64_t Address,
-                                         const void *Decoder);
-
-static DecodeStatus DecodeL4RSrcDstInstruction(MCInst &Inst,
-                                               unsigned Insn,
-                                               uint64_t Address,
-                                               const void *Decoder);
-
-static DecodeStatus DecodeL4RSrcDstSrcDstInstruction(MCInst &Inst,
-                                                     unsigned Insn,
-                                                     uint64_t Address,
-                                                     const void *Decoder);
-
 #include "YCoreGenDisassemblerTables.inc"
 
 static DecodeStatus DecodeGRRegsRegisterClass(MCInst &Inst,
