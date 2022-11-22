@@ -85,54 +85,6 @@ static DecodeStatus DecodeRRegsRegisterClass(MCInst &Inst,
 static DecodeStatus DecodeBitpOperand(MCInst &Inst, unsigned Val,
                                       uint64_t Address, const void *Decoder);
 
-static DecodeStatus DecodeNegImmOperand(MCInst &Inst, unsigned Val,
-                                        uint64_t Address, const void *Decoder);
-
-static DecodeStatus Decode2RInstruction(MCInst &Inst,
-                                        unsigned Insn,
-                                        uint64_t Address,
-                                        const void *Decoder);
-
-static DecodeStatus Decode2RImmInstruction(MCInst &Inst,
-                                           unsigned Insn,
-                                           uint64_t Address,
-                                           const void *Decoder);
-
-static DecodeStatus DecodeR2RInstruction(MCInst &Inst,
-                                         unsigned Insn,
-                                         uint64_t Address,
-                                         const void *Decoder);
-
-static DecodeStatus Decode2RSrcDstInstruction(MCInst &Inst,
-                                              unsigned Insn,
-                                              uint64_t Address,
-                                              const void *Decoder);
-
-static DecodeStatus DecodeRUSInstruction(MCInst &Inst,
-                                         unsigned Insn,
-                                         uint64_t Address,
-                                         const void *Decoder);
-
-static DecodeStatus DecodeRUSBitpInstruction(MCInst &Inst,
-                                             unsigned Insn,
-                                             uint64_t Address,
-                                             const void *Decoder);
-
-static DecodeStatus DecodeRUSSrcDstBitpInstruction(MCInst &Inst,
-                                                   unsigned Insn,
-                                                   uint64_t Address,
-                                                   const void *Decoder);
-
-static DecodeStatus DecodeL2RInstruction(MCInst &Inst,
-                                         unsigned Insn,
-                                         uint64_t Address,
-                                         const void *Decoder);
-
-static DecodeStatus DecodeLR2RInstruction(MCInst &Inst,
-                                          unsigned Insn,
-                                          uint64_t Address,
-                                          const void *Decoder);
-
 static DecodeStatus Decode3RInstruction(MCInst &Inst,
                                         unsigned Insn,
                                         uint64_t Address,
