@@ -57,14 +57,12 @@ public:
     return LRSpillSlot;
   }
 
-  int createFPSpillSlot(MachineFunction &MF);
   bool hasFPSpillSlot() { return FPSpillSlotSet; }
   int getFPSpillSlot() const {
     assert(FPSpillSlotSet && "FP Spill slot not set");
     return FPSpillSlot;
   }
 
-  const int* createEHSpillSlot(MachineFunction &MF);
   bool hasEHSpillSlot() { return EHSpillSlotSet; }
   const int* getEHSpillSlot() const {
     assert(EHSpillSlotSet && "EH Spill slot not set");

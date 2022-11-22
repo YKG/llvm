@@ -49,31 +49,3 @@ int YCoreFunctionInfo::createLRSpillSlot(MachineFunction &MF) {
   return LRSpillSlot;
 }
 
-int YCoreFunctionInfo::createFPSpillSlot(MachineFunction &MF) {
-  if (FPSpillSlotSet) {
-    return FPSpillSlot;
-  }
-  const TargetRegisterClass &RC = YCore::GRRegsRegClass;
-  const TargetRegisterInfo &TRI = *MF.getSubtarget().getRegisterInfo();
-  MachineFrameInfo &MFI = MF.getFrameInfo();
-  FPSpillSlot =
-      MFI.CreateStackObject(TRI.getSpillSize(RC), TRI.getSpillAlign(RC), true);
-  FPSpillSlotSet = true;
-  return FPSpillSlot;
-}
-
-const int* YCoreFunctionInfo::createEHSpillSlot(MachineFunction &MF) {
-  if (EHSpillSlotSet) {
-    return EHSpillSlot;
-  }
-  const TargetRegisterClass &RC = YCore::GRRegsRegClass;
-  const TargetRegisterInfo &TRI = *MF.getSubtarget().getRegisterInfo();
-  MachineFrameInfo &MFI = MF.getFrameInfo();
-  unsigned Size = TRI.getSpillSize(RC);
-  Align Alignment = TRI.getSpillAlign(RC);
-  EHSpillSlot[0] = MFI.CreateStackObject(Size, Alignment, true);
-  EHSpillSlot[1] = MFI.CreateStackObject(Size, Alignment, true);
-  EHSpillSlotSet = true;
-  return EHSpillSlot;
-}
-

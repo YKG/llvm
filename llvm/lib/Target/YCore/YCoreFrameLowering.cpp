@@ -263,26 +263,12 @@ void YCoreFrameLowering::determineCalleeSaves(MachineFunction &MF,
     // We force the LR to be saved so these instructions are used.
     LRUsed = true;
 
-  if (MF.callsUnwindInit() || MF.callsEHReturn()) {
-    // The unwinder expects to find spill slots for the exception info regs R0
-    // & R1. These are used during llvm.eh.return() to 'restore' the exception
-    // info. N.B. we do not spill or restore R0, R1 during normal operation.
-    XFI->createEHSpillSlot(MF);
-    // As we will  have a stack, we force the LR to be saved.
-    LRUsed = true;
-  }
-
   if (LRUsed) {
     // We will handle the LR in the prologue/epilogue
     // and allocate space on the stack ourselves.
     SavedRegs.reset(YCore::LR);
     XFI->createLRSpillSlot(MF);
   }
-
-  if (hasFP(MF))
-    // A callee save register is used to hold the FP.
-    // This needs saving / restoring in the epilogue / prologue.
-    XFI->createFPSpillSlot(MF);
 }
 
 void YCoreFrameLowering::
