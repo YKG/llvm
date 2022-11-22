@@ -79,35 +79,6 @@ YCoreDisassembler::getInstruction(MCInst &instr, uint64_t &Size,
                                   ArrayRef<uint8_t> Bytes, uint64_t Address,
                                   raw_ostream &cStream) const {
   llvm_unreachable("TODO");
-//
-//  uint16_t insn16;
-//
-//  if (!readInstruction16(Bytes, Address, Size, insn16)) {
-//    return Fail;
-//  }
-//
-//  // Calling the auto-generated decoder function.
-//  DecodeStatus Result = decodeInstruction(DecoderTable16, instr, insn16,
-//                                          Address, this, STI);
-//  if (Result != Fail) {
-//    Size = 2;
-//    return Result;
-//  }
-//
-//  uint32_t insn32;
-//
-//  if (!readInstruction32(Bytes, Address, Size, insn32)) {
-//    return Fail;
-//  }
-//
-//  // Calling the auto-generated decoder function.
-//  Result = decodeInstruction(DecoderTable32, instr, insn32, Address, this, STI);
-//  if (Result != Fail) {
-//    Size = 4;
-//    return Result;
-//  }
-
-  return Fail;
 }
 
 static MCDisassembler *createYCoreDisassembler(const Target &T,
