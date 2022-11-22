@@ -201,17 +201,6 @@ def LD8U_3r :  _F3R<0b10001, (outs GRRegs:$dst),
                     "ld8u $dst, $addr[$offset]", []>;
 }
 
-let mayStore=1 in {
-def STW_l3r : _FL3R<0b000001100, (outs),
-                    (ins GRRegs:$val, GRRegs:$addr, GRRegs:$offset),
-                    "stw $val, $addr[$offset]", []>;
-
-def STW_2rus : _F2RUS<0b00000, (outs),
-                      (ins GRRegs:$val, GRRegs:$addr, i32imm:$offset),
-                      "stw $val, $addr[$offset]", []>;
-}
-
-
 let Uses = [SP] in {
 let mayStore=1 in {
 def STWSP_ru6 : _FRU6<0b010101, (outs), (ins RRegs:$a, i32imm:$b),
