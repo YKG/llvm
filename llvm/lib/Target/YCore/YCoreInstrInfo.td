@@ -260,7 +260,3 @@ let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1,
 defm SETSR_branch : FU6_LU6_np<0b0111101101, "setsr">;
 defm CLRSR_branch : FU6_LU6_np<0b0111101100, "clrsr">;
 }
-
-let isReMaterializable = 1, hasSideEffects = 0 in
-def MKMSK_rus : _FRUSBitp<0b101001, (outs GRRegs:$dst), (ins i32imm:$size),
-                          "mkmsk $dst, $size", []>;
