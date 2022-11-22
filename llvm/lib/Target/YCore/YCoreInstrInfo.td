@@ -232,14 +232,6 @@ def LDWSP_lru6 : _FLRU6<0b010111, (outs RRegs:$a), (ins i32imm:$b),
                         "ldw $a, sp[$b]",
                         [(set RRegs:$a, (YCoreLdwsp immU16:$b))]>;
 }
-
-let hasSideEffects = 0 in {
-def LDAWSP_ru6 : _FRU6<0b011001, (outs RRegs:$a), (ins i32imm:$b),
-                       "ldaw $a, sp[$b]", []>;
-
-def LDAWSP_lru6 : _FLRU6<0b011001, (outs RRegs:$a), (ins i32imm:$b),
-                         "ldaw $a, sp[$b]", []>;
-}
 }
 
 // U6
