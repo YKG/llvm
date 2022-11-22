@@ -87,17 +87,17 @@ namespace llvm {
                               const SmallVectorImpl<ISD::InputArg> &Ins,
                               const SDLoc &dl, SelectionDAG &DAG,
                               SmallVectorImpl<SDValue> &InVals) const;
-    SDValue getReturnAddressFrameIndex(SelectionDAG &DAG) const;
-
-    SDValue lowerLoadWordFromAlignedBasePlusOffset(const SDLoc &DL,
-                                                   SDValue Chain, SDValue Base,
-                                                   int64_t Offset,
-                                                   SelectionDAG &DAG) const;
+//    SDValue getReturnAddressFrameIndex(SelectionDAG &DAG) const;
+//
+//    SDValue lowerLoadWordFromAlignedBasePlusOffset(const SDLoc &DL,
+//                                                   SDValue Chain, SDValue Base,
+//                                                   int64_t Offset,
+//                                                   SelectionDAG &DAG) const;
 
     // Lower Operand specifics
     SDValue LowerLOAD(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerSTORE(SDValue Op, SelectionDAG &DAG) const;
-    SDValue ExpandADDSUB(SDNode *Op, SelectionDAG &DAG) const;
+//    SDValue ExpandADDSUB(SDNode *Op, SelectionDAG &DAG) const;
 
     SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
 
