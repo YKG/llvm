@@ -106,11 +106,6 @@ class F3R_np<bits<5> opc, string OpcStr> :
        !strconcat(OpcStr, " $dst, $b, $c"), []>;
 // Three operand long
 
-class FL3R<bits<9> opc, string OpcStr, SDNode OpNode> :
-  _FL3R<opc, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
-        !strconcat(OpcStr, " $dst, $b, $c"),
-        [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
-
 // U6
 multiclass FU6_LU6<bits<10> opc, string OpcStr, SDNode OpNode> {
   def _u6: _FU6<opc, (outs), (ins i32imm:$a), !strconcat(OpcStr, " $a"),
