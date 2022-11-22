@@ -29,7 +29,6 @@ class YCoreFunctionInfo : public MachineFunctionInfo {
   int LRSpillSlot;
   unsigned ReturnStackOffset;
   bool ReturnStackOffsetSet = false;
-  mutable int CachedEStackSize = -1;
   std::vector<std::pair<MachineBasicBlock::iterator, CalleeSavedInfo>>
   SpillLabels;
 
