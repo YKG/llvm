@@ -174,14 +174,6 @@ let usesCustomInserter = 1 in {
 
 // Three operand short
 defm ADD : F3R_2RUS<0b00010, 0b10010, "add", add>;
-defm SUB : F3R_2RUS<0b00011, 0b10011, "sub", sub>;
-let hasSideEffects = 0 in {
-defm EQ : F3R_2RUS_np<0b00110, 0b10110, "eq">;
-def LSS_3r : F3R_np<0b11000, "lss">;
-def LSU_3r : F3R_np<0b11001, "lsu">;
-}
-def AND_3r : F3R<0b00111, "and", and>;
-def OR_3r : F3R<0b01000, "or", or>;
 
 let mayLoad=1 in {
 def LDW_3r : _F3R<0b01001, (outs GRRegs:$dst),
