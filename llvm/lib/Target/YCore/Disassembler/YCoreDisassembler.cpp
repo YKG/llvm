@@ -142,12 +142,6 @@ static DecodeStatus DecodeBitpOperand(MCInst &Inst, unsigned Val,
   return MCDisassembler::Success;
 }
 
-static DecodeStatus DecodeNegImmOperand(MCInst &Inst, unsigned Val,
-                                        uint64_t Address, const void *Decoder) {
-  Inst.addOperand(MCOperand::createImm(-(int64_t)Val));
-  return MCDisassembler::Success;
-}
-
 static DecodeStatus
 Decode2OpInstruction(unsigned Insn, unsigned &Op1, unsigned &Op2) {
   unsigned Combined = fieldFromInstruction(Insn, 6, 5);
