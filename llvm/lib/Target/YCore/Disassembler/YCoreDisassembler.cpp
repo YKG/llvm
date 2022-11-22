@@ -444,45 +444,6 @@ DecodeL6RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
   return S;
 }
 
-static DecodeStatus
-DecodeL4RSrcDstInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
-                           const void *Decoder) {
-  unsigned Op1, Op2, Op3;
-  unsigned Op4 = fieldFromInstruction(Insn, 16, 4);
-  DecodeStatus S =
-    Decode3OpInstruction(fieldFromInstruction(Insn, 0, 16), Op1, Op2, Op3);
-  if (S == MCDisassembler::Success) {
-    DecodeGRRegsRegisterClass(Inst, Op1, Address, Decoder);
-    S = DecodeGRRegsRegisterClass(Inst, Op4, Address, Decoder);
-  }
-  if (S == MCDisassembler::Success) {
-    DecodeGRRegsRegisterClass(Inst, Op4, Address, Decoder);
-    DecodeGRRegsRegisterClass(Inst, Op2, Address, Decoder);
-    DecodeGRRegsRegisterClass(Inst, Op3, Address, Decoder);
-  }
-  return S;
-}
-
-static DecodeStatus
-DecodeL4RSrcDstSrcDstInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
-                                 const void *Decoder) {
-  unsigned Op1, Op2, Op3;
-  unsigned Op4 = fieldFromInstruction(Insn, 16, 4);
-  DecodeStatus S =
-  Decode3OpInstruction(fieldFromInstruction(Insn, 0, 16), Op1, Op2, Op3);
-  if (S == MCDisassembler::Success) {
-    DecodeGRRegsRegisterClass(Inst, Op1, Address, Decoder);
-    S = DecodeGRRegsRegisterClass(Inst, Op4, Address, Decoder);
-  }
-  if (S == MCDisassembler::Success) {
-    DecodeGRRegsRegisterClass(Inst, Op1, Address, Decoder);
-    DecodeGRRegsRegisterClass(Inst, Op4, Address, Decoder);
-    DecodeGRRegsRegisterClass(Inst, Op2, Address, Decoder);
-    DecodeGRRegsRegisterClass(Inst, Op3, Address, Decoder);
-  }
-  return S;
-}
-
 MCDisassembler::DecodeStatus
 YCoreDisassembler::getInstruction(MCInst &instr, uint64_t &Size,
                                   ArrayRef<uint8_t> Bytes, uint64_t Address,
