@@ -67,16 +67,6 @@ static void IfNeededExtSP(MachineBasicBlock &MBB,
                           MachineBasicBlock::iterator MBBI, const DebugLoc &dl,
                           const TargetInstrInfo &TII, int OffsetFromTop,
                           int &Adjusted, int FrameSize, bool emitFrameMoves) {
-  while (OffsetFromTop > Adjusted) {
-    assert(Adjusted < FrameSize && "OffsetFromTop is beyond FrameSize");
-    int remaining = FrameSize - Adjusted;
-    int OpImm = (remaining > MaxImmU16) ? MaxImmU16 : remaining;
-    int Opcode = isImmU6(OpImm) ? YCore::EXTSP_u6 : YCore::EXTSP_lu6;
-    BuildMI(MBB, MBBI, dl, TII.get(Opcode)).addImm(OpImm);
-    Adjusted += OpImm;
-//    if (emitFrameMoves)
-//      EmitDefCfaOffset(MBB, MBBI, dl, TII, Adjusted*4);
-  }
 }
 
 /// The SP register is moved in steps of 'MaxImmU16' towards the top of the
@@ -129,14 +119,7 @@ void YCoreFrameLowering::emitPrologue(MachineFunction &MF,
   // to determine the end of the prologue.
   DebugLoc dl;
 
-  if (MFI.getMaxAlign() > getStackAlign())
-    report_fatal_error("emitPrologue unsupported alignment: " +
-                       Twine(MFI.getMaxAlign().value()));
-
   const AttributeList &PAL = MF.getFunction().getAttributes();
-  if (PAL.hasAttrSomewhere(Attribute::Nest))
-    BuildMI(MBB, MBBI, dl, TII.get(YCore::LDWSP_ru6), YCore::R11).addImm(0);
-    // FIX: Needs addMemOperand() but can't use getFixedStack() or getStack().
 
   // Work out frame sizes.
   // We will adjust the SP in stages towards the final FrameSize.
@@ -173,12 +156,6 @@ void YCoreFrameLowering::emitPrologue(MachineFunction &MF,
   IfNeededExtSP(MBB, MBBI, dl, TII, FrameSize, Adjusted, FrameSize,
                 emitFrameMoves);
   assert(Adjusted==FrameSize && "IfNeededExtSP has not completed adjustment");
-
-  if (FP) {
-    // Set the FP from the SP.
-    BuildMI(MBB, MBBI, dl, TII.get(YCore::LDAWSP_ru6), FramePtr).addImm(0);
-  }
-
 }
 
 void YCoreFrameLowering::emitEpilogue(MachineFunction &MF,
@@ -266,8 +243,4 @@ processFunctionBeforeFrameFinalized(MachineFunction &MF,
   // When using FP, for large or small frames, we may need 1 scratch register.
   unsigned Size = TRI.getSpillSize(RC);
   Align Alignment = TRI.getSpillAlign(RC);
-  if (XFI->isLargeFrame(MF) || hasFP(MF))
-    RS->addScavengingFrameIndex(MFI.CreateStackObject(Size, Alignment, false));
-  if (XFI->isLargeFrame(MF) && !hasFP(MF))
-    RS->addScavengingFrameIndex(MFI.CreateStackObject(Size, Alignment, false));
 }
