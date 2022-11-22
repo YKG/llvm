@@ -38,16 +38,6 @@ class _F3R<bits<5> opc, dag outs, dag ins, string asmstr, list<dag> pattern>
   let DecoderMethod = "Decode3RInstruction";
 }
 
-class _FL3R<bits<9> opc, dag outs, dag ins, string asmstr, list<dag> pattern>
-    : InstYCore<4, outs, ins, asmstr, pattern> {
-  let Inst{31-27} = opc{8-4};
-  let Inst{26-20} = 0b1111110;
-  let Inst{19-16} = opc{3-0};
-
-  let Inst{15-11} = 0b11111;
-  let DecoderMethod = "DecodeL3RInstruction";
-}
-
 class _F2RUS<bits<5> opc, dag outs, dag ins, string asmstr, list<dag> pattern>
     : InstYCore<2, outs, ins, asmstr, pattern> {
   let Inst{15-11} = opc;
