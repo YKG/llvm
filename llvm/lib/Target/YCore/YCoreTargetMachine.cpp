@@ -30,11 +30,6 @@ static Reloc::Model getEffectiveRelocModel(Optional<Reloc::Model> RM) {
 
 static CodeModel::Model
 getEffectiveYCoreCodeModel(Optional<CodeModel::Model> CM) {
-  if (CM) {
-    if (*CM != CodeModel::Small && *CM != CodeModel::Large)
-      report_fatal_error("Target only supports CodeModel Small or Large");
-    return *CM;
-  }
   return CodeModel::Small;
 }
 

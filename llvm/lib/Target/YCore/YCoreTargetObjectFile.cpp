@@ -62,43 +62,10 @@ void YCoreTargetObjectFile::Initialize(MCContext &Ctx, const TargetMachine &TM){
   // StaticDtorSection - see MObjectFileInfo.cpp
  }
 
-static unsigned getYCoreSectionType(SectionKind K) {
-  if (K.isBSS())
-    return ELF::SHT_NOBITS;
-  return ELF::SHT_PROGBITS;
-}
-
 MCSection *YCoreTargetObjectFile::SelectSectionForGlobal(
     const GlobalObject *GO, SectionKind Kind, const TargetMachine &TM) const {
 
   bool UseCPRel = GO->hasLocalLinkage();
 
   if (Kind.isText())                    return TextSection;
-  if (UseCPRel) {
-    if (Kind.isMergeable1ByteCString()) return CStringSection;
-    if (Kind.isMergeableConst4())       return MergeableConst4Section;
-    if (Kind.isMergeableConst8())       return MergeableConst8Section;
-    if (Kind.isMergeableConst16())      return MergeableConst16Section;
-  }
-  Type *ObjType = GO->getValueType();
-  auto &DL = GO->getParent()->getDataLayout();
-  if (TM.getCodeModel() == CodeModel::Small || !ObjType->isSized() ||
-      DL.getTypeAllocSize(ObjType) < CodeModelLargeSize) {
-    if (Kind.isReadOnly())              return UseCPRel? ReadOnlySection
-                                                       : DataRelROSection;
-    if (Kind.isBSS() || Kind.isCommon())return BSSSection;
-    if (Kind.isData())
-      return DataSection;
-    if (Kind.isReadOnlyWithRel())       return DataRelROSection;
-  } else {
-    if (Kind.isReadOnly())              return UseCPRel? ReadOnlySectionLarge
-                                                       : DataRelROSectionLarge;
-    if (Kind.isBSS() || Kind.isCommon())return BSSSectionLarge;
-    if (Kind.isData())
-      return DataSectionLarge;
-    if (Kind.isReadOnlyWithRel())       return DataRelROSectionLarge;
-  }
-
-  assert((Kind.isThreadLocal() || Kind.isCommon()) && "Unknown section kind");
-  report_fatal_error("Target does not support TLS or Common sections");
 }
