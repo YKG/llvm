@@ -236,11 +236,4 @@ processFunctionBeforeFrameFinalized(MachineFunction &MF,
   MachineFrameInfo &MFI = MF.getFrameInfo();
   const TargetRegisterClass &RC = YCore::GRRegsRegClass;
   const TargetRegisterInfo &TRI = *MF.getSubtarget().getRegisterInfo();
-  YCoreFunctionInfo *XFI = MF.getInfo<YCoreFunctionInfo>();
-  // Reserve slots close to SP or frame pointer for Scavenging spills.
-  // When using SP for small frames, we don't need any scratch registers.
-  // When using SP for large frames, we may need 2 scratch registers.
-  // When using FP, for large or small frames, we may need 1 scratch register.
-  unsigned Size = TRI.getSpillSize(RC);
-  Align Alignment = TRI.getSpillAlign(RC);
 }

@@ -59,9 +59,6 @@ public:
     assert(ReturnStackOffsetSet && "Return stack offset not set");
     return ReturnStackOffset;
   }
-
-  bool isLargeFrame(const MachineFunction &MF) const;
-
 };
 
 } // end namespace llvm

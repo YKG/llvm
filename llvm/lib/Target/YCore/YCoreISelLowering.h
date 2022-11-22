@@ -63,20 +63,6 @@ namespace llvm {
     //  DAG node.
     const char *getTargetNodeName(unsigned Opcode) const override;
 
-    /// If a physical register, this returns the register that receives the
-    /// exception address on entry to an EH pad.
-    Register
-    getExceptionPointerRegister(const Constant *PersonalityFn) const override {
-      return YCore::R0;
-    }
-
-    /// If a physical register, this returns the register that receives the
-    /// exception typeid on entry to a landing pad.
-    Register
-    getExceptionSelectorRegister(const Constant *PersonalityFn) const override {
-      return YCore::R1;
-    }
-
   private:
     const TargetMachine &TM;
     const YCoreSubtarget &Subtarget;
@@ -109,9 +95,6 @@ namespace llvm {
                      bool isVarArg,
                      const SmallVectorImpl<ISD::OutputArg> &ArgsFlags,
                      LLVMContext &Context) const override;
-    bool shouldInsertFencesForAtomic(const Instruction *I) const override {
-      return true;
-    }
   };
 }
 

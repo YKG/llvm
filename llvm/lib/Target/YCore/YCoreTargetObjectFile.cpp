@@ -65,7 +65,7 @@ void YCoreTargetObjectFile::Initialize(MCContext &Ctx, const TargetMachine &TM){
 MCSection *YCoreTargetObjectFile::SelectSectionForGlobal(
     const GlobalObject *GO, SectionKind Kind, const TargetMachine &TM) const {
 
-  bool UseCPRel = GO->hasLocalLinkage();
+//  bool UseCPRel = GO->hasLocalLinkage();
 
   if (Kind.isText())                    return TextSection;
 }

@@ -23,13 +23,8 @@ namespace llvm {
   class TargetMachine;
   class YCoreTargetMachine;
 
-  void initializeYCoreLowerThreadLocalPass(PassRegistry &p);
-
-  FunctionPass *createYCoreFrameToArgsOffsetEliminationPass();
   FunctionPass *createYCoreISelDag(YCoreTargetMachine &TM,
                                    CodeGenOpt::Level OptLevel);
-  ModulePass *createYCoreLowerThreadLocalPass();
-
 } // end namespace llvm;
 
 #endif
