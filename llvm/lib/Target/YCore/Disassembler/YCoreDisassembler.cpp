@@ -41,37 +41,6 @@ public:
 };
 }
 
-static bool readInstruction16(ArrayRef<uint8_t> Bytes, uint64_t Address,
-                              uint64_t &Size, uint16_t &Insn) {
-  // We want to read exactly 2 Bytes of data.
-  if (Bytes.size() < 2) {
-    Size = 0;
-    return false;
-  }
-  // Encoded as a little-endian 16-bit word in the stream.
-  Insn = (Bytes[0] << 0) | (Bytes[1] << 8);
-  return true;
-}
-
-static bool readInstruction32(ArrayRef<uint8_t> Bytes, uint64_t Address,
-                              uint64_t &Size, uint32_t &Insn) {
-  // We want to read exactly 4 Bytes of data.
-  if (Bytes.size() < 4) {
-    Size = 0;
-    return false;
-  }
-  // Encoded as a little-endian 32-bit word in the stream.
-  Insn =
-      (Bytes[0] << 0) | (Bytes[1] << 8) | (Bytes[2] << 16) | (Bytes[3] << 24);
-  return true;
-}
-
-static unsigned getReg(const void *D, unsigned RC, unsigned RegNo) {
-  const YCoreDisassembler *Dis = static_cast<const YCoreDisassembler*>(D);
-  const MCRegisterInfo *RegInfo = Dis->getContext().getRegisterInfo();
-  return *(RegInfo->getRegClass(RC).begin() + RegNo);
-}
-
 #include "YCoreGenDisassemblerTables.inc"
 
 MCDisassembler::DecodeStatus
