@@ -36,41 +36,6 @@ void YCoreInstPrinter::printInst(const MCInst *MI, uint64_t Address,
   printInstruction(MI, Address, O);
   printAnnotation(O, Annot);
 }
-//
-//void YCoreInstPrinter::
-//printInlineJT(const MCInst *MI, int opNum, raw_ostream &O) {
-//  report_fatal_error("can't handle InlineJT");
-//}
-//
-//void YCoreInstPrinter::
-//printInlineJT32(const MCInst *MI, int opNum, raw_ostream &O) {
-//  report_fatal_error("can't handle InlineJT32");
-//}
-//
-//static void printExpr(const MCExpr *Expr, const MCAsmInfo *MAI,
-//                      raw_ostream &OS) {
-//  int Offset = 0;
-//  const MCSymbolRefExpr *SRE;
-//
-//  if (const MCBinaryExpr *BE = dyn_cast<MCBinaryExpr>(Expr)) {
-//    SRE = dyn_cast<MCSymbolRefExpr>(BE->getLHS());
-//    const MCConstantExpr *CE = dyn_cast<MCConstantExpr>(BE->getRHS());
-//    assert(SRE && CE && "Binary expression must be sym+const.");
-//    Offset = CE->getValue();
-//  } else {
-//    SRE = dyn_cast<MCSymbolRefExpr>(Expr);
-//    assert(SRE && "Unexpected MCExpr type.");
-//  }
-//  assert(SRE->getKind() == MCSymbolRefExpr::VK_None);
-//
-//  SRE->getSymbol().print(OS, MAI);
-//
-//  if (Offset) {
-//    if (Offset > 0)
-//      OS << '+';
-//    OS << Offset;
-//  }
-//}
 
 void YCoreInstPrinter::
 printOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O) {
@@ -84,7 +49,4 @@ printOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O) {
     O << Op.getImm();
     return;
   }
-
-//  assert(Op.isExpr() && "unknown operand kind in printOperand");
-//  printExpr(Op.getExpr(), &MAI, O);
 }
