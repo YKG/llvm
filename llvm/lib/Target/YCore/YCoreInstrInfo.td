@@ -175,16 +175,6 @@ let usesCustomInserter = 1 in {
 // Three operand short
 defm ADD : F3R_2RUS<0b00010, 0b10010, "add", add>;
 
-let mayLoad=1 in {
-def LDW_3r : _F3R<0b01001, (outs GRRegs:$dst),
-                  (ins GRRegs:$addr, GRRegs:$offset),
-                  "ldw $dst, $addr[$offset]", []>;
-
-def LDW_2rus : _F2RUS<0b00001, (outs GRRegs:$dst),
-                      (ins GRRegs:$addr, i32imm:$offset),
-                      "ldw $dst, $addr[$offset]", []>;
-}
-
 let Uses = [SP] in {
 let mayStore=1 in {
 def STWSP_ru6 : _FRU6<0b010101, (outs), (ins RRegs:$a, i32imm:$b),
