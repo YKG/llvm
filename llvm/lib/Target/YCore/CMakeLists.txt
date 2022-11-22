@@ -18,7 +18,6 @@ add_llvm_target(YCoreCodeGen
   YCoreInstrInfo.cpp
   YCoreISelDAGToDAG.cpp
   YCoreISelLowering.cpp
-  YCoreLowerThreadLocal.cpp
   YCoreMachineFunctionInfo.cpp
   YCoreMCInstLower.cpp
   YCoreRegisterInfo.cpp

@@ -87,7 +87,6 @@ void YCorePassConfig::addIRPasses() {
 }
 
 bool YCorePassConfig::addPreISel() {
-  addPass(createYCoreLowerThreadLocalPass());
   return false;
 }
 
