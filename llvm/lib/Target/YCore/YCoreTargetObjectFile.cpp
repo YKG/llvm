@@ -23,27 +23,15 @@ void YCoreTargetObjectFile::Initialize(MCContext &Ctx, const TargetMachine &TM){
   BSSSection = Ctx.getELFSection(".dp.bss", ELF::SHT_NOBITS,
                                  ELF::SHF_ALLOC | ELF::SHF_WRITE |
                                      ELF::YCORE_SHF_DP_SECTION);
-//  BSSSectionLarge = Ctx.getELFSection(".dp.bss.large", ELF::SHT_NOBITS,
-//                                      ELF::SHF_ALLOC | ELF::SHF_WRITE |
-//                                          ELF::YCORE_SHF_DP_SECTION);
   DataSection = Ctx.getELFSection(".dp.data", ELF::SHT_PROGBITS,
                                   ELF::SHF_ALLOC | ELF::SHF_WRITE |
                                       ELF::YCORE_SHF_DP_SECTION);
-//  DataSectionLarge = Ctx.getELFSection(".dp.data.large", ELF::SHT_PROGBITS,
-//                                       ELF::SHF_ALLOC | ELF::SHF_WRITE |
-//                                           ELF::YCORE_SHF_DP_SECTION);
   DataRelROSection = Ctx.getELFSection(".dp.rodata", ELF::SHT_PROGBITS,
                                        ELF::SHF_ALLOC | ELF::SHF_WRITE |
                                            ELF::YCORE_SHF_DP_SECTION);
-//  DataRelROSectionLarge = Ctx.getELFSection(
-//      ".dp.rodata.large", ELF::SHT_PROGBITS,
-//      ELF::SHF_ALLOC | ELF::SHF_WRITE | ELF::YCORE_SHF_DP_SECTION);
   ReadOnlySection =
       Ctx.getELFSection(".cp.rodata", ELF::SHT_PROGBITS,
                         ELF::SHF_ALLOC | ELF::YCORE_SHF_CP_SECTION);
-//  ReadOnlySectionLarge =
-//      Ctx.getELFSection(".cp.rodata.large", ELF::SHT_PROGBITS,
-//                        ELF::SHF_ALLOC | ELF::YCORE_SHF_CP_SECTION);
   MergeableConst4Section = Ctx.getELFSection(
       ".cp.rodata.cst4", ELF::SHT_PROGBITS,
       ELF::SHF_ALLOC | ELF::SHF_MERGE | ELF::YCORE_SHF_CP_SECTION, 4);
