@@ -44,11 +44,6 @@ YCoreRegisterInfo::YCoreRegisterInfo()
   : YCoreGenRegisterInfo(YCore::LR) {
 }
 
-// helper functions
-static inline bool isImmUs(unsigned val) {
-  return val <= 11;
-}
-
 static inline bool isImmU6(unsigned val) {
   return val < (1 << 6);
 }
@@ -57,32 +52,6 @@ static inline bool isImmU16(unsigned val) {
   return val < (1 << 16);
 }
 
-
-static void InsertFPImmInst(MachineBasicBlock::iterator II,
-                            const YCoreInstrInfo &TII,
-                            unsigned Reg, unsigned FrameReg, int Offset ) {
-  MachineInstr &MI = *II;
-  MachineBasicBlock &MBB = *MI.getParent();
-  DebugLoc dl = MI.getDebugLoc();
-
-  switch (MI.getOpcode()) {
-  case YCore::LDWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::LDW_2rus), Reg)
-          .addReg(FrameReg)
-          .addImm(Offset)
-          .addMemOperand(*MI.memoperands_begin());
-    break;
-  case YCore::STWFI:
-    BuildMI(MBB, II, dl, TII.get(YCore::STW_2rus))
-          .addReg(Reg, getKillRegState(MI.getOperand(0).isKill()))
-          .addReg(FrameReg)
-          .addImm(Offset)
-          .addMemOperand(*MI.memoperands_begin());
-    break;
-  default:
-    llvm_unreachable("Unexpected Opcode");
-  }
-}
 
 static void InsertSPImmInst(MachineBasicBlock::iterator II,
                             const YCoreInstrInfo &TII,
@@ -131,8 +100,6 @@ YCoreRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
     0
   };
   const YCoreFrameLowering *TFI = getFrameLowering(*MF);
-  if (TFI->hasFP(*MF))
-    return CalleeSavedRegsFP;
   return CalleeSavedRegs;
 }
 
@@ -144,20 +111,12 @@ BitVector YCoreRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   Reserved.set(YCore::DP);
   Reserved.set(YCore::SP);
   Reserved.set(YCore::LR);
-  if (TFI->hasFP(MF)) {
-    Reserved.set(YCore::R10);
-  }
   return Reserved;
 }
 
 bool
 YCoreRegisterInfo::requiresRegisterScavenging(const MachineFunction &MF) const {
   return true;
-}
-
-bool
-YCoreRegisterInfo::useFPForScavengingIndex(const MachineFunction &MF) const {
-  return false;
 }
 
 void
@@ -190,12 +149,6 @@ YCoreRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 
   Register FrameReg = getFrameRegister(MF);
 
-  // Special handling of DBG_VALUE instructions.
-  if (MI.isDebugValue()) {
-    MI.getOperand(FIOperandNum).ChangeToRegister(FrameReg, false /*isDef*/);
-    MI.getOperand(FIOperandNum + 1).ChangeToImmediate(Offset);
-    return;
-  }
 
   // fold constant into offset.
   Offset += MI.getOperand(FIOperandNum + 1).getImm();
@@ -209,17 +162,10 @@ YCoreRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   Register Reg = MI.getOperand(0).getReg();
   assert(YCore::GRRegsRegClass.contains(Reg) && "Unexpected register operand");
 
-  if (TFI->hasFP(MF)) {
-    if (isImmUs(Offset))
-      InsertFPImmInst(II, TII, Reg, FrameReg, Offset);
-    else
-      llvm_unreachable("Impossible reg-to-reg copy");//InsertFPConstInst(II, TII, Reg, FrameReg, Offset, RS);
-  } else {
     if (isImmU16(Offset))
       InsertSPImmInst(II, TII, Reg, Offset);
     else
       llvm_unreachable("Impossible reg-to-reg copy");//InsertSPConstInst(II, TII, Reg, Offset, RS);
-  }
   // Erase old instruction.
   MachineBasicBlock &MBB = *MI.getParent();
   MBB.erase(II);
