@@ -44,15 +44,6 @@ using namespace llvm;
 const char *YCoreTargetLowering::
 getTargetNodeName(unsigned Opcode) const
 {
-  switch ((YCoreISD::NodeType)Opcode)
-  {
-    case YCoreISD::FIRST_NUMBER      : break;
-    case YCoreISD::LDWSP             : return "YCoreISD::LDWSP";
-    case YCoreISD::STWSP             : return "YCoreISD::STWSP";
-    case YCoreISD::RETSP             : return "YCoreISD::RETSP";
-    case YCoreISD::LADD              : return "YCoreISD::LADD";
-    case YCoreISD::FRAME_TO_ARGS_OFFSET : return "YCoreISD::FRAME_TO_ARGS_OFFSET";
-  }
   return nullptr;
 }
 
@@ -211,10 +202,6 @@ SDValue YCoreTargetLowering::LowerCCCArguments(
       switch (RegVT.getSimpleVT().SimpleTy) {
       default:
         {
-#ifndef NDEBUG
-          errs() << "LowerFormalArguments Unhandled argument type: "
-                 << RegVT.getEVTString() << "\n";
-#endif
           llvm_unreachable(nullptr);
         }
       case MVT::i32:
@@ -241,12 +228,7 @@ SDValue YCoreTargetLowering::LowerCCCArguments(
   for (SmallVectorImpl<ArgDataPair>::const_iterator ArgDI = ArgData.begin(),
                                                     ArgDE = ArgData.end();
        ArgDI != ArgDE; ++ArgDI) {
-
-    if (ArgDI->Flags.isByVal() && ArgDI->Flags.getByValSize()) {
-      llvm_unreachable("unimplemented");
-    } else {
-      InVals.push_back(ArgDI->SDV);
-    }
+    InVals.push_back(ArgDI->SDV);
   }
 
   return Chain;
@@ -263,10 +245,6 @@ CanLowerReturn(CallingConv::ID CallConv, MachineFunction &MF,
                LLVMContext &Context) const {
   SmallVector<CCValAssign, 16> RVLocs;
   CCState CCInfo(CallConv, isVarArg, MF, RVLocs, Context);
-  if (!CCInfo.CheckReturn(Outs, RetCC_YCore))
-    return false;
-  if (CCInfo.getNextStackOffset() != 0 && isVarArg)
-    return false;
   return true;
 }
 
