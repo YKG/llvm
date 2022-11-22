@@ -191,14 +191,6 @@ def LDW_3r : _F3R<0b01001, (outs GRRegs:$dst),
 def LDW_2rus : _F2RUS<0b00001, (outs GRRegs:$dst),
                       (ins GRRegs:$addr, i32imm:$offset),
                       "ldw $dst, $addr[$offset]", []>;
-
-def LD16S_3r :  _F3R<0b10000, (outs GRRegs:$dst),
-                     (ins GRRegs:$addr, GRRegs:$offset),
-                     "ld16s $dst, $addr[$offset]", []>;
-
-def LD8U_3r :  _F3R<0b10001, (outs GRRegs:$dst),
-                    (ins GRRegs:$addr, GRRegs:$offset),
-                    "ld8u $dst, $addr[$offset]", []>;
 }
 
 let Uses = [SP] in {
