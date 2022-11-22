@@ -254,9 +254,3 @@ let isReturn = 1, isTerminator = 1, mayLoad = 1, isBarrier = 1 in {
 defm RETSP : FU6_LU6<0b0111011111, "retsp", YCoreRetsp>;
 }
 }
-
-let isBranch=1, isIndirectBranch=1, isTerminator=1, isBarrier = 1,
-    isCodeGenOnly = 1 in {
-defm SETSR_branch : FU6_LU6_np<0b0111101101, "setsr">;
-defm CLRSR_branch : FU6_LU6_np<0b0111101100, "clrsr">;
-}
