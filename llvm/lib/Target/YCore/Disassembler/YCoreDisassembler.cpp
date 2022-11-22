@@ -302,20 +302,6 @@ DecodeL2RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
 }
 
 static DecodeStatus
-DecodeLR2RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
-                               const void *Decoder) {
-  unsigned Op1, Op2;
-  DecodeStatus S = Decode2OpInstruction(fieldFromInstruction(Insn, 0, 16),
-                                        Op1, Op2);
-  if (S != MCDisassembler::Success)
-    return DecodeL2OpInstructionFail(Inst, Insn, Address, Decoder);
-
-  DecodeGRRegsRegisterClass(Inst, Op2, Address, Decoder);
-  DecodeGRRegsRegisterClass(Inst, Op1, Address, Decoder);
-  return S;
-}
-
-static DecodeStatus
 Decode3RInstruction(MCInst &Inst, unsigned Insn, uint64_t Address,
                     const void *Decoder) {
   unsigned Op1, Op2, Op3;
