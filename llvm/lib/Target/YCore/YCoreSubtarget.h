@@ -16,7 +16,6 @@
 #include "YCoreFrameLowering.h"
 #include "YCoreISelLowering.h"
 #include "YCoreInstrInfo.h"
-#include "YCoreSelectionDAGInfo.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/Target/TargetMachine.h"
@@ -33,7 +32,6 @@ class YCoreSubtarget : public YCoreGenSubtargetInfo {
   YCoreInstrInfo InstrInfo;
   YCoreFrameLowering FrameLowering;
   YCoreTargetLowering TLInfo;
-  YCoreSelectionDAGInfo TSInfo;
 
 public:
   /// This constructor initializes the data members to match that
@@ -52,9 +50,6 @@ public:
   }
   const YCoreTargetLowering *getTargetLowering() const override {
     return &TLInfo;
-  }
-  const YCoreSelectionDAGInfo *getSelectionDAGInfo() const override {
-    return &TSInfo;
   }
   const TargetRegisterInfo *getRegisterInfo() const override {
     return &InstrInfo.getRegisterInfo();
