@@ -27,13 +27,8 @@ namespace llvm {
 class YCoreFunctionInfo : public MachineFunctionInfo {
   bool LRSpillSlotSet = false;
   int LRSpillSlot;
-  bool FPSpillSlotSet = false;
-  int FPSpillSlot;
-  bool EHSpillSlotSet = false;
-  int EHSpillSlot[2];
   unsigned ReturnStackOffset;
   bool ReturnStackOffsetSet = false;
-  int VarArgsFrameIndex = 0;
   mutable int CachedEStackSize = -1;
   std::vector<std::pair<MachineBasicBlock::iterator, CalleeSavedInfo>>
   SpillLabels;
@@ -47,26 +42,11 @@ public:
 
   ~YCoreFunctionInfo() override = default;
 
-  void setVarArgsFrameIndex(int off) { VarArgsFrameIndex = off; }
-  int getVarArgsFrameIndex() const { return VarArgsFrameIndex; }
-
   int createLRSpillSlot(MachineFunction &MF);
   bool hasLRSpillSlot() { return LRSpillSlotSet; }
   int getLRSpillSlot() const {
     assert(LRSpillSlotSet && "LR Spill slot not set");
     return LRSpillSlot;
-  }
-
-  bool hasFPSpillSlot() { return FPSpillSlotSet; }
-  int getFPSpillSlot() const {
-    assert(FPSpillSlotSet && "FP Spill slot not set");
-    return FPSpillSlot;
-  }
-
-  bool hasEHSpillSlot() { return EHSpillSlotSet; }
-  const int* getEHSpillSlot() const {
-    assert(EHSpillSlotSet && "EH Spill slot not set");
-    return EHSpillSlot;
   }
 
   void setReturnStackOffset(unsigned value) {
@@ -82,10 +62,6 @@ public:
 
   bool isLargeFrame(const MachineFunction &MF) const;
 
-  std::vector<std::pair<MachineBasicBlock::iterator, CalleeSavedInfo>> &
-  getSpillLabels() {
-    return SpillLabels;
-  }
 };
 
 } // end namespace llvm

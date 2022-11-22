@@ -40,8 +40,6 @@ MCOperand YCoreMCInstLower::LowerOperand(const MachineOperand &MO,
       return MCOperand::createReg(MO.getReg());
     case MachineOperand::MO_Immediate:
       return MCOperand::createImm(MO.getImm() + offset);
-    case MachineOperand::MO_RegisterMask:
-      break;
   }
 
   return MCOperand();

@@ -90,13 +90,6 @@ static void IfNeededLDAWSP(MachineBasicBlock &MBB,
                            MachineBasicBlock::iterator MBBI, const DebugLoc &dl,
                            const TargetInstrInfo &TII, int OffsetFromTop,
                            int &RemainingAdj) {
-  while (OffsetFromTop < RemainingAdj - MaxImmU16) {
-    assert(RemainingAdj && "OffsetFromTop is beyond FrameSize");
-    int OpImm = (RemainingAdj > MaxImmU16) ? MaxImmU16 : RemainingAdj;
-    int Opcode = isImmU6(OpImm) ? YCore::LDAWSP_ru6 : YCore::LDAWSP_lru6;
-    BuildMI(MBB, MBBI, dl, TII.get(Opcode), YCore::SP).addImm(OpImm);
-    RemainingAdj -= OpImm;
-  }
 }
 
 /// Creates an ordered list of registers that are spilled
@@ -106,18 +99,6 @@ static void IfNeededLDAWSP(MachineBasicBlock &MBB,
 static void GetSpillList(SmallVectorImpl<StackSlotInfo> &SpillList,
                          MachineFrameInfo &MFI, YCoreFunctionInfo *XFI,
                          bool fetchLR, bool fetchFP) {
-  if (fetchLR) {
-    int Offset = MFI.getObjectOffset(XFI->getLRSpillSlot());
-    SpillList.push_back(StackSlotInfo(XFI->getLRSpillSlot(),
-                                      Offset,
-                                      YCore::LR));
-  }
-  if (fetchFP) {
-    int Offset = MFI.getObjectOffset(XFI->getFPSpillSlot());
-    SpillList.push_back(StackSlotInfo(XFI->getFPSpillSlot(),
-                                      Offset,
-                                      FramePtr));
-  }
   llvm::sort(SpillList, CompareSSIOffset);
 }
 
