@@ -89,21 +89,6 @@ multiclass F3R_2RUS<bits<5> opc1, bits<5> opc2, string OpcStr, SDNode OpNode> {
                      [(set GRRegs:$dst, (OpNode GRRegs:$b, immUs:$c))]>;
 }
 
-multiclass F3R_2RUS_np<bits<5> opc1, bits<5> opc2, string OpcStr> {
-  def _3r: _F3R<opc1, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
-                !strconcat(OpcStr, " $dst, $b, $c"), []>;
-  def _2rus : _F2RUS<opc2, (outs GRRegs:$dst), (ins GRRegs:$b, i32imm:$c),
-                     !strconcat(OpcStr, " $dst, $b, $c"), []>;
-}
-
-class F3R<bits<5> opc, string OpcStr, SDNode OpNode> :
-  _F3R<opc, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
-       !strconcat(OpcStr, " $dst, $b, $c"),
-       [(set GRRegs:$dst, (OpNode GRRegs:$b, GRRegs:$c))]>;
-
-class F3R_np<bits<5> opc, string OpcStr> :
-  _F3R<opc, (outs GRRegs:$dst), (ins GRRegs:$b, GRRegs:$c),
-       !strconcat(OpcStr, " $dst, $b, $c"), []>;
 // Three operand long
 
 // U6
