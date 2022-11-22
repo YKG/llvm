@@ -68,43 +68,6 @@ static unsigned getYCoreSectionType(SectionKind K) {
   return ELF::SHT_PROGBITS;
 }
 
-static unsigned getYCoreSectionFlags(SectionKind K, bool IsCPRel) {
-  unsigned Flags = 0;
-
-  if (!K.isMetadata())
-    Flags |= ELF::SHF_ALLOC;
-
-  if (K.isText())
-    Flags |= ELF::SHF_EXECINSTR;
-  else if (IsCPRel)
-    Flags |= ELF::YCORE_SHF_CP_SECTION;
-  else
-    Flags |= ELF::YCORE_SHF_DP_SECTION;
-
-  if (K.isWriteable())
-    Flags |= ELF::SHF_WRITE;
-
-  if (K.isMergeableCString() || K.isMergeableConst4() ||
-      K.isMergeableConst8() || K.isMergeableConst16())
-    Flags |= ELF::SHF_MERGE;
-
-  if (K.isMergeableCString())
-    Flags |= ELF::SHF_STRINGS;
-
-  return Flags;
-}
-
-MCSection *YCoreTargetObjectFile::getExplicitSectionGlobal(
-    const GlobalObject *GO, SectionKind Kind, const TargetMachine &TM) const {
-  StringRef SectionName = GO->getSection();
-  // Infer section flags from the section name if we can.
-  bool IsCPRel = SectionName.startswith(".cp.");
-  if (IsCPRel && !Kind.isReadOnly())
-    report_fatal_error("Using .cp. section for writeable object.");
-  return getContext().getELFSection(SectionName, getYCoreSectionType(Kind),
-                                    getYCoreSectionFlags(Kind, IsCPRel));
-}
-
 MCSection *YCoreTargetObjectFile::SelectSectionForGlobal(
     const GlobalObject *GO, SectionKind Kind, const TargetMachine &TM) const {
 
@@ -138,17 +101,4 @@ MCSection *YCoreTargetObjectFile::SelectSectionForGlobal(
 
   assert((Kind.isThreadLocal() || Kind.isCommon()) && "Unknown section kind");
   report_fatal_error("Target does not support TLS or Common sections");
-}
-
-MCSection *YCoreTargetObjectFile::getSectionForConstant(
-    const DataLayout &DL, SectionKind Kind, const Constant *C,
-    Align &Alignment) const {
-  if (Kind.isMergeableConst4())           return MergeableConst4Section;
-  if (Kind.isMergeableConst8())           return MergeableConst8Section;
-  if (Kind.isMergeableConst16())          return MergeableConst16Section;
-  assert((Kind.isReadOnly() || Kind.isReadOnlyWithRel()) &&
-         "Unknown section kind");
-  // We assume the size of the object is never greater than CodeModelLargeSize.
-  // To handle CodeModelLargeSize changes to AsmPrinter would be required.
-  return ReadOnlySection;
 }
